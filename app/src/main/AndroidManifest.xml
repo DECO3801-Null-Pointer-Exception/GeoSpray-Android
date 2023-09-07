@@ -2,6 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.ar"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +25,11 @@
         android:theme="@style/Theme.GeoSpray"
         tools:targetApi="31">
         <activity
+            android:name=".ARArtActivity"
+            android:exported="false"
+            android:label="@string/title_activity_arart"
+            android:theme="@style/Theme.GeoSpray" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -23,6 +40,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
+ This tag indicates that this application requires ARCore.  This results in the Google Play
+         Store downloading and installing ARCore along with the application.
+         Application code must still call ArCoreApk.requestInstall() before beginning an ARCore
+         sessions, in case the user uninstalls ARCore for any reason.
+        -->
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required" />
     </application>
 
 </manifest>
