@@ -1,46 +1,32 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray
 
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import au.edu.uq.deco3801.nullpointerexception.geospray.ui.theme.GeoSprayTheme
 
 class ARArtActivity : ComponentActivity() {
+    private lateinit var arSurfaceView: ARSurfaceView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            GeoSprayTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting2("Android")
-                }
-            }
-        }
+
+        arSurfaceView = ARSurfaceView(this)
+        arSurfaceView.preserveEGLContextOnPause = true
+        arSurfaceView.setEGLContextClientVersion(2)
+        arSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+        arSurfaceView.setRenderer(ARRenderer(this))
+        arSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+        arSurfaceView.setWillNotDraw(false)
+
+        setContentView(arSurfaceView)
     }
-}
 
-@Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onResume() {
+        super.onResume()
+        arSurfaceView.onResume()
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    GeoSprayTheme {
-        Greeting2("Android")
+    override fun onPause() {
+        super.onPause()
+        arSurfaceView.onPause()
     }
 }
