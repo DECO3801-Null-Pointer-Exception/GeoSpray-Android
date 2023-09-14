@@ -5,18 +5,25 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.util.Log
+import android.view.MotionEvent
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationHelper
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.GeoSprayPermissionsHelper
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.ObjectRenderer
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaneRenderer
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRenderer
+import com.google.ar.core.Anchor
 import com.google.ar.core.ArCoreApk
 import com.google.ar.core.Camera
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
+import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
+import com.google.ar.core.Point
 import com.google.ar.core.Session
+import com.google.ar.core.Trackable
 import com.google.ar.core.TrackingState
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import java.io.IOException
@@ -28,14 +35,24 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
     private val backgroundRenderer: BackgroundRenderer = BackgroundRenderer()
     private val planeRenderer: PlaneRenderer = PlaneRenderer()
     private val pointCloudRenderer: PointCloudRenderer = PointCloudRenderer()
+    private val virtualObject: ObjectRenderer = ObjectRenderer()
+
+    private var currentAnchor: Anchor? = null
+    private val anchorMatrix = FloatArray(16)
+
+    private val andyColor = floatArrayOf(139.0f, 195.0f, 74.0f, 255.0f)
 
     private lateinit var trackingStateHelper: TrackingStateHelper
     private lateinit var session: Session
+    private lateinit var tapHelper: TapHelper
 
     override fun onResume() {
         super.onResume()
 
         trackingStateHelper = TrackingStateHelper(context as Activity?)
+        tapHelper = TapHelper(context)
+
+        this.setOnTouchListener(tapHelper)
 
         if (!::session.isInitialized) {
             val exception: Exception? = null
@@ -87,6 +104,8 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
             backgroundRenderer.createOnGlThread(context)
             planeRenderer.createOnGlThread(context, "models/trigrid.png")
             pointCloudRenderer.createOnGlThread(context)
+            virtualObject.createOnGlThread(context, "models/andy.obj", "models/andy.png")
+            virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f)
         } catch (e: IOException) {
             Log.e(TAG, "Failed to read an asset file", e)
         }
@@ -110,7 +129,7 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
             val frame: Frame = session.update()
             val camera: Camera = frame.camera
 
-            // TODO: Handle tap
+            handleTap(frame, camera)
 
             backgroundRenderer.draw(frame)
 
@@ -147,7 +166,13 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
                 session.getAllTrackables(Plane::class.java), camera.displayOrientedPose, projmtx
             )
 
-            // TODO: Draw model
+            if (currentAnchor != null && currentAnchor!!.trackingState == TrackingState.TRACKING) {
+                currentAnchor!!.pose.toMatrix(anchorMatrix, 0)
+
+                //Update and draw the model
+                virtualObject.updateModelMatrix(anchorMatrix, 1f)
+                virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba, andyColor)
+            }
         } catch (t: Throwable) {
             Log.e(TAG, "Exception on OpenGL thread", t)
         }
@@ -159,8 +184,7 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
                 // ARCore is installed
             }
 
-            ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD,
-            ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> {
+            ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD, ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED -> {
                 try {
                     when (ArCoreApk.getInstance().requestInstall(context as Activity?, true)) {
                         ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
@@ -190,6 +214,37 @@ class ARSurfaceView(context: Context, private val displayRotationHelper: Display
             }
         }
         return false
+    }
+
+    private fun handleTap(frame: Frame, camera: Camera) {
+        if (currentAnchor != null) {
+            return
+        }
+
+        val tap: MotionEvent? = tapHelper.poll()
+        if (tap != null && camera.trackingState == TrackingState.TRACKING) {
+            for (hit: HitResult in frame.hitTest(tap)) {
+                val trackable: Trackable = hit.trackable
+
+                if ((trackable is Plane
+                            && trackable.isPoseInPolygon(hit.hitPose)
+                            && (PlaneRenderer.calculateDistanceToPlane(
+                        hit.hitPose,
+                        camera.pose
+                    ) > 0))
+                    || (trackable is Point
+                            && trackable.orientationMode == Point.OrientationMode.ESTIMATED_SURFACE_NORMAL)
+                ) {
+                    currentAnchor = hit.createAnchor()
+                    // TODO: Resolve button stuff
+                    // TODO: display hosting message
+                    // TODO: session.hostCloudAnchorAync
+                    break;
+                }
+            }
+
+        }
+
     }
 
 
