@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "68408939123",
+    "firebase_url": "https://arcore-geospray-default-rtdb.firebaseio.com",
+    "project_id": "arcore-geospray",
+    "storage_bucket": "arcore-geospray.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68408939123:android:75ce7db7c95f6d15bed006",
+        "android_client_info": {
+          "package_name": "au.edu.uq.deco3801.nullpointerexception.geospray"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtyc2L4McrpgSg9ed2DS5AZuAyz3wF0mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68408939123:android:f414f79e174ed1e5bed006",
+        "android_client_info": {
+          "package_name": "com.google.ar.core.codelab.cloudanchor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtyc2L4McrpgSg9ed2DS5AZuAyz3wF0mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
