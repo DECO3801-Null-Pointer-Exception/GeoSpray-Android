@@ -16,7 +16,10 @@
 
 package au.edu.uq.deco3801.nullpointerexception.geospray;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -27,6 +30,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -106,6 +114,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private Future future = null;
 
   private Button resolveButton;
+  private Button uploadButton;
+  private static final int SELECT_IMAGE = 1;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -137,6 +147,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     resolveButton = rootView.findViewById(R.id.resolve_button);
     resolveButton.setOnClickListener(v -> onResolveButtonPressed());
+
+    uploadButton = rootView.findViewById(R.id.upload_button);
+    uploadButton.setOnClickListener(v -> onUploadButtonPressed());
 
     return rootView;
   }
@@ -251,12 +264,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       virtualObject.createOnGlThread(getContext(), "models/andy.obj", "models/andy.png");
       virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
-
-      virtualObjectShadow
-          .createOnGlThread(getContext(), "models/andy_shadow.obj", "models/andy_shadow.png");
-      virtualObjectShadow.setBlendMode(BlendMode.Shadow);
-      virtualObjectShadow.setMaterialProperties(1.0f, 0.0f, 0.0f, 1.0f);
-
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
     }
@@ -342,7 +349,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         virtualObjectShadow.updateModelMatrix(anchorMatrix, 1f);
 
         virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba, andyColor);
-        virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba, andyColor);
       }
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
@@ -394,6 +400,30 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
     return false;
   }
+
+  private void onUploadButtonPressed() {
+    // Open file selection dialog
+    Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
+    selectionDialog.setType("*/*");
+    selectionDialog = Intent.createChooser(selectionDialog, "Select image");
+    sActivityResultLauncher.launch(selectionDialog);
+  }
+
+  ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
+          new ActivityResultContracts.StartActivityForResult(),
+          result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+              Intent data = result.getData();
+
+              if (data != null) {
+                Uri uri = data.getData();
+                messageSnackbarHelper.showMessage(getActivity(), "File: " + uri);
+              } else {
+                messageSnackbarHelper.showMessage(getActivity(), "File error");
+              }
+            }
+          }
+  );
 
   private void onClearButtonPressed() {
     // Clear the anchor from the scene.

@@ -316,7 +316,7 @@ public class ObjectRenderer {
     GLES20.glUniform4fv(colorCorrectionParameterUniform, 1, colorCorrectionRgba, 0);
 
     // Set the object color property.
-    GLES20.glUniform4fv(colorUniform, 1, objColor, 0);
+//    GLES20.glUniform4fv(colorUniform, 1, objColor, 0);
 
     // Set the object material properties.
     GLES20.glUniform4f(materialParametersUniform, ambient, diffuse, specular, specularPower);
