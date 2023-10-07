@@ -41,7 +41,7 @@ public class FirebaseManager {
   }
 
   private static final String TAG = FirebaseManager.class.getName();
-  private static final String KEY_ROOT_DIR = "shared_anchor_codelab_root";
+  private static final String KEY_ROOT_DIR = "images";
   private static final String KEY_NEXT_SHORT_CODE = "next_short_code";
   private static final String KEY_PREFIX = "anchor;";
   private static final int INITIAL_SHORT_CODE = 142;
@@ -88,7 +88,7 @@ public class FirebaseManager {
 
   /** Stores the cloud anchor ID in the configured Firebase Database. */
   public void storeUsingShortCode(int shortCode, String cloudAnchorId) {
-    rootRef.child(KEY_PREFIX + shortCode).setValue(cloudAnchorId);
+    rootRef.child("" + shortCode).child(KEY_PREFIX).setValue(cloudAnchorId);
   }
 
   /**
@@ -97,7 +97,8 @@ public class FirebaseManager {
    */
   public void getCloudAnchorId(int shortCode, CloudAnchorIdListener listener) {
     rootRef
-        .child(KEY_PREFIX + shortCode)
+        .child("" + shortCode)
+        .child(KEY_PREFIX)
         .addListenerForSingleValueEvent(
             new ValueEventListener() {
               @Override
