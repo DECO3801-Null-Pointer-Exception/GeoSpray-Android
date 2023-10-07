@@ -32,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -123,6 +124,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private UploadTask uploadTask;
   private Uri imageUri;
   private Bitmap image;
+  private SeekBar rotationBar;
+  private int imageRotation;
+  private boolean visualisePlanes = true;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -157,6 +161,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     resolveButton = rootView.findViewById(R.id.resolve_button);
     resolveButton.setOnClickListener(v -> onResolveButtonPressed());
+
+    rotationBar = rootView.findViewById(R.id.rotation_seekbar);
+    rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
 
     return rootView;
   }
@@ -271,7 +278,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       Bitmap bitmap = BitmapFactory.decodeStream(requireContext().getAssets().open("models/andy.png"));
       virtualObject.createOnGlThread(getContext(), "models/andy.obj", bitmap);
-      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+      virtualObject.setMaterialProperties(1.0f, 0.0f, 0.0f, 0.0f);
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
     }
@@ -344,11 +352,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       // No tracking error at this point. If we didn't detect any plane, show searchingPlane message.
       if (!hasTrackingPlane()) {
         messageSnackbarHelper.showMessage(getActivity(), "Searching for surfaces...");
+        visualisePlanes = true;
       }
 
       // Visualize planes.
-      planeRenderer.drawPlanes(
-          session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
+      if (visualisePlanes) {
+        planeRenderer.drawPlanes(
+                session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
+      }
 
       if (currentAnchor != null && currentAnchor.getTrackingState() == TrackingState.TRACKING) {
         currentAnchor.getPose().toMatrix(anchorMatrix, 0);
@@ -356,6 +367,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         virtualObject.updateModelMatrix(anchorMatrix, 1f);
         virtualObjectShadow.updateModelMatrix(anchorMatrix, 1f);
 
+        virtualObject.rotateImage(imageRotation);
         virtualObject.updateTexture(image);
 
         virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
@@ -386,12 +398,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
             == OrientationMode.ESTIMATED_SURFACE_NORMAL)) {
           // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
 
-          // Open file dialog
-          Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
-          selectionDialog.setType("image/*");
-          selectionDialog = Intent.createChooser(selectionDialog, "Select image");
-          sActivityResultLauncher.launch(selectionDialog);
-
           // Adding an Anchor tells ARCore that it should track this position in
           // space. This anchor is created on the Plane to place the 3D model
           // in the correct position relative both to the world and to the plane.
@@ -399,6 +405,18 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           requireActivity().runOnUiThread(() -> resolveButton.setEnabled(false));
           messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
           future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
+
+          // Open file dialog
+          // TODO: Ensure "cancel" (back button) works
+          //  No upload, grid stays, etc.
+          Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
+          selectionDialog.setType("image/*");
+          selectionDialog = Intent.createChooser(selectionDialog, "Select image");
+          sActivityResultLauncher.launch(selectionDialog);
+
+          visualisePlanes = false;
+          rotationBar.setProgress(180);
+
           break;
         }
       }
@@ -450,6 +468,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       future.cancel();
       future = null;
     }
+
+    visualisePlanes = true;
+    image = null;
 
     resolveButton.setEnabled(true);
   }
@@ -515,6 +536,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     if (cloudState == CloudAnchorState.SUCCESS) {
       messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Resolved. Short code: " + shortCode);
       currentAnchor = anchor;
+
+      visualisePlanes = false;
+      rotationBar.setProgress(180);
     } else {
       messageSnackbarHelper.showMessage(
           getActivity(),
@@ -525,4 +549,19 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       resolveButton.setEnabled(true);
     }
   }
+
+  private final SeekBar.OnSeekBarChangeListener rotationChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+      // SeekBar begins at 180 which corresponds to a 0 degree rotation
+      // Negative so rotation direction follows SeekBar direction
+      imageRotation = -(i - 180);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {}
+  };
 }

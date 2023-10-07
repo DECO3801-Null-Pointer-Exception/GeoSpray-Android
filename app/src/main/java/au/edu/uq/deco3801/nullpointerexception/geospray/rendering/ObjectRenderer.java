@@ -53,7 +53,6 @@ public class ObjectRenderer {
   private static final String FRAGMENT_SHADER_NAME = "shaders/object.frag";
 
   private static final int COORDS_PER_VERTEX = 3;
-  private static final float[] DEFAULT_COLOR = new float[] {0f, 0f, 0f, 0f};
 
   // Note: the last component must be zero to avoid applying the translational part of the matrix.
   private static final float[] LIGHT_DIRECTION = new float[] {0.250f, 0.866f, 0.433f, 0.0f};
@@ -384,5 +383,13 @@ public class ObjectRenderer {
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
     GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+
+    // Enable transparency
+    GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+    GLES20.glEnable(GLES20.GL_BLEND);
+  }
+
+  public void rotateImage(int rotation) {
+    Matrix.rotateM(this.modelMatrix, 0, rotation, 0.0f, 1.0f, 0.0f);
   }
 }
