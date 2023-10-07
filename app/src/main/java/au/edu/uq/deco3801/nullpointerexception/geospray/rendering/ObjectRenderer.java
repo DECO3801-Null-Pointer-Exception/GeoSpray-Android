@@ -116,7 +116,7 @@ public class ObjectRenderer {
    * @param objAssetName Name of the OBJ file containing the model geometry.
    * @param diffuseTextureAssetName Name of the PNG file containing the diffuse texture map.
    */
-  public void createOnGlThread(Context context, String objAssetName, String diffuseTextureAssetName)
+  public void createOnGlThread(Context context, String objAssetName, Bitmap textureBitmap)
       throws IOException {
     final int vertexShader =
         ShaderUtil.loadGLShader(TAG, context, GLES20.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
@@ -149,9 +149,6 @@ public class ObjectRenderer {
     ShaderUtil.checkGLError(TAG, "Program parameters");
 
     // Read the texture.
-    Bitmap textureBitmap =
-        BitmapFactory.decodeStream(context.getAssets().open(diffuseTextureAssetName));
-
     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
     GLES20.glGenTextures(textures.length, textures, 0);
     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
@@ -285,15 +282,10 @@ public class ObjectRenderer {
    * @see #setMaterialProperties(float, float, float, float)
    * @see Matrix
    */
-  public void draw(float[] cameraView, float[] cameraPerspective, float[] colorCorrectionRgba) {
-    draw(cameraView, cameraPerspective, colorCorrectionRgba, DEFAULT_COLOR);
-  }
-
   public void draw(
       float[] cameraView,
       float[] cameraPerspective,
-      float[] colorCorrectionRgba,
-      float[] objColor) {
+      float[] colorCorrectionRgba) {
 
     ShaderUtil.checkGLError(TAG, "Before draw");
 
@@ -314,9 +306,6 @@ public class ObjectRenderer {
         viewLightDirection[2],
         1.f);
     GLES20.glUniform4fv(colorCorrectionParameterUniform, 1, colorCorrectionRgba, 0);
-
-    // Set the object color property.
-//    GLES20.glUniform4fv(colorUniform, 1, objColor, 0);
 
     // Set the object material properties.
     GLES20.glUniform4f(materialParametersUniform, ambient, diffuse, specular, specularPower);
@@ -385,5 +374,15 @@ public class ObjectRenderer {
     v[0] *= reciprocalLength;
     v[1] *= reciprocalLength;
     v[2] *= reciprocalLength;
+  }
+
+  // TODO: https://stackoverflow.com/questions/16077448/texture-is-all-black
+  public void updateTexture(Bitmap bitmap) {
+    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+    GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
   }
 }

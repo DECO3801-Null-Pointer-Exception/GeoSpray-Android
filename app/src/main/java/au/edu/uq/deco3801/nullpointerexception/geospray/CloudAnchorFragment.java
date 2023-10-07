@@ -19,10 +19,13 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,13 +34,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Anchor.CloudAnchorState;
 import com.google.ar.core.ArCoreApk;
@@ -62,7 +64,6 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.ObjectRenderer;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.ObjectRenderer.BlendMode;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaneRenderer;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRenderer;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationHelper;
@@ -72,7 +73,12 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.IOException;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -105,8 +111,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   // Temporary matrix allocated here to reduce number of allocations for each frame.
   private final float[] anchorMatrix = new float[16];
-  private static final String SEARCHING_PLANE_MESSAGE = "Searching for surfaces...";
-  private final float[] andyColor = {139.0f, 195.0f, 74.0f, 255.0f};
 
   @Nullable
   private Anchor currentAnchor = null;
@@ -114,8 +118,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private Future future = null;
 
   private Button resolveButton;
-  private Button uploadButton;
-  private static final int SELECT_IMAGE = 1;
+
+  private StorageReference storageReference;
+  private UploadTask uploadTask;
+  private Uri imageUri;
+  private Bitmap image;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -123,6 +130,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     tapHelper = new TapHelper(context);
     trackingStateHelper = new TrackingStateHelper(requireActivity());
     firebaseManager = new FirebaseManager(context);
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    storageReference = firebaseStorage.getReference();
   }
 
   @Override
@@ -147,9 +157,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     resolveButton = rootView.findViewById(R.id.resolve_button);
     resolveButton.setOnClickListener(v -> onResolveButtonPressed());
-
-    uploadButton = rootView.findViewById(R.id.upload_button);
-    uploadButton.setOnClickListener(v -> onUploadButtonPressed());
 
     return rootView;
   }
@@ -262,7 +269,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       planeRenderer.createOnGlThread(getContext(), "models/trigrid.png");
       pointCloudRenderer.createOnGlThread(getContext());
 
-      virtualObject.createOnGlThread(getContext(), "models/andy.obj", "models/andy.png");
+      Bitmap bitmap = BitmapFactory.decodeStream(requireContext().getAssets().open("models/andy.png"));
+      virtualObject.createOnGlThread(getContext(), "models/andy.obj", bitmap);
       virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
@@ -335,7 +343,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       // No tracking error at this point. If we didn't detect any plane, show searchingPlane message.
       if (!hasTrackingPlane()) {
-        messageSnackbarHelper.showMessage(getActivity(), SEARCHING_PLANE_MESSAGE);
+        messageSnackbarHelper.showMessage(getActivity(), "Searching for surfaces...");
       }
 
       // Visualize planes.
@@ -348,7 +356,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         virtualObject.updateModelMatrix(anchorMatrix, 1f);
         virtualObjectShadow.updateModelMatrix(anchorMatrix, 1f);
 
-        virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba, andyColor);
+        virtualObject.updateTexture(image);
+
+        virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
       }
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
@@ -376,11 +386,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
             == OrientationMode.ESTIMATED_SURFACE_NORMAL)) {
           // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
 
+          // Open file dialog
+          Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
+          selectionDialog.setType("image/*");
+          selectionDialog = Intent.createChooser(selectionDialog, "Select image");
+          sActivityResultLauncher.launch(selectionDialog);
+
           // Adding an Anchor tells ARCore that it should track this position in
           // space. This anchor is created on the Plane to place the 3D model
           // in the correct position relative both to the world and to the plane.
           currentAnchor = hit.createAnchor();
-          getActivity().runOnUiThread(() -> resolveButton.setEnabled(false));
+          requireActivity().runOnUiThread(() -> resolveButton.setEnabled(false));
           messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
           future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
           break;
@@ -388,6 +404,27 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       }
     }
   }
+
+  ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
+          new ActivityResultContracts.StartActivityForResult(),
+          result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+              Intent data = result.getData();
+
+              if (data != null) {
+                imageUri = data.getData();
+
+                try {
+                  image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
+                } catch (IOException e) {
+                  messageSnackbarHelper.showMessage(getActivity(), "Error: " + e);
+                }
+              } else {
+                messageSnackbarHelper.showMessage(getActivity(), "File error");
+              }
+            }
+          }
+  );
 
   /**
    * Checks if we detected at least one plane.
@@ -400,30 +437,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
     return false;
   }
-
-  private void onUploadButtonPressed() {
-    // Open file selection dialog
-    Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
-    selectionDialog.setType("*/*");
-    selectionDialog = Intent.createChooser(selectionDialog, "Select image");
-    sActivityResultLauncher.launch(selectionDialog);
-  }
-
-  ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
-          new ActivityResultContracts.StartActivityForResult(),
-          result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-              Intent data = result.getData();
-
-              if (data != null) {
-                Uri uri = data.getData();
-                messageSnackbarHelper.showMessage(getActivity(), "File: " + uri);
-              } else {
-                messageSnackbarHelper.showMessage(getActivity(), "File error");
-              }
-            }
-          }
-  );
 
   private void onClearButtonPressed() {
     // Clear the anchor from the scene.
@@ -447,6 +460,19 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         if (shortCode != null) {
           firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId);
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted. Short code: " + shortCode);
+
+          if (imageUri != null) {
+            StorageReference imageReference = storageReference.child("images/" + shortCode);
+            uploadTask = imageReference.putFile(imageUri);
+
+            uploadTask.addOnFailureListener(
+                    e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
+            ).addOnSuccessListener(
+                    taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
+            );
+          } else {
+            messageSnackbarHelper.showMessage(getActivity(), "File error");
+          }
         } else {
           // Firebase could not provide a short code.
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted, but could not "
@@ -461,10 +487,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private void onResolveButtonPressed() {
     ResolveDialogFragment dialog = ResolveDialogFragment.createWithOkListener(
         this::onShortCodeEntered);
-    dialog.show(getActivity().getSupportFragmentManager(), "Resolve");
+    dialog.show(requireActivity().getSupportFragmentManager(), "Resolve");
   }
 
   private void onShortCodeEntered(int shortCode) {
+    StorageReference imageReference = storageReference.child("images/" + shortCode);
+    imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
+            bytes -> image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length)
+    ).addOnFailureListener(
+            e -> messageSnackbarHelper.showMessage(getActivity(), "Error retrieving image")
+    );
+
     firebaseManager.getCloudAnchorId(shortCode, cloudAnchorId -> {
       if (cloudAnchorId == null || cloudAnchorId.isEmpty()) {
         messageSnackbarHelper.showMessage(
