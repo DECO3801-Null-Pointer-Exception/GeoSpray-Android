@@ -106,7 +106,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private final BackgroundRenderer backgroundRenderer = new BackgroundRenderer();
   private final ObjectRenderer virtualObject = new ObjectRenderer();
-  private final ObjectRenderer virtualObjectShadow = new ObjectRenderer();
   private final PlaneRenderer planeRenderer = new PlaneRenderer();
   private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
 
@@ -127,10 +126,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private SeekBar rotationBar;
   private SeekBar scaleBar;
   private int imageRotation = -135;
-  private float imageScale = 1f;
-  private boolean visualisePlanes = true;
-  private float imageWidth = 1f;
-  private float imageHeight = 1f;
+  private float imageScale = 1.0f;
+  private boolean visualise = true;
+  private float imageWidth;
+  private float imageHeight;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -141,6 +140,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     storageReference = firebaseStorage.getReference();
+
+    // Open file dialog
+    // TODO: Ensure "cancel" (back button) works
+    //  No upload, grid stays, etc.
+    Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
+    selectionDialog.setType("image/*");
+    selectionDialog = Intent.createChooser(selectionDialog, "Select image");
+    sActivityResultLauncher.launch(selectionDialog);
   }
 
   @Override
@@ -349,19 +356,21 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       // Visualize tracked points.
       // Use try-with-resources to automatically release the point cloud.
-      try (PointCloud pointCloud = frame.acquirePointCloud()) {
-        pointCloudRenderer.update(pointCloud);
-        pointCloudRenderer.draw(viewmtx, projmtx);
+      if (visualise) {
+        try (PointCloud pointCloud = frame.acquirePointCloud()) {
+          pointCloudRenderer.update(pointCloud);
+          pointCloudRenderer.draw(viewmtx, projmtx);
+        }
       }
 
       // No tracking error at this point. If we didn't detect any plane, show searchingPlane message.
       if (!hasTrackingPlane()) {
         messageSnackbarHelper.showMessage(getActivity(), "Searching for surfaces...");
-        visualisePlanes = true;
+        visualise = true;
       }
 
       // Visualize planes.
-      if (visualisePlanes) {
+      if (visualise) {
         planeRenderer.drawPlanes(
                 session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
       }
@@ -414,15 +423,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
           future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
-          // Open file dialog
-          // TODO: Ensure "cancel" (back button) works
-          //  No upload, grid stays, etc.
-          Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
-          selectionDialog.setType("image/*");
-          selectionDialog = Intent.createChooser(selectionDialog, "Select image");
-          sActivityResultLauncher.launch(selectionDialog);
-
-          visualisePlanes = false;
+          visualise = false;
           rotationBar.setProgress(180);
           scaleBar.setProgress(100);
 
@@ -480,8 +481,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       future = null;
     }
 
-    visualisePlanes = true;
-    image = null;
+    visualise = true;
 
     rotationBar.setProgress(180);
     scaleBar.setProgress(100);
@@ -493,7 +493,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId);
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale);
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted. Short code: " + shortCode);
 
           if (imageUri != null) {
@@ -555,7 +555,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Resolved. Short code: " + shortCode);
       currentAnchor = anchor;
 
-      visualisePlanes = false;
+      visualise = false;
       rotationBar.setProgress(180);
       scaleBar.setProgress(100);
     } else {
