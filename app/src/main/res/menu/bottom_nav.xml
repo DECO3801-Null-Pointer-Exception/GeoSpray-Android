@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bot_home"
+        android:icon="@drawable/home_button"
+        android:title="home" />
+    <item
+        android:id="@+id/bot_search"
+        android:icon="@drawable/search_button"
+        android:title="search" />
+    <item
+        android:id="@+id/bot_create"
+        android:icon="@drawable/create_button"
+        android:title="create" />
+    <item
+        android:id="@+id/bot_navigation"
+        android:icon="@drawable/navigation"
+        android:title="navigation" />
+    <item
+        android:id="@+id/bot_profile"
+        android:icon="@drawable/profile_button"
+        android:title="profile" />
+</menu>

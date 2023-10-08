@@ -17,9 +17,17 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import au.edu.uq.deco3801.nullpointerexception.geospray.databinding.ActivityMainBinding;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
 /**
@@ -29,18 +37,49 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper
  * the fragment and attaches it to this Activity.
  */
 public class MainActivity extends AppCompatActivity {
+  ActivityMainBinding binding;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    binding = ActivityMainBinding.inflate(getLayoutInflater());
+    setContentView(binding.getRoot());
+
+    binding.botnav.setOnItemSelectedListener(item -> {
+      if (item.getItemId() == R.id.bot_create) {
+        replaceFrag(new CloudAnchorFragment());
+      }
+      return true;
+    });
+
+//    FragmentManager fm = getSupportFragmentManager();
+//    Fragment frag = fm.findFragmentById(R.id.fragment_container);
+//    if (frag == null) {
+//      frag = new CloudAnchorFragment();
+//      fm.beginTransaction().replace(R.id.fragment_container, frag).commit();
+//      fm.beginTransaction().commit();
+//    }
+
+//    Button goto_ar = (Button) findViewById(R.id.gotoar);
+//    goto_ar.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View view) {
+//        FragmentManager fm = getSupportFragmentManager();
+//        Fragment frag = fm.findFragmentById(R.id.fragment_container);
+//        if (frag == null) {
+//          frag = new CloudAnchorFragment();
+//          fm.beginTransaction().add(R.id.fragment_container, frag).commit();
+//        }
+//      }
+//    });
+  }
+
+  private void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
-    Fragment frag = fm.findFragmentById(R.id.fragment_container);
-    if (frag == null) {
-      frag = new CloudAnchorFragment();
-      fm.beginTransaction().add(R.id.fragment_container, frag).commit();
-    }
+    FragmentTransaction fmtrans = fm.beginTransaction().replace(R.id.frame_layout, fragment);
+    fmtrans.commit();
   }
 
   @Override
