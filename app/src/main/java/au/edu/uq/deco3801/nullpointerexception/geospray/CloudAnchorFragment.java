@@ -127,10 +127,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private SeekBar rotationBar;
   private SeekBar scaleBar;
   private int imageRotation = -135;
+  private float imageScale = 1f;
   private boolean visualisePlanes = true;
   private float imageWidth = 1f;
   private float imageHeight = 1f;
-  private float imageScale = 1f;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -482,6 +482,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     visualisePlanes = true;
     image = null;
+
+    rotationBar.setProgress(180);
+    scaleBar.setProgress(100);
 
     resolveButton.setEnabled(true);
   }
