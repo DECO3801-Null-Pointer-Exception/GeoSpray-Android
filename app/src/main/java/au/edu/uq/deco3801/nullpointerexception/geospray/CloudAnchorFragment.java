@@ -125,8 +125,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private Uri imageUri;
   private Bitmap image;
   private SeekBar rotationBar;
-  private int imageRotation;
+  private SeekBar scaleBar;
+  private int imageRotation = -135;
   private boolean visualisePlanes = true;
+  private float imageWidth = 1f;
+  private float imageHeight = 1f;
+  private float imageScale = 1f;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -164,6 +168,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
+
+    scaleBar = rootView.findViewById(R.id.size_seekbar);
+    scaleBar.setOnSeekBarChangeListener(scaleChangeListener);
 
     return rootView;
   }
@@ -276,9 +283,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       planeRenderer.createOnGlThread(getContext(), "models/trigrid.png");
       pointCloudRenderer.createOnGlThread(getContext());
 
-      Bitmap bitmap = BitmapFactory.decodeStream(requireContext().getAssets().open("models/andy.png"));
-      virtualObject.createOnGlThread(getContext(), "models/andy.obj", bitmap);
-//      virtualObject.setMaterialProperties(0.0f, 2.0f, 0.5f, 6.0f);
+      virtualObject.createOnGlThread(getContext());
       virtualObject.setMaterialProperties(1.0f, 0.0f, 0.0f, 0.0f);
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
@@ -364,12 +369,15 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       if (currentAnchor != null && currentAnchor.getTrackingState() == TrackingState.TRACKING) {
         currentAnchor.getPose().toMatrix(anchorMatrix, 0);
         // Update and draw the model and its shadow.
-        virtualObject.updateModelMatrix(anchorMatrix, 1f);
-        virtualObjectShadow.updateModelMatrix(anchorMatrix, 1f);
+        virtualObject.updateModelMatrix(anchorMatrix, imageScale);
 
+        // Modify image properties
         virtualObject.rotateImage(imageRotation);
         virtualObject.updateTexture(image);
+        float ratio = imageHeight / imageWidth;
+        virtualObject.resizeImage(0.25f, 0.25f * ratio);
 
+        // Draw image
         virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
       }
     } catch (Throwable t) {
@@ -416,6 +424,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
           visualisePlanes = false;
           rotationBar.setProgress(180);
+          scaleBar.setProgress(100);
 
           break;
         }
@@ -434,6 +443,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
                 try {
                   image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
+                  imageWidth = image.getWidth();
+                  imageHeight = image.getHeight();
                 } catch (IOException e) {
                   messageSnackbarHelper.showMessage(getActivity(), "Error: " + e);
                 }
@@ -514,7 +525,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private void onShortCodeEntered(int shortCode) {
     StorageReference imageReference = storageReference.child("images/" + shortCode);
     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
-            bytes -> image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length)
+            bytes -> {
+              image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+              imageWidth = image.getWidth();
+              imageHeight = image.getHeight();
+            }
     ).addOnFailureListener(
             e -> messageSnackbarHelper.showMessage(getActivity(), "Error retrieving image")
     );
@@ -539,6 +554,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       visualisePlanes = false;
       rotationBar.setProgress(180);
+      scaleBar.setProgress(100);
     } else {
       messageSnackbarHelper.showMessage(
           getActivity(),
@@ -555,7 +571,20 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
       // SeekBar begins at 180 which corresponds to a 0 degree rotation
       // Negative so rotation direction follows SeekBar direction
-      imageRotation = -(i - 180);
+      imageRotation = -(i - 180) - 135;
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {}
+  };
+
+  private final SeekBar.OnSeekBarChangeListener scaleChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+      imageScale = i / 100f;
     }
 
     @Override

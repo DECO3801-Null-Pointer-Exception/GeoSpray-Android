@@ -42,10 +42,17 @@
 
     <SeekBar
         android:id="@+id/rotation_seekbar"
-        android:layout_width="match_parent"
+        android:layout_width="110dp"
         android:layout_height="50dp"
         android:max="360"
         android:progress="180" />
+
+    <SeekBar
+        android:id="@+id/size_seekbar"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:max="200"
+        android:progress="100" />
 
   </LinearLayout>
 </FrameLayout>

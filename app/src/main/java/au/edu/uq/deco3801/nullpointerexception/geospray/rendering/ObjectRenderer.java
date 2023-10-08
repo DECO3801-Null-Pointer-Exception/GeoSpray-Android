@@ -16,16 +16,11 @@ package au.edu.uq.deco3801.nullpointerexception.geospray.rendering;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjData;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -112,10 +107,8 @@ public class ObjectRenderer {
    * Creates and initializes OpenGL resources needed for rendering the model.
    *
    * @param context Context for loading the shader and below-named model and texture assets.
-   * @param objAssetName Name of the OBJ file containing the model geometry.
-   * @param diffuseTextureAssetName Name of the PNG file containing the diffuse texture map.
    */
-  public void createOnGlThread(Context context, String objAssetName, Bitmap textureBitmap)
+  public void createOnGlThread(Context context)
       throws IOException {
     final int vertexShader =
         ShaderUtil.loadGLShader(TAG, context, GLES20.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
@@ -147,42 +140,27 @@ public class ObjectRenderer {
 
     ShaderUtil.checkGLError(TAG, "Program parameters");
 
-    // Read the texture.
+    // Initialise texture.
     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
     GLES20.glGenTextures(textures.length, textures, 0);
     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
 
-    GLES20.glTexParameteri(
-        GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
+    // TODO: https://stackoverflow.com/questions/16077448/texture-is-all-black
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-    GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, textureBitmap, 0);
-    GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
 
-    textureBitmap.recycle();
+    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 
     ShaderUtil.checkGLError(TAG, "Texture loading");
 
-    // Read the obj file.
-    InputStream objInputStream = context.getAssets().open(objAssetName);
-    Obj obj = ObjReader.read(objInputStream);
-
-    // Prepare the Obj so that its structure is suitable for
-    // rendering with OpenGL:
-    // 1. Triangulate it
-    // 2. Make sure that texture coordinates are not ambiguous
-    // 3. Make sure that normals are not ambiguous
-    // 4. Convert it to single-indexed data
-    obj = ObjUtils.convertToRenderable(obj);
-
+    // Initialise model.
     // OpenGL does not use Java arrays. ByteBuffers are used instead to provide data in a format
     // that OpenGL understands.
-
-    // Obtain the data from the OBJ, as direct buffers:
-    IntBuffer wideIndices = ObjData.getFaceVertexIndices(obj, 3);
-    FloatBuffer vertices = ObjData.getVertices(obj);
-    FloatBuffer texCoords = ObjData.getTexCoords(obj, 2);
-    FloatBuffer normals = ObjData.getNormals(obj);
+    IntBuffer wideIndices = IntBuffer.wrap(new int[]{0, 1, 3, 0, 3, 2});
+    FloatBuffer texCoords = FloatBuffer.wrap(new float[]{0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f});
+    FloatBuffer normals = FloatBuffer.wrap(new float[]{-0.0f, 1.0f, -0.0f, -0.0f, 1.0f, -0.0f, -0.0f, 1.0f, -0.0f, -0.0f, 1.0f, -0.0f});
 
     // Convert int indices to shorts for GL ES 2.0 compatibility
     ShortBuffer indices =
@@ -201,14 +179,12 @@ public class ObjectRenderer {
 
     // Load vertex buffer
     verticesBaseAddress = 0;
-    texCoordsBaseAddress = verticesBaseAddress + 4 * vertices.limit();
+    texCoordsBaseAddress = verticesBaseAddress + 4 * 12; // 12 = vertices.limit()
     normalsBaseAddress = texCoordsBaseAddress + 4 * texCoords.limit();
     final int totalBytes = normalsBaseAddress + 4 * normals.limit();
 
     GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferId);
     GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, totalBytes, null, GLES20.GL_STATIC_DRAW);
-    GLES20.glBufferSubData(
-        GLES20.GL_ARRAY_BUFFER, verticesBaseAddress, 4 * vertices.limit(), vertices);
     GLES20.glBufferSubData(
         GLES20.GL_ARRAY_BUFFER, texCoordsBaseAddress, 4 * texCoords.limit(), texCoords);
     GLES20.glBufferSubData(
@@ -274,8 +250,7 @@ public class ObjectRenderer {
    *
    * @param cameraView A 4x4 view matrix, in column-major order.
    * @param cameraPerspective A 4x4 projection matrix, in column-major order.
-   * @param lightIntensity Illumination intensity. Combined with diffuse and specular material
-   *     properties.
+   * @param colorCorrectionRgba Colour correction.
    * @see #setBlendMode(BlendMode)
    * @see #updateModelMatrix(float[], float)
    * @see #setMaterialProperties(float, float, float, float)
@@ -375,21 +350,35 @@ public class ObjectRenderer {
     v[2] *= reciprocalLength;
   }
 
-  // TODO: https://stackoverflow.com/questions/16077448/texture-is-all-black
   public void updateTexture(Bitmap bitmap) {
     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
-    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-    GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
     GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
 
     // Enable transparency
     GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     GLES20.glEnable(GLES20.GL_BLEND);
+
+    GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+
+    bitmap.recycle();
   }
 
   public void rotateImage(int rotation) {
     Matrix.rotateM(this.modelMatrix, 0, rotation, 0.0f, 1.0f, 0.0f);
+  }
+
+  public void resizeImage(float x, float y) {
+    float[] v = {
+            -x, -0.0f, y,
+            x, -0.0f, y,
+            -x, 0.0f, -y,
+            x, 0.0f, -y
+    };
+    FloatBuffer vertices = FloatBuffer.wrap(v);
+
+    GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vertexBufferId);
+    GLES20.glBufferSubData(GLES20.GL_ARRAY_BUFFER, verticesBaseAddress, 4 * vertices.limit(), vertices);
+    GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
   }
 }
