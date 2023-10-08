@@ -118,6 +118,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private Future future = null;
 
   private Button resolveButton;
+  private Button uploadButton;
 
   private StorageReference storageReference;
   private UploadTask uploadTask;
@@ -175,9 +176,15 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
+    rotationBar.setEnabled(false);
 
     scaleBar = rootView.findViewById(R.id.size_seekbar);
     scaleBar.setOnSeekBarChangeListener(scaleChangeListener);
+    scaleBar.setEnabled(false);
+
+    uploadButton = rootView.findViewById(R.id.upload_button);
+    uploadButton.setOnClickListener(v -> onUploadButtonPressed());
+    uploadButton.setEnabled(false);
 
     return rootView;
   }
@@ -419,13 +426,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           // space. This anchor is created on the Plane to place the 3D model
           // in the correct position relative both to the world and to the plane.
           currentAnchor = hit.createAnchor();
-          requireActivity().runOnUiThread(() -> resolveButton.setEnabled(false));
-          messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
-          future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
+          requireActivity().runOnUiThread(() -> {
+            resolveButton.setEnabled(false);
+            uploadButton.setEnabled(true);
+            scaleBar.setEnabled(true);
+            rotationBar.setEnabled(true);
+          });
 
           visualise = false;
-          rotationBar.setProgress(180);
-          scaleBar.setProgress(100);
 
           break;
         }
@@ -489,6 +497,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     resolveButton.setEnabled(true);
   }
 
+  private void onUploadButtonPressed() {
+    messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
+    future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
+
+    requireActivity().runOnUiThread(() -> {
+      uploadButton.setEnabled(false);
+      rotationBar.setEnabled(false);
+      scaleBar.setEnabled(false);
+    });
+  }
+
   private void onHostComplete(String cloudAnchorId, CloudAnchorState cloudState) {
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
@@ -536,6 +555,26 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     ).addOnFailureListener(
             e -> messageSnackbarHelper.showMessage(getActivity(), "Error retrieving image")
     );
+
+    firebaseManager.getImageRotation(shortCode, rotation -> {
+      if (rotation == null) {
+        messageSnackbarHelper.showMessage(
+                getActivity(),
+                "A rotation for the short code " + shortCode + " was not found.");
+        return;
+      }
+      imageRotation = rotation;
+    });
+
+    firebaseManager.getImageScale(shortCode, scale -> {
+      if (scale == null) {
+        messageSnackbarHelper.showMessage(
+                getActivity(),
+                "A scale for the short code " + shortCode + " was not found.");
+        return;
+      }
+      imageScale = scale;
+    });
 
     firebaseManager.getCloudAnchorId(shortCode, cloudAnchorId -> {
       if (cloudAnchorId == null || cloudAnchorId.isEmpty()) {

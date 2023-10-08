@@ -35,6 +35,14 @@ public class FirebaseManager {
     void onCloudAnchorIdAvailable(String cloudAnchorId);
   }
 
+  public interface ImageRotationListener {
+    void onImageRotationAvailable(Integer rotation);
+  }
+
+  public interface ImageScaleListener {
+    void onImageScaleAvailable(Float scale);
+  }
+
   /** Listener for a new short code from the Firebase Database. */
   public interface ShortCodeListener {
     void onShortCodeAvailable(Integer shortCode);
@@ -118,4 +126,50 @@ public class FirebaseManager {
               }
             });
   }
+
+    public void getImageRotation(int shortCode, ImageRotationListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("rotation")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageRotationAvailable(dataSnapshot.getValue(Integer.class));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageRotation was cancelled.",
+                                        error.toException());
+                                listener.onImageRotationAvailable(null);
+                            }
+                        });
+    }
+
+    public void getImageScale(int shortCode, ImageScaleListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("scale")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageScaleAvailable(dataSnapshot.getValue(Float.class));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageScale was cancelled.",
+                                        error.toException());
+                                listener.onImageScaleAvailable(null);
+                            }
+                        });
+    }
 }
