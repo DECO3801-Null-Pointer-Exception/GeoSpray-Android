@@ -43,7 +43,7 @@ public class FirebaseManager {
   private static final String TAG = FirebaseManager.class.getName();
   private static final String KEY_ROOT_DIR = "images";
   private static final String KEY_NEXT_SHORT_CODE = "next_short_code";
-  private static final String KEY_PREFIX = "anchor;";
+  private static final String KEY_PREFIX = "anchor";
   private static final int INITIAL_SHORT_CODE = 142;
   private final DatabaseReference rootRef;
 
