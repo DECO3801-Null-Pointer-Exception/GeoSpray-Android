@@ -15,4 +15,6 @@
     <string name="back_button">Back Button</string>
     <string name="upload_button">Upload Button</string>
     <string name="create_button">Create Button</string>
+    <string name="profile_image_button">Profile Image Button</string>
+    <string name="home_title">Artworks</string>
 </resources>
