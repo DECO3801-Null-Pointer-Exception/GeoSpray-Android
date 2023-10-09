@@ -7,4 +7,12 @@
     <string name="password">password</string>
     <string name="username">username</string>
     <string name="logo_of_geospray">Logo of GeoSpray</string>
+    <string name="image_upload">Image Upload</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+    <string name="submit">Submit</string>
+    <string name="back_button">Back Button</string>
+    <string name="upload_button">Upload Button</string>
+    <string name="create_button">Create Button</string>
 </resources>

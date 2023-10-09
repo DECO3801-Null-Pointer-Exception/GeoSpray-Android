@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
         replaceFrag(new CloudAnchorFragment());
+      } else if (item.getItemId() == R.id.bot_navigation) {
+        replaceFrag(new NavigationFragment());
       }
       return true;
     });
