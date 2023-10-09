@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GeoSpray</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="not_a_user_create_your_account">Not a user? Create your account</string>
+    <string name="login">login</string>
+    <string name="password">password</string>
+    <string name="username">username</string>
+    <string name="logo_of_geospray">Logo of GeoSpray</string>
 </resources>

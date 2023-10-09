@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#484155">
@@ -9,9 +10,9 @@
         android:id="@+id/imageView"
         android:layout_width="228dp"
         android:layout_height="228dp"
-        android:layout_marginStart="92dp"
         android:layout_marginTop="67dp"
-        android:contentDescription="Logo of GeoSpray"
+        android:contentDescription="@string/logo_of_geospray"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
@@ -19,14 +20,15 @@
     <EditText
         android:id="@+id/log_username"
         android:layout_width="208dp"
-        android:layout_height="45sp"
+        android:layout_height="48sp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="101dp"
         android:layout_marginTop="36dp"
-        android:ems="10"
-        android:inputType="text"
         android:autofillHints="username"
-        android:hint="username"
+        android:ems="10"
+        android:hint="@string/username"
+        android:inputType="text"
+        android:textColorHint="#B0BEC5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -34,57 +36,59 @@
     <EditText
         android:id="@+id/log_password"
         android:layout_width="208dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="99dp"
+        android:layout_height="48dp"
         android:layout_marginTop="29dp"
-        android:ems="10"
-        android:inputType="textPassword"
         android:autofillHints="password"
-        android:hint="password"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColorHint="#B0BEC5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_username" />
-
 
 
     <Button
         android:id="@+id/log_login"
         android:layout_width="208sp"
-        android:layout_height="45sp"
-        android:layout_marginStart="102dp"
+        android:layout_height="48sp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/button"
-        android:text="login"
+        android:text="@string/login"
+        android:textColor="#311B92"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_password" />
-
 
 
     <Button
         android:id="@+id/log_forgot_pwd"
         android:layout_width="184dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="114dp"
-        android:layout_marginTop="14dp"
+        android:layout_height="48dp"
         android:background="#00FFFFFF"
-        android:text="Forgot your password?"
+        android:text="@string/forgot_your_password"
         android:textAllCaps="false"
-        android:textColor="@color/light_grey"
+        android:textColor="#B0BEC5"
         android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/log_login" />
+        app:layout_constraintTop_toBottomOf="@+id/log_login"
+        tools:ignore="TextSizeCheck" />
 
     <Button
         android:id="@+id/log_create_user"
         android:layout_width="284dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="63dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="91dp"
         android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
-        android:text="Not a user? Create your account"
+        android:text="@string/not_a_user_create_your_account"
         android:textAllCaps="false"
-        android:textColor="@color/light_grey"
+        android:textColor="#B0BEC5"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/log_forgot_pwd" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
