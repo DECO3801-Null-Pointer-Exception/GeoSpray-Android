@@ -32,4 +32,8 @@
     <!-- All customizations that are NOT specific to a particular API-level can go here. -->
   </style>
 
+  <style name="rounded_corner">
+    <item name="cornerSize">10%</item>
+  </style>
+
 </resources>
