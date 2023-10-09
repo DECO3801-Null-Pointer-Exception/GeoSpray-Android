@@ -18,6 +18,7 @@ package au.edu.uq.deco3801.nullpointerexception.geospray.helpers;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+
+import androidx.annotation.NonNull;
 
 /** Helper class for Firebase storage of cloud anchor IDs. */
 public class FirebaseManager {
@@ -43,14 +46,6 @@ public class FirebaseManager {
     void onImageScaleAvailable(Float scale);
   }
 
-    public interface LatitudeListener {
-        void onLatitudeAvailable(Double latitude);
-    }
-
-    public interface LongitudeListener {
-        void onLongitudeAvailable(Double longitude);
-    }
-
   /** Listener for a new short code from the Firebase Database. */
   public interface ShortCodeListener {
     void onShortCodeAvailable(Integer shortCode);
@@ -59,7 +54,7 @@ public class FirebaseManager {
   private static final String TAG = FirebaseManager.class.getName();
   private static final String KEY_ROOT_DIR = "images";
   private static final String KEY_NEXT_SHORT_CODE = "next_short_code";
-  private static final int INITIAL_SHORT_CODE = 142;
+  private static final int INITIAL_SHORT_CODE = 1;
   private final DatabaseReference rootRef;
 
   /** Constructor that initializes the Firebase connection. */
@@ -77,8 +72,9 @@ public class FirebaseManager {
         .child(KEY_NEXT_SHORT_CODE)
         .runTransaction(
             new Transaction.Handler() {
+              @NonNull
               @Override
-              public Transaction.Result doTransaction(MutableData currentData) {
+              public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 Integer shortCode = currentData.getValue(Integer.class);
                 if (shortCode == null) {
                   // Set the initial short code if one did not exist before.
@@ -121,13 +117,13 @@ public class FirebaseManager {
         .addListenerForSingleValueEvent(
             new ValueEventListener() {
               @Override
-              public void onDataChange(DataSnapshot dataSnapshot) {
+              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Listener invoked when the data is successfully read from Firebase.
                 listener.onCloudAnchorIdAvailable(String.valueOf(dataSnapshot.getValue()));
               }
 
               @Override
-              public void onCancelled(DatabaseError error) {
+              public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(
                     TAG,
                     "The Firebase operation for getCloudAnchorId was cancelled.",
@@ -144,13 +140,13 @@ public class FirebaseManager {
                 .addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // Listener invoked when the data is successfully read from Firebase.
                                 listener.onImageRotationAvailable(dataSnapshot.getValue(Integer.class));
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError error) {
+                            public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e(
                                         TAG,
                                         "The Firebase operation for getImageRotation was cancelled.",
@@ -167,13 +163,13 @@ public class FirebaseManager {
                 .addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // Listener invoked when the data is successfully read from Firebase.
                                 listener.onImageScaleAvailable(dataSnapshot.getValue(Float.class));
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError error) {
+                            public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e(
                                         TAG,
                                         "The Firebase operation for getImageScale was cancelled.",
@@ -183,49 +179,7 @@ public class FirebaseManager {
                         });
     }
 
-    public void getLatitude(int shortCode, LatitudeListener listener) {
-        rootRef
-                .child("" + shortCode)
-                .child("lat")
-                .addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Listener invoked when the data is successfully read from Firebase.
-                                listener.onLatitudeAvailable(dataSnapshot.getValue(Double.class));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError error) {
-                                Log.e(
-                                        TAG,
-                                        "The Firebase operation for getLatitude was cancelled.",
-                                        error.toException());
-                                listener.onLatitudeAvailable(null);
-                            }
-                        });
-    }
-
-    public void getLongitude(int shortCode, LongitudeListener listener) {
-        rootRef
-                .child("" + shortCode)
-                .child("long")
-                .addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                // Listener invoked when the data is successfully read from Firebase.
-                                listener.onLongitudeAvailable(dataSnapshot.getValue(Double.class));
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError error) {
-                                Log.e(
-                                        TAG,
-                                        "The Firebase operation for getLongitude was cancelled.",
-                                        error.toException());
-                                listener.onLongitudeAvailable(null);
-                            }
-                        });
+    public DatabaseReference getRootRef() {
+        return rootRef;
     }
 }
