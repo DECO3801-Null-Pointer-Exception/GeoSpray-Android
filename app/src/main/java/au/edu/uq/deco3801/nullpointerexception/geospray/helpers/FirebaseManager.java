@@ -43,6 +43,14 @@ public class FirebaseManager {
     void onImageScaleAvailable(Float scale);
   }
 
+    public interface LatitudeListener {
+        void onLatitudeAvailable(Double latitude);
+    }
+
+    public interface LongitudeListener {
+        void onLongitudeAvailable(Double longitude);
+    }
+
   /** Listener for a new short code from the Firebase Database. */
   public interface ShortCodeListener {
     void onShortCodeAvailable(Integer shortCode);
@@ -94,10 +102,12 @@ public class FirebaseManager {
   }
 
   /** Stores the cloud anchor ID in the configured Firebase Database. */
-  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale) {
+  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude) {
     rootRef.child("" + shortCode).child("anchor").setValue(cloudAnchorId);
     rootRef.child("" + shortCode).child("rotation").setValue(rotation);
     rootRef.child("" + shortCode).child("scale").setValue(scale);
+    rootRef.child("" + shortCode).child("lat").setValue(latitude);
+    rootRef.child("" + shortCode).child("long").setValue(longitude);
   }
 
   /**
@@ -169,6 +179,52 @@ public class FirebaseManager {
                                         "The Firebase operation for getImageScale was cancelled.",
                                         error.toException());
                                 listener.onImageScaleAvailable(null);
+                            }
+                        });
+    }
+
+    public void getLatitude(int shortCode, LatitudeListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("lat")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onLatitudeAvailable(dataSnapshot.getValue(Double.class));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getLatitude was cancelled.",
+                                        error.toException());
+                                listener.onLatitudeAvailable(null);
+                            }
+                        });
+    }
+
+    public void getLongitude(int shortCode, LongitudeListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("long")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onLongitudeAvailable(dataSnapshot.getValue(Double.class));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getLongitude was cancelled.",
+                                        error.toException());
+                                listener.onLongitudeAvailable(null);
                             }
                         });
     }

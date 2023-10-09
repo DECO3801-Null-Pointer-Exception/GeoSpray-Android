@@ -19,28 +19,29 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Anchor.CloudAnchorState;
 import com.google.ar.core.ArCoreApk;
@@ -57,17 +58,6 @@ import com.google.ar.core.PointCloud;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.CameraPermissionHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.ResolveDialogFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.SnackbarHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.ObjectRenderer;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaneRenderer;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRenderer;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationHelper;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
@@ -78,10 +68,30 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.CameraPermissionHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.LocationPermissionHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.ResolveDialogFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.SnackbarHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.ObjectRenderer;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaneRenderer;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRenderer;
 
 /**
  * Main Fragment for the Cloud Anchors Codelab.
@@ -131,6 +141,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private boolean visualise = true;
   private float imageWidth;
   private float imageHeight;
+  private FusedLocationProviderClient fusedLocationProviderClient;
+  private double latitude;
+  private double longitude;
+  private byte[] preview;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -141,6 +155,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     storageReference = firebaseStorage.getReference();
+
+    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
     // Open file dialog
     // TODO: Ensure "cancel" (back button) works
@@ -153,7 +169,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   @Override
   public View onCreateView(
-      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+          LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     // Inflate from the Layout XML file.
     View rootView = inflater.inflate(R.layout.cloud_anchor_fragment, container, false);
     GLSurfaceView surfaceView = rootView.findViewById(R.id.surfaceView);
@@ -212,6 +228,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           return;
         }
 
+        if (!LocationPermissionHelper.hasLocationPermission(requireActivity())) {
+          LocationPermissionHelper.requestLocationPermission(requireActivity());
+          return;
+        }
+
         // Create the session.
         session = new Session(requireActivity());
 
@@ -221,7 +242,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         session.configure(config);
 
       } catch (UnavailableArcoreNotInstalledException
-          | UnavailableUserDeclinedInstallationException e) {
+               | UnavailableUserDeclinedInstallationException e) {
         message = "Please install ARCore";
         exception = e;
       } catch (UnavailableApkTooOldException e) {
@@ -250,7 +271,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       session.resume();
     } catch (CameraNotAvailableException e) {
       messageSnackbarHelper
-          .showError(requireActivity(), "Camera not available. Try restarting the app.");
+              .showError(requireActivity(), "Camera not available. Try restarting the app.");
       session = null;
       return;
     }
@@ -274,10 +295,21 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
+    if (!LocationPermissionHelper.hasLocationPermission(requireActivity())) {
+      Toast.makeText(requireActivity(), "Location permission is needed to run this application",
+                      Toast.LENGTH_LONG)
+              .show();
+      if (!LocationPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
+        // Permission denied with checking "Do not ask again".
+        LocationPermissionHelper.launchPermissionSettings(requireActivity());
+      }
+      requireActivity().finish();
+    }
+
     if (!CameraPermissionHelper.hasCameraPermission(requireActivity())) {
       Toast.makeText(requireActivity(), "Camera permission is needed to run this application",
-          Toast.LENGTH_LONG)
-          .show();
+                      Toast.LENGTH_LONG)
+              .show();
       if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
         // Permission denied with checking "Do not ask again".
         CameraPermissionHelper.launchPermissionSettings(requireActivity());
@@ -343,7 +375,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       // If not tracking, don't draw 3D objects, show tracking failure reason instead.
       if (camera.getTrackingState() == TrackingState.PAUSED) {
         messageSnackbarHelper.showMessage(
-            getActivity(), TrackingStateHelper.getTrackingFailureReasonString(camera));
+                getActivity(), TrackingStateHelper.getTrackingFailureReasonString(camera));
         return;
       }
 
@@ -415,11 +447,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         Trackable trackable = hit.getTrackable();
         // Creates an anchor if a plane or an oriented point was hit.
         if ((trackable instanceof Plane
-            && ((Plane) trackable).isPoseInPolygon(hit.getHitPose())
-            && (PlaneRenderer.calculateDistanceToPlane(hit.getHitPose(), camera.getPose()) > 0))
-            || (trackable instanceof Point
-            && ((Point) trackable).getOrientationMode()
-            == OrientationMode.ESTIMATED_SURFACE_NORMAL)) {
+                && ((Plane) trackable).isPoseInPolygon(hit.getHitPose())
+                && (PlaneRenderer.calculateDistanceToPlane(hit.getHitPose(), camera.getPose()) > 0))
+                || (trackable instanceof Point
+                && ((Point) trackable).getOrientationMode()
+                == OrientationMode.ESTIMATED_SURFACE_NORMAL)) {
           // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
 
           // Adding an Anchor tells ARCore that it should track this position in
@@ -506,13 +538,38 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       rotationBar.setEnabled(false);
       scaleBar.setEnabled(false);
     });
+
+    // Required to stop getCurrentLocation complaining
+    if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      messageSnackbarHelper.showMessage(getActivity(), "No location permission");
+    }
+
+    fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
+            requireActivity(), location -> {
+              if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+              }
+            }
+    );
+
+    // Screenshot view
+    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
+
+    PixelCopy.request(surfaceView, bitmap, result -> {
+      if (result == PixelCopy.SUCCESS) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        preview = stream.toByteArray();
+      }
+    }, new Handler(Looper.getMainLooper()));
   }
 
   private void onHostComplete(String cloudAnchorId, CloudAnchorState cloudState) {
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale);
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude);
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted. Short code: " + shortCode);
 
           if (imageUri != null) {
@@ -527,6 +584,15 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           } else {
             messageSnackbarHelper.showMessage(getActivity(), "File error");
           }
+
+          StorageReference previewReference = storageReference.child("previews/" + shortCode);
+          uploadTask = previewReference.putBytes(preview);
+
+          uploadTask.addOnFailureListener(
+                  e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
+          ).addOnSuccessListener(
+                  taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
+          );
         } else {
           // Firebase could not provide a short code.
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted, but could not "
