@@ -59,6 +59,22 @@ public class gallery_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyViewHolder) {
             ((MyViewHolder) holder).image1.setImageBitmap(gallery_images.get(position).get(0).getImg());
+//            ((MyViewHolder) holder).image2.setImageBitmap(gallery_images.get(position).get(1).getImg());
+//            ((MyViewHolder) holder).image3.setImageBitmap(gallery_images.get(position).get(2).getImg());
+//            ((MyViewHolder) holder).image4.setImageBitmap(gallery_images.get(position).get(3).getImg());
+//            ((MyViewHolder) holder).image5.setImageBitmap(gallery_images.get(position).get(4).getImg());
+//            ((MyViewHolder) holder).image6.setImageBitmap(gallery_images.get(position).get(5).getImg());
+//            ((MyViewHolder) holder).image7.setImageBitmap(gallery_images.get(position).get(6).getImg());
+//            ((MyViewHolder) holder).image8.setImageBitmap(gallery_images.get(position).get(7).getImg());
+//            ((MyViewHolder) holder).image9.setImageBitmap(gallery_images.get(position).get(8).getImg());
+//            ((MyViewHolder) holder).image10.setImageBitmap(gallery_images.get(position).get(9).getImg());
+//            ((MyViewHolder) holder).image11.setImageBitmap(gallery_images.get(position).get(10).getImg());
+//            ((MyViewHolder) holder).image12.setImageBitmap(gallery_images.get(position).get(11).getImg());
+//            ((MyViewHolder) holder).image13.setImageBitmap(gallery_images.get(position).get(12).getImg());
+//            ((MyViewHolder) holder).image14.setImageBitmap(gallery_images.get(position).get(13).getImg());
+//            ((MyViewHolder) holder).image15.setImageBitmap(gallery_images.get(position).get(14).getImg());
+//            ((MyViewHolder) holder).image16.setImageBitmap(gallery_images.get(position).get(15).getImg());
+
         } else if (holder instanceof LoadingviewHolder) {
             showLoadingView((LoadingviewHolder) holder, position);
         }

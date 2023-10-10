@@ -2,7 +2,7 @@
 <androidx.gridlayout.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/one_grid"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     app:columnCount="2"
@@ -16,21 +16,21 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g2"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
-        android:layout_height="370dp"
+        android:layout_height="380dp"
         android:layout_width="180dp"
         app:layout_columnWeight="1"
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -43,7 +43,7 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -56,13 +56,13 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g5"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -70,20 +70,20 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g6"
         app:shapeAppearanceOverlay="@style/rounded_corner"
-        android:layout_height="370dp"
-        android:layout_width="370dp"
+        android:layout_height="380dp"
+        android:layout_width="380dp"
         app:layout_columnWeight="1"
         app:layout_rowWeight="1"
         app:layout_columnSpan="2"
         app:layout_rowSpan="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -96,13 +96,13 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g8"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -110,26 +110,26 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g9"
         app:shapeAppearanceOverlay="@style/rounded_corner"
-        android:layout_height="370dp"
+        android:layout_height="380dp"
         android:layout_width="180dp"
         app:layout_columnWeight="1"
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g10"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -137,13 +137,13 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g11"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -151,7 +151,7 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -164,13 +164,13 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g13"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -178,7 +178,7 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -186,12 +186,12 @@
         android:id="@+id/g14"
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
-        android:layout_width="370dp"
+        android:layout_width="380dp"
         app:layout_columnWeight="1"
         app:layout_rowWeight="1"
         app:layout_columnSpan="2"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
@@ -204,13 +204,13 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/g16"
-        android:layout_marginStart="10dp"
+
         app:shapeAppearanceOverlay="@style/rounded_corner"
         android:layout_height="180dp"
         android:layout_width="180dp"
@@ -218,7 +218,7 @@
         app:layout_rowWeight="1"
         app:layout_columnSpan="1"
         app:layout_rowSpan="1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         app:layout_gravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/isa"/>

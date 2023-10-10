@@ -60,44 +60,45 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
+    replaceFrag(new ImageGalleryFragment());
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
         replaceFrag(new CloudAnchorFragment());
       } else if (item.getItemId() == R.id.bot_navigation) {
         replaceFrag(new NavigationFragment());
+      } else if (item.getItemId() == R.id.bot_home) {
+        replaceFrag(new ImageGalleryFragment());
       }
       return true;
     });
 
-    SwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_gallery);
-    refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-      @Override
-      public void onRefresh() {
-        refreshLayout.setRefreshing(false);
-      }
-    });
+//    SwipeRefreshLayout refreshLayout = findViewById(R.id.refresh_gallery);
+//    refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//      @Override
+//      public void onRefresh() {
+//        refreshLayout.setRefreshing(false);
+//      }
+//    });
 
-    recyclerView = findViewById(R.id.gallery_recycler);
-    setupGallery();
-    adapter = new gallery_adapter(this, gallery_images);
-    recyclerView.setAdapter(adapter);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override
-      public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-        if (!recyclerView.canScrollVertically(1)) {
-          gallery_images.add(images);
-          adapter.notifyDataSetChanged();
-          Log.i("POSITION", "END");
-        }
-      }
-    });
+//    recyclerView = findViewById(R.id.gallery_recycler);
+//    setupGallery();
+//    adapter = new gallery_adapter(this, gallery_images);
+//    recyclerView.setAdapter(adapter);
+//    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//      @Override
+//      public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//        super.onScrollStateChanged(recyclerView, newState);
+//        if (!recyclerView.canScrollVertically(1)) {
+//          gallery_images.add(images);
+//          adapter.notifyDataSetChanged();
+//          Log.i("POSITION", "END");
+//        }
+//      }
+//    });
   }
 
   private void replaceFrag(Fragment fragment) {
@@ -112,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
     FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
   }
 
-  public void setupGallery() {
-
-    for (int i = 0; i < 16; i++) {
-      images.add(new gallery_image(i, BitmapFactory.decodeResource(getResources(), R.drawable.logo)));
-    }
-    gallery_images.add(images);
-  }
+//  public void setupGallery() {
+//
+//    for (int i = 0; i < 16; i++) {
+//      images.add(new gallery_image(i, BitmapFactory.decodeResource(getResources(), R.drawable.logo)));
+//    }
+//    gallery_images.add(images);
+//  }
 }
