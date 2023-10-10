@@ -23,61 +23,70 @@
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="410dp"
+        android:layout_width="match_parent"
         android:layout_height="654dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="330dp"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30sp"
             android:orientation="vertical"
             tools:visibility="visible">
 
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
+                app:shapeAppearanceOverlay="@style/box_corner"
                 android:id="@+id/create_upload_image"
-                android:layout_width="300sp"
-                android:layout_height="228sp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="67dp"
+                android:layout_marginTop="35dp"
+                android:scaleType="centerCrop"
                 android:background="@drawable/rounded_corner"
                 android:contentDescription="@string/image_upload"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                />
 
             <TextView
+                android:layout_marginBottom="7dp"
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30sp"
                 android:text="@string/title"
-                android:textSize="20sp"
+                android:textSize="23dp"
                 android:textColor="@color/text_color" />
 
             <EditText
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:id="@+id/create_title"
                 android:layout_width="match_parent"
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:background="@drawable/rounded_corner"
+                android:textColor="@color/white"
                 android:ems="10"
                 android:inputType="text"
                 android:autofillHints="title"
-                android:hint="@string/title"/>
+                />
 
             <TextView
+                android:layout_marginBottom="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="30sp"
                 android:text="@string/description"
-                android:textSize="20sp"
-
+                android:textSize="23dp"
                 android:textColor="@color/text_color" />
 
             <EditText
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:id="@+id/create_description"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -86,44 +95,45 @@
                 android:layout_gravity="center"
                 android:gravity="top"
                 android:background="@drawable/rounded_corner"
+                android:textColor="@color/white"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:hint="@string/description"
-
-
                 android:autofillHints="Description" />
 
             <TextView
+                android:layout_marginBottom="7dp"
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30sp"
                 android:text="@string/location"
-                android:textSize="20sp"
+                android:textSize="23dp"
                 android:textColor="@color/text_color" />
 
             <EditText
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:id="@+id/create_location"
                 android:layout_width="match_parent"
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:background="@drawable/rounded_corner"
+                android:textColor="@color/white"
                 android:ems="10"
                 android:inputType="text"
                 android:autofillHints="location"
-                android:hint="@string/location"/>
+                />
 
             <Button
-
                 android:id="@+id/create_upload_submit"
                 android:layout_width="match_parent"
-                android:layout_height="48sp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="35sp"
                 android:layout_marginBottom="60sp"
                 android:backgroundTint="@color/button"
                 android:text="@string/submit"
-                android:textSize="20sp"
+                android:textSize="25dp"
                 android:textAllCaps="false"/>
         </LinearLayout>
     </ScrollView>
