@@ -16,19 +16,15 @@
 
 package au.edu.uq.deco3801.nullpointerexception.geospray;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -74,8 +70,6 @@ import java.io.IOException;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -132,7 +126,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private StorageReference storageReference;
   private UploadTask uploadTask;
-  private Uri imageUri;
   private Bitmap image;
   private SeekBar rotationBar;
   private SeekBar scaleBar;
@@ -146,6 +139,13 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private double longitude;
   private byte[] preview;
 
+  // Arguments from upload page
+  private Bundle args;
+  private byte[] imageBytes;
+  private String title;
+  private String description;
+  private String location;
+
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
@@ -158,13 +158,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
-    // Open file dialog
-    // TODO: Ensure "cancel" (back button) works
-    //  No upload, grid stays, etc.
-    Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
-    selectionDialog.setType("image/*");
-    selectionDialog = Intent.createChooser(selectionDialog, "Select image");
-    sActivityResultLauncher.launch(selectionDialog);
+    args = this.getArguments();
   }
 
   @Override
@@ -201,6 +195,19 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     uploadButton = rootView.findViewById(R.id.upload_button);
     uploadButton.setOnClickListener(v -> onUploadButtonPressed());
     uploadButton.setEnabled(false);
+
+    if (args != null) {
+      imageBytes = args.getByteArray("image");
+      title = args.getString("title");
+      description = args.getString("description");
+      location = args.getString("location");
+
+      if (imageBytes != null) {
+        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        imageHeight = image.getHeight();
+        imageWidth = image.getWidth();
+      }
+    }
 
     return rootView;
   }
@@ -473,29 +480,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
   }
 
-  ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
-          new ActivityResultContracts.StartActivityForResult(),
-          result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-              Intent data = result.getData();
-
-              if (data != null) {
-                imageUri = data.getData();
-
-                try {
-                  image = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
-                  imageWidth = image.getWidth();
-                  imageHeight = image.getHeight();
-                } catch (IOException e) {
-                  messageSnackbarHelper.showMessage(getActivity(), "Error: " + e);
-                }
-              } else {
-                messageSnackbarHelper.showMessage(getActivity(), "File error");
-              }
-            }
-          }
-  );
-
   /**
    * Checks if we detected at least one plane.
    */
@@ -569,21 +553,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude);
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location);
           messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted. Short code: " + shortCode);
 
-          if (imageUri != null) {
-            StorageReference imageReference = storageReference.child("images/" + shortCode);
-            uploadTask = imageReference.putFile(imageUri);
+          StorageReference imageReference = storageReference.child("images/" + shortCode);
+          uploadTask = imageReference.putBytes(imageBytes);
 
-            uploadTask.addOnFailureListener(
-                    e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
-            ).addOnSuccessListener(
-                    taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
-            );
-          } else {
-            messageSnackbarHelper.showMessage(getActivity(), "File error");
-          }
+          uploadTask.addOnFailureListener(
+                  e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
+          ).addOnSuccessListener(
+                  taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
+          );
 
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
           uploadTask = previewReference.putBytes(preview);
