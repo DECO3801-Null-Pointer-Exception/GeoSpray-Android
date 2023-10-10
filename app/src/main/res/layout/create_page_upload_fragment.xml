@@ -17,11 +17,12 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:srcCompat="@drawable/back_arrow"
-        android:contentDescription="@string/back_button"
-        />
+        android:contentDescription="@string/back_button" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="410dp"
         android:layout_height="654dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -79,11 +80,14 @@
             <EditText
                 android:id="@+id/create_description"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
+                android:layout_height="150dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:layout_gravity="center"
+                android:gravity="top"
                 android:background="@drawable/rounded_corner"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:hint="@string/description"
 
 
@@ -112,14 +116,15 @@
             <Button
 
                 android:id="@+id/create_upload_submit"
-                android:layout_width="208sp"
+                android:layout_width="match_parent"
                 android:layout_height="48sp"
                 android:layout_gravity="center"
                 android:layout_marginTop="35sp"
                 android:layout_marginBottom="60sp"
                 android:backgroundTint="@color/button"
                 android:text="@string/submit"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textAllCaps="false"/>
         </LinearLayout>
     </ScrollView>
 
