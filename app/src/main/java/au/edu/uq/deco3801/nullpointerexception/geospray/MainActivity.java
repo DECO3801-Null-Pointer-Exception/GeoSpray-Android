@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(new NavigationFragment());
       } else if (item.getItemId() == R.id.bot_home) {
         replaceFrag(new ImageGalleryFragment());
+      } else if (item.getItemId() == R.id.bot_profile) {
+        replaceFrag(new ProfileFragment());
       }
       return true;
     });
