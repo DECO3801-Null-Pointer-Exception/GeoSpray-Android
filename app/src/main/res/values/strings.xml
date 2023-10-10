@@ -15,6 +15,17 @@
     <string name="back_button">Back Button</string>
     <string name="upload_button">Upload Button</string>
     <string name="create_button">Create Button</string>
-    <string name="profile_image_button">Profile Image Button</string>
+    <string name="profile_picture_button">Profile Picture Button</string>
     <string name="home_title">Artworks</string>
+    <string name="create_account">Create account</string>
+    <string name="new_account_profile_picture">New account profile picture</string>
+    <string name="user_handle">"@user_handle"</string>
+    <string name="down_arrow">Expand user description button</string>
+    <string name="header_image">Header image</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="example_username">Username</string>
+    <string name="following">" Following"</string>
+    <string name="followers">" Followers"</string>
+    <string name="empty_space">" "</string>
+    <string name="number_placeholder">xxx</string>
 </resources>

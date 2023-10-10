@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#484155">
+
+    <ImageView
+        android:id="@+id/header_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="center"
+        android:contentDescription="@string/header_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/isa" />
+
+    <ImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="150dp"
+        android:contentDescription="@string/profile_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/profile_picture" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/example_username"
+        android:textSize="20sp"
+        android:textColor="@color/text_color"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_picture"/>
+
+    <TextView
+        android:id="@+id/user_handle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/user_handle"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username"/>
+
+    <TextView
+        android:id="@+id/follow_text_centre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/empty_space"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_handle"/>
+
+    <TextView
+        android:id="@+id/following_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/following"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintEnd_toStartOf="@+id/follow_text_centre"
+        app:layout_constraintTop_toBottomOf="@id/user_handle"/>
+
+    <!-- Can actively change the text here to reflect the following number from the database -->
+    <TextView
+        android:id="@+id/following_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/number_placeholder"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        app:layout_constraintEnd_toStartOf="@id/following_text"
+        app:layout_constraintTop_toBottomOf="@id/user_handle"/>
+
+    <!-- Can actively change the text here to reflect the follower number from the database -->
+    <TextView
+        android:id="@+id/followers_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/number_placeholder"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toEndOf="@+id/follow_text_centre"
+        app:layout_constraintTop_toBottomOf="@id/user_handle"/>
+
+    <TextView
+        android:id="@+id/followers_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/followers"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toEndOf="@id/followers_number"
+        app:layout_constraintTop_toBottomOf="@id/user_handle"/>
+
+    <ImageButton
+        android:id="@+id/expand_description_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="#484155"
+        android:contentDescription="@string/down_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/follow_text_centre"
+        app:srcCompat="@drawable/down_arrow" />
+
+
+    <!-- TODO: Implement expandable description -->
+
+    <!-- TODO: Implement gallery of images -->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
