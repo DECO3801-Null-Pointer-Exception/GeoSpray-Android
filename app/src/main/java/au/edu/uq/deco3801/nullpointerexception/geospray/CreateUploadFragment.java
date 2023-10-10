@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class CreateUploadFragment extends Fragment {
     private EditText location;
     private Bitmap bitmap;
     private View rootView;
+    private TextView imageText;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -46,6 +48,8 @@ public class CreateUploadFragment extends Fragment {
 
         imageView = rootView.findViewById(R.id.create_upload_image);
         imageView.setOnClickListener(v -> onImagePressed());
+
+        imageText = rootView.findViewById(R.id.create_upload_image_text);
 
         Button submitButton = rootView.findViewById(R.id.create_upload_submit);
         submitButton.setOnClickListener(v -> onSubmitButtonPressed());
@@ -80,6 +84,7 @@ public class CreateUploadFragment extends Fragment {
                             // Set preview image
                             bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), imageUri);
                             imageView.setImageBitmap(bitmap);
+                            imageText.setVisibility(View.GONE);
                         } catch (IOException e) {
                             // getBitmap error
                         }

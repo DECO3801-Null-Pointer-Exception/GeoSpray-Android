@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,20 +36,30 @@
                 app:layout_constraintBottom_toTopOf="@id/scrollView"
                 app:srcCompat="@drawable/back_arrow"
                 android:contentDescription="@string/back_button"/>
-
-
-            <com.google.android.material.imageview.ShapeableImageView
-                app:shapeAppearanceOverlay="@style/box_corner"
-                android:id="@+id/create_upload_image"
+            
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="200sp"
-                android:layout_gravity="center"
                 android:layout_marginTop="35sp"
-                android:layout_marginHorizontal="30sp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/rounded_corner"
-                android:contentDescription="@string/image_upload"
-                />
+                android:layout_marginHorizontal="30sp">
+                <com.google.android.material.imageview.ShapeableImageView
+                    app:shapeAppearanceOverlay="@style/box_corner"
+                    android:id="@+id/create_upload_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/rounded_corner"
+                    android:contentDescription="@string/image_upload" />
+                
+                <TextView
+                    android:id="@+id/create_upload_image_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload image"
+                    android:layout_gravity="center"
+                    android:textSize="23sp"/>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/textView2"
