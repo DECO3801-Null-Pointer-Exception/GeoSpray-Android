@@ -17,48 +17,63 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    <EditText
-        android:id="@+id/log_username"
-        android:layout_width="208dp"
-        android:layout_height="48sp"
-        android:layout_alignParentTop="true"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/username_textField"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:autofillHints="username"
-        android:ems="10"
         android:hint="@string/username"
-        android:inputType="text"
         android:textColorHint="#B0BEC5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingStart="4dp"
+            android:background="@drawable/rounded_corner"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/log_password"
-        android:layout_width="208dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="29dp"
-        android:autofillHints="password"
-        android:ems="10"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_textField"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:hint="@string/password"
-        android:inputType="textPassword"
         android:textColorHint="#B0BEC5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/log_username" />
+        app:layout_constraintTop_toBottomOf="@+id/username_textField">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/log_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingStart="4dp"
+            android:background="@drawable/rounded_corner"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <Button
         android:id="@+id/log_login"
-        android:layout_width="208sp"
+        android:layout_width="300sp"
         android:layout_height="48sp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/button"
         android:text="@string/login"
+        android:textAllCaps="false"
         android:textColor="#311B92"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/log_password" />
+        app:layout_constraintTop_toBottomOf="@+id/password_textField" />
 
 
     <Button
@@ -79,7 +94,7 @@
         android:id="@+id/log_create_user"
         android:layout_width="284dp"
         android:layout_height="48dp"
-        android:layout_marginTop="91dp"
+        android:layout_marginTop="120dp"
         android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
         android:text="@string/not_a_user_create_your_account"
