@@ -18,11 +18,9 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,11 +30,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
-
 import au.edu.uq.deco3801.nullpointerexception.geospray.databinding.ActivityMainBinding;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_adapter;
@@ -66,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
-        replaceFrag(new CloudAnchorFragment());
+        replaceFrag(new CreateOptionsFragment());
       } else if (item.getItemId() == R.id.bot_navigation) {
         replaceFrag(new NavigationFragment());
       } else if (item.getItemId() == R.id.bot_home) {
@@ -101,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 //    });
   }
 
-  private void replaceFrag(Fragment fragment) {
+  protected void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction fmtrans = fm.beginTransaction().replace(R.id.frame_layout, fragment);
     fmtrans.commit();
