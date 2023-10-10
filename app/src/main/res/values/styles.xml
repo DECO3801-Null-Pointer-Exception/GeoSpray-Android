@@ -36,4 +36,9 @@
     <item name="cornerSize">10%</item>
   </style>
 
+  <style name="box_corner">
+    <item name="cornerSize">5%</item>
+  </style>
+
+
 </resources>
