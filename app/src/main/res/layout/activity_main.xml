@@ -35,7 +35,6 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/botnav"
-            android:paddingTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#484155"
@@ -46,7 +45,7 @@
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav"
             app:itemIconTint="@xml/bottom_navigation_selector"
-            app:itemIconSize="32dp"
+            app:itemIconSize="25dp"
             />
 
         <FrameLayout

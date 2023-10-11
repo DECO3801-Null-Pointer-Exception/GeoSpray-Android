@@ -40,10 +40,6 @@ public class ImageGalleryFragment extends Fragment {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
-    // Args
-    private Bundle args;
-    private int shortCode;
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -56,20 +52,12 @@ public class ImageGalleryFragment extends Fragment {
         gallery_images = new ArrayList<>();
 
         adapter = new gallery_adapter(context, gallery_images);
-
-        args = this.getArguments();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.image_gallery, container, false);
-
-        if (args != null) {
-            shortCode = args.getInt("shortcode");
-        }
-
-        // Retrieve title, location, description from shortCode
 
         SwipeRefreshLayout refreshLayout = rootView.findViewById(R.id.refresh_gallery2);
         refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));

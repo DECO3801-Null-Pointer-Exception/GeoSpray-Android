@@ -94,6 +94,11 @@ public class CreateUploadFragment extends Fragment {
     );
 
     private void onSubmitButtonPressed() {
+        if (bitmap == null) {
+            // Error
+            return;
+        }
+
         // Close keyboard
         InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);

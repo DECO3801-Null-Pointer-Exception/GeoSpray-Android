@@ -46,6 +46,18 @@ public class FirebaseManager {
     void onImageScaleAvailable(Float scale);
   }
 
+    public interface ImageTitleListener {
+        void onImageTitleAvailable(String title);
+    }
+
+    public interface ImageDescriptionListener {
+        void onImageDescriptionAvailable(String description);
+    }
+
+    public interface ImageLocationListener {
+        void onImageLocationAvailable(String location);
+    }
+
   /** Listener for a new short code from the Firebase Database. */
   public interface ShortCodeListener {
     void onShortCodeAvailable(Integer shortCode);
@@ -178,6 +190,75 @@ public class FirebaseManager {
                                         "The Firebase operation for getImageScale was cancelled.",
                                         error.toException());
                                 listener.onImageScaleAvailable(null);
+                            }
+                        });
+    }
+
+    public void getImageTitle(int shortCode, ImageTitleListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("title")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageTitleAvailable(dataSnapshot.getValue(String.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageTitle was cancelled.",
+                                        error.toException());
+                                listener.onImageTitleAvailable(null);
+                            }
+                        });
+    }
+
+    public void getImageDescription(int shortCode, ImageDescriptionListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("description")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageDescriptionAvailable(dataSnapshot.getValue(String.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageDescription was cancelled.",
+                                        error.toException());
+                                listener.onImageDescriptionAvailable(null);
+                            }
+                        });
+    }
+
+    public void getImageLocation(int shortCode, ImageLocationListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("location")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageLocationAvailable(dataSnapshot.getValue(String.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageLocation was cancelled.",
+                                        error.toException());
+                                listener.onImageLocationAvailable(null);
                             }
                         });
     }
