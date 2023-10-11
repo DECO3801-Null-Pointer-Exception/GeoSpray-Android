@@ -94,7 +94,11 @@ public class CreateUploadFragment extends Fragment {
     );
 
     private void onSubmitButtonPressed() {
-        if (bitmap == null) {
+        String titleText = title.getText().toString();
+        String descriptionText = description.getText().toString();
+        String locationText = location.getText().toString();
+
+        if (bitmap == null || titleText.isEmpty() || descriptionText.isEmpty() || locationText.isEmpty()) {
             // Error
             return;
         }
@@ -112,9 +116,9 @@ public class CreateUploadFragment extends Fragment {
         bitmap.recycle();
 
         args.putByteArray("image", stream.toByteArray());
-        args.putString("title", title.getText().toString());
-        args.putString("description", description.getText().toString());
-        args.putString("location", location.getText().toString());
+        args.putString("title", titleText);
+        args.putString("description", descriptionText);
+        args.putString("location", locationText);
 
         cloudAnchorFragment.setArguments(args);
 
