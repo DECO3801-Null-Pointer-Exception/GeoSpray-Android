@@ -65,6 +65,12 @@ public class ImageGalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.image_gallery, container, false);
 
+        if (args != null) {
+            shortCode = args.getInt("shortcode");
+        }
+
+        // Retrieve title, location, description from shortCode
+
         SwipeRefreshLayout refreshLayout = rootView.findViewById(R.id.refresh_gallery2);
         refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
 
@@ -103,10 +109,6 @@ public class ImageGalleryFragment extends Fragment {
                         error.toException());
             }
         });
-
-        if (args != null) {
-            shortCode = args.getInt("shortcode");
-        }
 
         return rootView;
     }

@@ -139,6 +139,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private double longitude;
   private byte[] preview;
 
+  private Bitmap chosenImage;
+
   // Arguments from upload page
   private Bundle args;
   private byte[] imageBytes;
@@ -203,7 +205,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       location = args.getString("location");
 
       if (imageBytes != null) {
-        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        chosenImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        image = chosenImage;
         imageHeight = image.getHeight();
         imageWidth = image.getWidth();
       }
@@ -506,11 +509,13 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
 
     visualise = true;
+    image = chosenImage;
 
     rotationBar.setProgress(180);
     scaleBar.setProgress(100);
 
     resolveButton.setEnabled(true);
+    uploadButton.setEnabled(false);
   }
 
   private void onUploadButtonPressed() {
