@@ -37,7 +37,7 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_image;
  * the fragment and attaches it to this Activity.
  */
 public class MainActivity extends AppCompatActivity {
-  ActivityMainBinding binding;
+  private ActivityMainBinding binding;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(new ImageGalleryFragment());
       } else if (item.getItemId() == R.id.bot_profile) {
         replaceFrag(new ProfileFragment());
+      } else if (item.getItemId() == R.id.bot_search) {
+        replaceFrag(new PreviewFragment());
       }
       return true;
     });
   }
 
-  protected void replaceFrag(Fragment fragment) {
+  public void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction fmtrans = fm.beginTransaction().replace(R.id.frame_layout, fragment);
     fmtrans.commit();

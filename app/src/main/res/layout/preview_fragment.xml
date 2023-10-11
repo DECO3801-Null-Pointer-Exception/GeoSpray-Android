@@ -131,7 +131,7 @@
                 android:background="@drawable/rounded_corner"
                 android:inputType="text"
                 android:hint="Leave a comment..."
-                android:textSize="10dp"
+                android:textSize="11sp"
                 android:layout_gravity="center"
                 android:padding="5dp"
                 android:layout_marginStart="10dp"/>
