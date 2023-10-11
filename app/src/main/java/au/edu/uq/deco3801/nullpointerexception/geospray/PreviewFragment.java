@@ -46,7 +46,7 @@ public class PreviewFragment extends Fragment {
         }
 
         // Retrieve image, title, location, description from shortCode
-        StorageReference imageReference = storageReference.child("images/" + shortCode);
+        StorageReference imageReference = storageReference.child("previews/" + shortCode);
         imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
                 bytes -> ((ImageView) rootView.findViewById(R.id.preview_image)).setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length))
         );
