@@ -206,9 +206,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       if (imageBytes != null) {
         chosenImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        image = chosenImage;
-        imageHeight = image.getHeight();
-        imageWidth = image.getWidth();
       }
     }
 
@@ -467,6 +464,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           // Adding an Anchor tells ARCore that it should track this position in
           // space. This anchor is created on the Plane to place the 3D model
           // in the correct position relative both to the world and to the plane.
+          image = chosenImage;
+          imageHeight = chosenImage.getHeight();
+          imageWidth = chosenImage.getWidth();
+
           currentAnchor = hit.createAnchor();
           requireActivity().runOnUiThread(() -> {
             resolveButton.setEnabled(false);
@@ -509,7 +510,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
 
     visualise = true;
-    image = chosenImage;
+    image = null;
 
     rotationBar.setProgress(180);
     scaleBar.setProgress(100);
@@ -590,12 +591,16 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   private void onResolveButtonPressed() {
+    image = null;
+
     ResolveDialogFragment dialog = ResolveDialogFragment.createWithOkListener(
         this::onShortCodeEntered);
     dialog.show(requireActivity().getSupportFragmentManager(), "Resolve");
   }
 
   private void onShortCodeEntered(int shortCode) {
+    resolveButton.setEnabled(false);
+
     StorageReference imageReference = storageReference.child("images/" + shortCode);
     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
             bytes -> {
@@ -634,7 +639,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
             "A Cloud Anchor ID for the short code " + shortCode + " was not found.");
         return;
       }
-      resolveButton.setEnabled(false);
       future = session.resolveCloudAnchorAsync(
           cloudAnchorId, (anchor, cloudState) -> onResolveComplete(anchor, cloudState, shortCode));
     });
