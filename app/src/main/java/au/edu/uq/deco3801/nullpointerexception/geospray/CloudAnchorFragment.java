@@ -79,7 +79,6 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationH
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.LocationPermissionHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.ResolveDialogFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.SnackbarHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer;
@@ -102,7 +101,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private boolean installRequested;
 
   private Session session;
-  private final SnackbarHelper messageSnackbarHelper = new SnackbarHelper();
   private DisplayRotationHelper displayRotationHelper;
   private TrackingStateHelper trackingStateHelper;
   private TapHelper tapHelper;
@@ -147,6 +145,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private String title;
   private String description;
   private String location;
+
+  private Toast currentToast;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -250,25 +250,26 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       } catch (UnavailableArcoreNotInstalledException
                | UnavailableUserDeclinedInstallationException e) {
-        message = "Please install ARCore";
+        message = "Please install ARCore.";
         exception = e;
       } catch (UnavailableApkTooOldException e) {
-        message = "Please update ARCore";
+        message = "Please update ARCore.";
         exception = e;
       } catch (UnavailableSdkTooOldException e) {
-        message = "Please update this app";
+        message = "Please update this app.";
         exception = e;
       } catch (UnavailableDeviceNotCompatibleException e) {
-        message = "This device does not support AR";
+        message = "This device does not support AR.";
         exception = e;
       } catch (Exception e) {
-        message = "Failed to create AR session";
+        message = "Failed to create AR session.";
         exception = e;
       }
 
       if (message != null) {
-        messageSnackbarHelper.showError(requireActivity(), message);
-        Log.e(TAG, "Exception creating session", exception);
+        String finalMessage = message;
+        requireActivity().runOnUiThread(() -> showToast(finalMessage));
+        Log.e(TAG, "Exception creating session.", exception);
         return;
       }
     }
@@ -277,8 +278,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     try {
       session.resume();
     } catch (CameraNotAvailableException e) {
-      messageSnackbarHelper
-              .showError(requireActivity(), "Camera not available. Try restarting the app.");
+      requireActivity().runOnUiThread(() -> showToast("Camera not available. Try restarting the app."));
       session = null;
       return;
     }
@@ -303,9 +303,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
     if (!LocationPermissionHelper.hasLocationPermission(requireActivity())) {
-      Toast.makeText(requireActivity(), "Location permission is needed to run this application",
-                      Toast.LENGTH_LONG)
-              .show();
+      requireActivity().runOnUiThread(() -> showToast("Location permission is needed to run this application."));
       if (!LocationPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
         // Permission denied with checking "Do not ask again".
         LocationPermissionHelper.launchPermissionSettings(requireActivity());
@@ -314,9 +312,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
 
     if (!CameraPermissionHelper.hasCameraPermission(requireActivity())) {
-      Toast.makeText(requireActivity(), "Camera permission is needed to run this application",
-                      Toast.LENGTH_LONG)
-              .show();
+      requireActivity().runOnUiThread(() -> showToast("Camera permission is needed to run this application."));
       if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
         // Permission denied with checking "Do not ask again".
         CameraPermissionHelper.launchPermissionSettings(requireActivity());
@@ -339,7 +335,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       virtualObject.createOnGlThread(getContext());
       virtualObject.setMaterialProperties(1.0f, 0.0f, 0.0f, 0.0f);
     } catch (IOException e) {
-      Log.e(TAG, "Failed to read an asset file", e);
+      Log.e(TAG, "Failed to read an asset file.", e);
     }
   }
 
@@ -381,8 +377,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       // If not tracking, don't draw 3D objects, show tracking failure reason instead.
       if (camera.getTrackingState() == TrackingState.PAUSED) {
-        messageSnackbarHelper.showMessage(
-                getActivity(), TrackingStateHelper.getTrackingFailureReasonString(camera));
+        requireActivity().runOnUiThread(() -> showToast(TrackingStateHelper.getTrackingFailureReasonString(camera)));
         return;
       }
 
@@ -411,8 +406,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       // No tracking error at this point. If we didn't detect any plane, show searchingPlane message.
       if (!hasTrackingPlane()) {
-        messageSnackbarHelper.showMessage(getActivity(), "Searching for surfaces...");
-        visualise = true;
+        requireActivity().runOnUiThread(() -> showToast("Searching for surfaces..."));
       }
 
       // Visualize planes.
@@ -437,7 +431,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       }
     } catch (Throwable t) {
       // Avoid crashing the application due to unhandled exceptions.
-      Log.e(TAG, "Exception on the OpenGL thread", t);
+      Log.e(TAG, "Exception on the OpenGL thread.", t);
     }
   }
 
@@ -520,9 +514,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   private void onUploadButtonPressed() {
-    messageSnackbarHelper.showMessage(getActivity(), "Now hosting anchor...");
+    requireActivity().runOnUiThread(() -> showToast("Now hosting anchor..."));
     future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
+    // TODO: check necessity
     requireActivity().runOnUiThread(() -> {
       uploadButton.setEnabled(false);
       rotationBar.setEnabled(false);
@@ -531,7 +526,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     // Required to stop getCurrentLocation complaining
     if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      messageSnackbarHelper.showMessage(getActivity(), "No location permission");
+      requireActivity().runOnUiThread(() -> showToast("No location permission."));
     }
 
     fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
@@ -560,33 +555,32 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
           firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location);
-          messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted. Short code: " + shortCode);
+          requireActivity().runOnUiThread(() -> showToast("Cloud anchor hosted. Short code: " + shortCode + "."));
 
           StorageReference imageReference = storageReference.child("images/" + shortCode);
           uploadTask = imageReference.putBytes(imageBytes);
 
           uploadTask.addOnFailureListener(
-                  e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
+                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed: " + e + "."))
           ).addOnSuccessListener(
-                  taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
+                  taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
           );
 
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
           uploadTask = previewReference.putBytes(preview);
 
           uploadTask.addOnFailureListener(
-                  e -> messageSnackbarHelper.showMessage(getActivity(), "Upload failed: " + e)
+                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed: " + e + "."))
           ).addOnSuccessListener(
-                  taskSnapshot -> messageSnackbarHelper.showMessage(getActivity(), "Upload successful")
+                  taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
           );
         } else {
           // Firebase could not provide a short code.
-          messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Hosted, but could not "
-              + "get a short code from Firebase.");
+          requireActivity().runOnUiThread(() -> showToast("Cloud anchor hosted, but could not get a short code from Firebase."));
         }
       });
     } else {
-      messageSnackbarHelper.showMessage(getActivity(), "Error while hosting: " + cloudState.toString());
+      requireActivity().runOnUiThread(() -> showToast("Error while hosting: " + cloudState.toString()));
     }
   }
 
@@ -609,14 +603,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
               imageHeight = image.getHeight();
             }
     ).addOnFailureListener(
-            e -> messageSnackbarHelper.showMessage(getActivity(), "Error retrieving image")
+            e -> requireActivity().runOnUiThread(() -> showToast("Error retrieving image."))
     );
 
     firebaseManager.getImageRotation(shortCode, rotation -> {
       if (rotation == null) {
-        messageSnackbarHelper.showMessage(
-                getActivity(),
-                "A rotation for the short code " + shortCode + " was not found.");
+        requireActivity().runOnUiThread(() -> showToast("A rotation for the short code " + shortCode + " was not found."));
         return;
       }
       imageRotation = rotation;
@@ -624,9 +616,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     firebaseManager.getImageScale(shortCode, scale -> {
       if (scale == null) {
-        messageSnackbarHelper.showMessage(
-                getActivity(),
-                "A scale for the short code " + shortCode + " was not found.");
+        requireActivity().runOnUiThread(() -> showToast("A scale for the short code " + shortCode + " was not found."));
         return;
       }
       imageScale = scale;
@@ -634,9 +624,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     firebaseManager.getCloudAnchorId(shortCode, cloudAnchorId -> {
       if (cloudAnchorId == null || cloudAnchorId.isEmpty()) {
-        messageSnackbarHelper.showMessage(
-            getActivity(),
-            "A Cloud Anchor ID for the short code " + shortCode + " was not found.");
+        requireActivity().runOnUiThread(() -> showToast("A cloud anchor ID for the short code " + shortCode + " was not found."));
         return;
       }
       future = session.resolveCloudAnchorAsync(
@@ -646,19 +634,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private void onResolveComplete(Anchor anchor, CloudAnchorState cloudState, int shortCode) {
     if (cloudState == CloudAnchorState.SUCCESS) {
-      messageSnackbarHelper.showMessage(getActivity(), "Cloud Anchor Resolved. Short code: " + shortCode);
+      requireActivity().runOnUiThread(() -> showToast("Cloud anchor resolved. Short code: " + shortCode));
       currentAnchor = anchor;
 
       visualise = false;
       rotationBar.setProgress(180);
       scaleBar.setProgress(100);
     } else {
-      messageSnackbarHelper.showMessage(
-          getActivity(),
-          "Error while resolving anchor with short code "
-              + shortCode
-              + ". Error: "
-              + cloudState.toString());
+      requireActivity().runOnUiThread(() -> showToast("Error while resolving anchor with short code " + shortCode + ". Error: " + cloudState.toString()));
       resolveButton.setEnabled(true);
     }
   }
@@ -690,4 +673,18 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
   };
+
+  // Hides previous toast then shows a new one
+  private void showToast(String message) {
+    if (message.isEmpty()) {
+      return;
+    }
+
+    if (currentToast != null) {
+      currentToast.cancel();
+    }
+
+    currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT);
+    currentToast.show();
+  }
 }

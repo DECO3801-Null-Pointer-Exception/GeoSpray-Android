@@ -25,14 +25,12 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.SnackbarHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_adapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_image;
 
 public class ImageGalleryFragment extends Fragment {
     private static final String TAG = ImageGalleryFragment.class.getName();
 
-    private SnackbarHelper messageSnackbarHelper;
     private RecyclerView recyclerView;
     private gallery_adapter adapter;
     private ArrayList<gallery_image> gallery_images;
@@ -44,7 +42,6 @@ public class ImageGalleryFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        messageSnackbarHelper = new SnackbarHelper();
         firebaseManager = new FirebaseManager(context);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();

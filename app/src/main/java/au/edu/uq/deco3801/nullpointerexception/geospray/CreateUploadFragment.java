@@ -35,6 +35,7 @@ public class CreateUploadFragment extends Fragment {
     private Bitmap bitmap;
     private View rootView;
     private TextView imageText;
+    private Toast currentToast;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -100,17 +101,16 @@ public class CreateUploadFragment extends Fragment {
         String locationText = location.getText().toString();
 
         if (bitmap == null) {
-            // TODO: Error
-            Toast.makeText(getContext(), "Please choose an image", Toast.LENGTH_SHORT).show();
+            showToast("Please choose an image.");
             return;
         } else if (titleText.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a title", Toast.LENGTH_SHORT).show();
+            showToast("Please enter a title.");
             return;
         } else if (descriptionText.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a description", Toast.LENGTH_SHORT).show();
+            showToast("Please enter a description.");
             return;
         } else if (locationText.isEmpty()) {
-            Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
+            showToast("Please enter a location.");
             return;
         }
 
@@ -134,5 +134,14 @@ public class CreateUploadFragment extends Fragment {
         cloudAnchorFragment.setArguments(args);
 
         ((MainActivity) requireActivity()).replaceFrag(cloudAnchorFragment);
+    }
+
+    private void showToast(String message) {
+        if (currentToast != null) {
+            currentToast.cancel();
+        }
+
+        currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT);
+        currentToast.show();
     }
 }

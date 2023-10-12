@@ -45,10 +45,12 @@ public class PreviewFragment extends Fragment {
             shortCode = args.getInt("shortcode");
         }
 
+        ImageView previewImage = rootView.findViewById(R.id.preview_image);
+
         // Retrieve image, title, location, description from shortCode
         StorageReference imageReference = storageReference.child("previews/" + shortCode);
         imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
-                bytes -> ((ImageView) rootView.findViewById(R.id.preview_image)).setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length))
+                bytes -> previewImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length))
         );
 
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
@@ -60,6 +62,11 @@ public class PreviewFragment extends Fragment {
         // Convert 100 dp to px
         behavior.setPeekHeight((int) (100 * getResources().getDisplayMetrics().density));
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        previewImage.setOnClickListener(view -> behavior.setState(BottomSheetBehavior.STATE_COLLAPSED));
+
+        // Prevent tapping bottom sheet closing itself
+        rootView.findViewById(R.id.bottom_sheet).setOnClickListener(null);
 
         return rootView;
     }
