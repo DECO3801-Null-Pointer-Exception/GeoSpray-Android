@@ -67,14 +67,13 @@ public class CreateUploadFragment extends Fragment {
 
     private void onImagePressed() {
         // Open file dialog
-        // TODO: Ensure "cancel" (back button) works
-        //  No upload, grid stays, etc.
         Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
         selectionDialog.setType("image/*");
         selectionDialog = Intent.createChooser(selectionDialog, "Select image");
         sActivityResultLauncher.launch(selectionDialog);
     }
 
+    // File dialog handler
     ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -90,7 +89,7 @@ public class CreateUploadFragment extends Fragment {
                             imageView.setImageBitmap(bitmap);
                             imageText.setVisibility(View.GONE);
                         } catch (IOException e) {
-                            // getBitmap error
+                            showToast("Error getting image: " + e + ".");
                         }
                     }
                 }
