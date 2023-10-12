@@ -1,4 +1,4 @@
-package au.edu.uq.deco3801.nullpointerexception.geospray;
+package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
 public class PreviewFragment extends Fragment {

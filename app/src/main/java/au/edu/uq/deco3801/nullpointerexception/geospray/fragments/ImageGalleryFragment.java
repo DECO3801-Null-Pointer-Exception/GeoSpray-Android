@@ -1,4 +1,4 @@
-package au.edu.uq.deco3801.nullpointerexception.geospray;
+package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,16 +24,17 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_adapter;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_image;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
+import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
 public class ImageGalleryFragment extends Fragment {
     private static final String TAG = ImageGalleryFragment.class.getName();
 
     private RecyclerView recyclerView;
-    private gallery_adapter adapter;
-    private ArrayList<gallery_image> gallery_images;
+    private GalleryAdapter adapter;
+    private ArrayList<GalleryImage> GalleryImages;
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -46,9 +47,9 @@ public class ImageGalleryFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-        gallery_images = new ArrayList<>();
+        GalleryImages = new ArrayList<>();
 
-        adapter = new gallery_adapter(context, gallery_images);
+        adapter = new GalleryAdapter(context, GalleryImages);
     }
 
     @Nullable
@@ -73,10 +74,10 @@ public class ImageGalleryFragment extends Fragment {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
                                 if (child.getKey() != null) {
-                                    gallery_image image = new gallery_image(Integer.parseInt(child.getKey()), bitmap);
+                                    GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
-                                    if (!gallery_images.contains(image)) {
-                                        gallery_images.add(image);
+                                    if (!GalleryImages.contains(image)) {
+                                        GalleryImages.add(image);
                                     }
                                 }
                             }

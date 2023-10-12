@@ -1,4 +1,4 @@
-package au.edu.uq.deco3801.nullpointerexception.geospray;
+package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -28,6 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.MarkerInfoWindowAdapter;
+import au.edu.uq.deco3801.nullpointerexception.geospray.Place;
+import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaceRenderer;
 

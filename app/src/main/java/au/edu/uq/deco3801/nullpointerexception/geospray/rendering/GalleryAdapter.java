@@ -1,8 +1,6 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray.rendering;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +14,21 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import au.edu.uq.deco3801.nullpointerexception.geospray.CreateUploadFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
-import au.edu.uq.deco3801.nullpointerexception.geospray.PreviewFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 
-public class gallery_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
     private Context context;
-    private ArrayList<gallery_image> gallery_images;
+    private ArrayList<GalleryImage> GalleryImages;
     private int currentIndex;
 
-    public gallery_adapter(Context context, ArrayList<gallery_image> gallery_images) {
+    public GalleryAdapter(Context context, ArrayList<GalleryImage> GalleryImages) {
         this.context = context;
-        this.gallery_images = gallery_images;
+        this.GalleryImages = GalleryImages;
         currentIndex = 0;
     }
 
@@ -55,9 +52,9 @@ public class gallery_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof MyViewHolder) {
             for (int i = 0; i < 16; i++) {
                 // Never exceed gallery_images max index
-                int index = (currentIndex++) % gallery_images.size();
+                int index = (currentIndex++) % GalleryImages.size();
 
-                gallery_image image = gallery_images.get(index);
+                GalleryImage image = GalleryImages.get(index);
 
                 if (image != null) {
                     ((MyViewHolder) holder).images.get(i).setImageBitmap(image.getImg());
@@ -74,8 +71,8 @@ public class gallery_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             // Make sure images aren't skipped
-            if (currentIndex > gallery_images.size()) {
-                currentIndex = gallery_images.size();
+            if (currentIndex > GalleryImages.size()) {
+                currentIndex = GalleryImages.size();
             }
         } else if (holder instanceof LoadingviewHolder) {
             showLoadingView((LoadingviewHolder) holder, position);
@@ -84,11 +81,11 @@ public class gallery_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return gallery_images.size();
+        return GalleryImages.size();
     }
 
     public int getItemViewType(int position) {
-        return gallery_images.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return GalleryImages.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -1,4 +1,4 @@
-package au.edu.uq.deco3801.nullpointerexception.geospray;
+package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +25,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
+import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 
 public class CreateUploadFragment extends Fragment {
     private CloudAnchorFragment cloudAnchorFragment;

@@ -18,17 +18,18 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 
 import android.os.Bundle;
 
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 import au.edu.uq.deco3801.nullpointerexception.geospray.databinding.ActivityMainBinding;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CloudAnchorFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateOptionsFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ImageGalleryFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.NavigationFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ProfileFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_adapter;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.gallery_image;
 
 /**
  * Main Activity for the Cloud Anchors Codelab.
