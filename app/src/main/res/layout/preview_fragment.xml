@@ -2,9 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/coordinatorLayout">
 
     <!-- Background Image -->
     <ImageView
@@ -142,5 +142,21 @@
                 android:autofillHints="comment" />
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Back button -->
+    <ImageButton
+        android:id="@+id/preview_page_back"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="10sp"
+        android:background="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/coordinatorLayout"
+        app:srcCompat="@drawable/back_arrow"
+        android:contentDescription="@string/back_button"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
