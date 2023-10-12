@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -98,8 +99,18 @@ public class CreateUploadFragment extends Fragment {
         String descriptionText = description.getText().toString();
         String locationText = location.getText().toString();
 
-        if (bitmap == null || titleText.isEmpty() || descriptionText.isEmpty() || locationText.isEmpty()) {
-            // Error
+        if (bitmap == null) {
+            // TODO: Error
+            Toast.makeText(getContext(), "Please choose an image", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (titleText.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a title", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (descriptionText.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a description", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (locationText.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter a location", Toast.LENGTH_SHORT).show();
             return;
         }
 
