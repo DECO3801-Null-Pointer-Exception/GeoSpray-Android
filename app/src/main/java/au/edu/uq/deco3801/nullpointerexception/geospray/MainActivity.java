@@ -16,12 +16,18 @@
 
 package au.edu.uq.deco3801.nullpointerexception.geospray;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import au.edu.uq.deco3801.nullpointerexception.geospray.databinding.ActivityMainBinding;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CloudAnchorFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateOptionsFragment;
@@ -40,14 +46,17 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper
 public class MainActivity extends AppCompatActivity {
   private ActivityMainBinding binding;
 
+  private FirebaseAuth mAuth;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.activity_main);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
     replaceFrag(new ImageGalleryFragment());
+
+    mAuth = FirebaseAuth.getInstance();
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
@@ -57,13 +66,23 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_home) {
         replaceFrag(new ImageGalleryFragment());
       } else if (item.getItemId() == R.id.bot_profile) {
-        replaceFrag(new ProfileFragment());
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Toast.makeText(getApplicationContext(), ("User is:"+ currentUser),
+                Toast.LENGTH_SHORT).show();
+        if(currentUser != null){
+          replaceFrag(new ProfileFragment());
+        } else {
+          Intent login = new Intent(getApplicationContext(), UserLogin.class);
+          startActivity(login);
+        }
+
       } else if (item.getItemId() == R.id.bot_search) {
         replaceFrag(new PreviewFragment());
       }
       return true;
     });
   }
+
 
   public void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
