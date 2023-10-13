@@ -79,13 +79,13 @@ public class UserLogin extends AppCompatActivity {
 
     }
 
-    private void createToast(String msg) {
+    public void createToast(String msg) {
         Toast.makeText(getApplicationContext(), (msg),
                 Toast.LENGTH_SHORT).show();
     }
 
     private void updateUI(FirebaseUser user) {
 //        user.getDisplayName();
-        finishActivity(0);
+        finish();
     }
 }

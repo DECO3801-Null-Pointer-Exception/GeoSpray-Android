@@ -83,6 +83,16 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  @Override
+  public void onStart() {
+    super.onStart();
+//         Check if user is signed in (non-null) and update UI accordingly.
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    if (currentUser != null) {
+      createToast("User is Loaded");
+      // TODO Testing user interaction
+    }
+  }
 
   public void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
@@ -95,4 +105,10 @@ public class MainActivity extends AppCompatActivity {
     super.onWindowFocusChanged(hasFocus);
     FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
   }
+
+  public void createToast(String msg) {
+    Toast.makeText(getApplicationContext(), (msg),
+            Toast.LENGTH_SHORT).show();
+  }
+
 }
