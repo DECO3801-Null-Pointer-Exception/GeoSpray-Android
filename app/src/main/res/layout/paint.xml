@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_undo"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/default_undo"
+                app:tint="@xml/bottom_navigation_selector"
+                android:text="Undo" />
+
+            <ImageButton
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/default_save"
+                app:tint="@xml/bottom_navigation_selector"
+                android:text="Save" />
+
+            <ImageButton
+                android:id="@+id/btn_color"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/default_color"
+                app:tint="@xml/bottom_navigation_selector"
+                android:text="Color" />
+
+            <ImageButton
+                android:id="@+id/btn_stroke"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/default_brush"
+                app:tint="@xml/bottom_navigation_selector"
+                android:text="Stroke" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <SeekBar
+                android:id="@+id/brush_slider"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:max="100"
+                android:progress="50" />
+
+<!--            <com.google.android.material.slider.RangeSlider-->
+<!--                android:id="@+id/rangebar2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:visibility="gone" />-->
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <au.edu.uq.deco3801.nullpointerexception.geospray.paint.DrawView
+        android:id="@+id/draw_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/linear"
+        android:layout_centerInParent="true">
+
+    </au.edu.uq.deco3801.nullpointerexception.geospray.paint.DrawView>
+
+</RelativeLayout>
