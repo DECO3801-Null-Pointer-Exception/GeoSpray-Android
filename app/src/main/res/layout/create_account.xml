@@ -3,7 +3,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#484155">
@@ -12,7 +11,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="80sp"
         android:text="@string/create_account"
         android:textSize="32sp"
         android:textColor="#B0BEC5"
@@ -22,9 +21,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="150sp"
+        android:layout_height="150sp"
+        android:layout_marginTop="50sp"
         android:contentDescription="@string/new_account_profile_picture"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,10 +31,10 @@
         app:srcCompat="@drawable/new_user_profile" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username_textField"
-        android:layout_width="300dp"
+        android:id="@+id/email_textField"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="36sp"
         android:hint="@string/username"
         android:textColorHint="#B0BEC5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,12 +42,13 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/log_username"
+            android:id="@+id/log_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingStart="4dp"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:paddingStart="4sp"
+            android:paddingEnd="4sp"
             android:background="@drawable/rounded_corner"
             android:inputType="text"
             />
@@ -57,22 +57,23 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password_textField"
-        android:layout_width="300dp"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="18sp"
         android:hint="@string/password"
         android:textColorHint="#B0BEC5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_textField">
+        app:layout_constraintTop_toBottomOf="@+id/email_textField">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/log_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingStart="4dp"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:paddingStart="4sp"
+            android:paddingEnd="4sp"
             android:background="@drawable/rounded_corner"
             android:inputType="text"
             />
@@ -83,7 +84,7 @@
         android:id="@+id/log_login"
         android:layout_width="300sp"
         android:layout_height="48sp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="36sp"
         android:backgroundTint="@color/button"
         android:text="@string/create_account"
         android:textAllCaps="false"

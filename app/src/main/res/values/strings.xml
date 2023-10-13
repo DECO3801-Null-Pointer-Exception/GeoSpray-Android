@@ -4,8 +4,9 @@
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="not_a_user_create_your_account">Not a user? Create your account</string>
     <string name="login">Log in</string>
-    <string name="password">password</string>
-    <string name="username">username</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
     <string name="logo_of_geospray">Logo of GeoSpray</string>
     <string name="image_upload">Image Upload</string>
     <string name="title">Title</string>
