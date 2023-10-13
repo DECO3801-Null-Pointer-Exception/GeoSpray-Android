@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,12 +36,14 @@ public class UserCreate extends AppCompatActivity {
     private TextInputEditText password;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account);
 
         mAuth = FirebaseAuth.getInstance();
 
+        email = this.findViewById(R.id.create_email);
+        password = this.findViewById(R.id.create_password);
 
         Button btn = findViewById(R.id.create_login);
         btn.setOnClickListener(v -> onCreateButtonPressed());
@@ -52,18 +54,19 @@ public class UserCreate extends AppCompatActivity {
         email.setError(null);
         password.setError(null);
 
-        if (email.getText() == null){
+        if (TextUtils.isEmpty(email.getText())){
             email.setError("Please Enter an Email");
             return;
-        } else if (password.getText() == null) {
+        } else if (TextUtils.isEmpty(password.getText())) {
             password.setError("Please Enter a Password");
             return;
+        } else {
+
+            String emailString = email.getText().toString();
+            String passwordString = password.getText().toString();
+
+            createAccount(emailString, passwordString);
         }
-
-        String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
-
-        createAccount(emailString, passwordString);
     }
 
     @Override
@@ -89,7 +92,7 @@ public class UserCreate extends AppCompatActivity {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         if (task.getException() != null) {
-                            createToast(task.getException().toString());
+                            createToast(task.getException().getMessage());
                         } else {
                             createToast("Authentication failed.");
                         }

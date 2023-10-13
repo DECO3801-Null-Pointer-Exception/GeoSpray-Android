@@ -3,6 +3,7 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,7 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
 public class UserLogin extends AppCompatActivity {
 
@@ -23,8 +29,8 @@ public class UserLogin extends AppCompatActivity {
     private TextInputEditText password;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
         mAuth = FirebaseAuth.getInstance();
@@ -50,18 +56,19 @@ public class UserLogin extends AppCompatActivity {
         email.setError(null);
         password.setError(null);
 
-        if (email.getText() == null){
+
+        if (TextUtils.isEmpty(email.getText())){
             email.setError("Please Enter an Email");
-            return;
-        } else if (password.getText() == null) {
+        } else if (TextUtils.isEmpty(password.getText())) {
             password.setError("Please Enter a Password");
-            return;
+        } else {
+            // TODO allow multiple errors to be set at once
+
+            String emailString = email.getText().toString();
+            String passwordString = password.getText().toString();
+
+            signIn(emailString, passwordString);
         }
-
-        String emailString = email.getText().toString();
-        String passwordString = password.getText().toString();
-
-        signIn(emailString, passwordString);
 }
 
 
@@ -79,10 +86,26 @@ public class UserLogin extends AppCompatActivity {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         if (task.getException() != null) {
-                            createToast(task.getException().toString());
+                            createToast(task.getException().getMessage());
+                            // todo implement textbox errors using catch
+
                         } else {
                             createToast("Authentication failed.");
                         }
+
+//                        if(!task.isSuccessful()) {
+//                            try {
+//                                throw task.getException();
+//                            } catch(FirebaseAuthWeakPasswordException e) {
+//                                //do somethig
+//                            } catch(FirebaseAuthInvalidCredentialsException e) {
+//                                //do somethig
+//                            } catch(FirebaseAuthUserCollisionException e) {
+//                                //do somethig
+//                            } catch(Exception e) {
+//                                Log.e("TAG", e.getMessage());
+//                            }
+//                        }
                     }
                 });
 
@@ -96,5 +119,12 @@ public class UserLogin extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
 //        user.getDisplayName();
         finish();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
+        // TODO if you want bar, remove full screen helper
     }
 }

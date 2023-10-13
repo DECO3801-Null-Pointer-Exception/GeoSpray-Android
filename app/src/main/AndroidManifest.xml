@@ -25,9 +25,8 @@
         android:theme="@style/Theme.GeoSpray"
         tools:targetApi="31">
         <meta-data
-            android:name="com.google.android.actions"
+            android:name="com.google.android.shortcuts"
             android:resource="@xml/bottom_navigation_selector" />
-
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
