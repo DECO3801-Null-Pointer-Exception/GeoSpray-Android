@@ -1,5 +1,6 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -31,9 +32,17 @@ public class UserLogin extends AppCompatActivity {
         email = this.findViewById(R.id.log_email);
         password = this.findViewById(R.id.log_password);
 
-        Button btn = findViewById(R.id.log_login);
-        btn.setOnClickListener(v -> onLoginButtonPressed());
+        Button btnLogin = findViewById(R.id.log_login);
+        btnLogin.setOnClickListener(v -> onLoginButtonPressed());
 
+        Button btnCreateAccount = findViewById(R.id.log_create_user);
+        btnCreateAccount.setOnClickListener(v -> onCreateUserButtonPressed());
+
+    }
+
+    private void onCreateUserButtonPressed() {
+        Intent createUser = new Intent(getApplicationContext(), UserCreate.class);
+        startActivity(createUser);
     }
 
     private void onLoginButtonPressed() {

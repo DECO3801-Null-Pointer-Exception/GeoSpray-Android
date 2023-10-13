@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
   private FirebaseAuth mAuth;
 
+//  private ProfileFragment profile;
+  // TODO save profile information
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -67,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(new ImageGalleryFragment());
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Toast.makeText(getApplicationContext(), ("User is:"+ currentUser),
-                Toast.LENGTH_SHORT).show();
+        createToast("User is:"+ currentUser);
         if(currentUser != null){
           replaceFrag(new ProfileFragment());
         } else {

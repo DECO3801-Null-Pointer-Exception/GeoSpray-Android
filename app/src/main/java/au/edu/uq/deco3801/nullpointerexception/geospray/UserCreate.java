@@ -31,6 +31,10 @@ public class UserCreate extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+
+    private TextInputEditText email;
+    private TextInputEditText password;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -38,6 +42,28 @@ public class UserCreate extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
+        Button btn = findViewById(R.id.create_login);
+        btn.setOnClickListener(v -> onCreateButtonPressed());
+
+    }
+
+    private void onCreateButtonPressed() {
+        email.setError(null);
+        password.setError(null);
+
+        if (email.getText() == null){
+            email.setError("Please Enter an Email");
+            return;
+        } else if (password.getText() == null) {
+            password.setError("Please Enter a Password");
+            return;
+        }
+
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
+
+        createAccount(emailString, passwordString);
     }
 
     @Override
@@ -52,22 +78,20 @@ public class UserCreate extends AppCompatActivity {
 
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(getApplicationContext(), "Account Created.",
-                                    Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        createToast("Account Created.");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        if (task.getException() != null) {
+                            createToast(task.getException().toString());
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            createToast("Authentication failed.");
                         }
                     }
                 });
@@ -90,6 +114,12 @@ public class UserCreate extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
 
     }
+
+    public void createToast(String msg) {
+        Toast.makeText(getApplicationContext(), (msg),
+                Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
