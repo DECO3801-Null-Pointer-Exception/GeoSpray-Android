@@ -42,7 +42,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password_textField"
-        android:layout_width="300dp"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:hint="@string/password"
@@ -55,12 +55,12 @@
             android:id="@+id/log_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2sp"
-            android:paddingBottom="2sp"
-            android:paddingStart="4sp"
-            android:paddingEnd="4sp"
             android:background="@drawable/rounded_corner"
-            android:inputType = "textPassword" />
+            android:inputType="text"
+            android:paddingStart="4sp"
+            android:paddingTop="2sp"
+            android:paddingEnd="4sp"
+            android:paddingBottom="2sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

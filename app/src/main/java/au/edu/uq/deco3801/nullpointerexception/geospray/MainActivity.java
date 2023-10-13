@@ -20,11 +20,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
   private FirebaseAuth mAuth;
 
+//  private ProfileFragment profile;
+  // TODO save profile information
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -58,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
     mAuth = FirebaseAuth.getInstance();
 
+    mAuth.signOut(); //just for testing purposes
+    //otherwise user stays signed in
+
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
         replaceFrag(new CreateOptionsFragment());
@@ -67,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(new ImageGalleryFragment());
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Toast.makeText(getApplicationContext(), ("User is:"+ currentUser),
-                Toast.LENGTH_SHORT).show();
+        createToast("User is:"+ currentUser);
         if(currentUser != null){
           replaceFrag(new ProfileFragment());
         } else {
@@ -83,8 +92,25 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  @Override
+  public void onStart() {
+    super.onStart();
+//         Check if user is signed in (non-null) and update UI accordingly.
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    if (currentUser != null) {
+//      createToast("User is Loaded");
+//      createToast(currentUser.getDisplayName());
+      createToast(currentUser.getEmail());
+      // TODO Testing user interaction
+    } else {
+      //set user to be anon
+//      mAuth.signInAnonymously();
+
+    }
+  }
 
   public void replaceFrag(Fragment fragment) {
+
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction fmtrans = fm.beginTransaction().replace(R.id.frame_layout, fragment);
     fmtrans.commit();
@@ -95,4 +121,10 @@ public class MainActivity extends AppCompatActivity {
     super.onWindowFocusChanged(hasFocus);
     FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
   }
+
+  public void createToast(String msg) {
+    Toast.makeText(getApplicationContext(), (msg),
+            Toast.LENGTH_SHORT).show();
+  }
+
 }
