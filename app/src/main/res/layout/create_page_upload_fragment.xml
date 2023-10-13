@@ -38,17 +38,20 @@
                 android:contentDescription="@string/back_button"/>
             
             <FrameLayout
+                android:id="@+id/create_upload_image_layout"
                 android:layout_width="match_parent"
-                android:layout_height="200sp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="35sp"
                 android:layout_marginHorizontal="30sp">
                 <com.google.android.material.imageview.ShapeableImageView
                     app:shapeAppearanceOverlay="@style/box_corner"
                     android:id="@+id/create_upload_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200sp"
                     android:layout_gravity="center"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
                     android:background="@drawable/rounded_corner"
                     android:contentDescription="@string/image_upload" />
                 
