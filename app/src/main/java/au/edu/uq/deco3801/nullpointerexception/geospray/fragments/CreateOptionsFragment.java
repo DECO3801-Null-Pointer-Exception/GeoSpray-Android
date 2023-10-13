@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
+import au.edu.uq.deco3801.nullpointerexception.geospray.paint.PaintFragment;
 
 public class CreateOptionsFragment extends Fragment {
     @Override
@@ -38,6 +39,6 @@ public class CreateOptionsFragment extends Fragment {
     }
 
     private void onCreateButtonPressed() {
-
+        ((MainActivity) requireActivity()).replaceFrag(new PaintFragment());
     }
 }
