@@ -90,39 +90,43 @@
             android:layout_height="wrap_content"
             android:text="Vibrant Dreamscape"
             android:textStyle="bold"
-            android:textSize="30sp"
+            android:textSize="35sp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="-5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/preview_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="UQ Modwest"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <ImageButton
                 android:id="@+id/preview_navigate"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/navigation"
                 android:background="#00FFFFFF"
                 app:tint="#E55A53"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:contentDescription="Navigate" />
         </LinearLayout>
+
+        <View style="@style/divider" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/preview_date"
@@ -167,12 +171,15 @@
 
         </LinearLayout>
 
+        <View style="@style/divider" />
+
         <TextView
             android:id="@+id/preview_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="&quot;Vibrant Dreamscape&quot; is a mesmerizing artwork that marries bold colors with ethereal forms. Swirling strokes of cerulean and magenta create a sense of fluidity and depth, drawing the viewer into a surreal world of endless possibilities. This piece evokes a sense of wonder and invites contemplation of the unknown."
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp" />
 
         <View style="@style/divider" />
 
