@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -61,6 +62,18 @@ public class CreateUploadFragment extends Fragment {
         title = rootView.findViewById(R.id.create_title);
         description = rootView.findViewById(R.id.create_description);
         location = rootView.findViewById(R.id.create_location);
+
+        Bundle args = this.getArguments();
+
+        if (args != null) {
+            byte[] imageBytes = args.getByteArray("image");
+
+            if (imageBytes != null) {
+                bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                imageView.setImageBitmap(bitmap);
+                imageText.setVisibility(View.GONE);
+            }
+        }
 
         return rootView;
     }

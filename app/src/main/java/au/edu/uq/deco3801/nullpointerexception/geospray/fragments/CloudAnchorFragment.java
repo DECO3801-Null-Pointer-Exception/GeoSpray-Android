@@ -144,7 +144,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private Bitmap chosenImage;
 
   // Arguments from upload page
-  private Bundle args;
   private byte[] imageBytes;
   private String title;
   private String description;
@@ -163,8 +162,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     storageReference = firebaseStorage.getReference();
 
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
-
-    args = this.getArguments();
   }
 
   @Override
@@ -201,6 +198,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     uploadButton = rootView.findViewById(R.id.upload_button);
     uploadButton.setOnClickListener(v -> onUploadButtonPressed());
     uploadButton.setEnabled(false);
+
+    // Retrieve arguments
+    Bundle args = this.getArguments();
 
     if (args != null) {
       imageBytes = args.getByteArray("image");

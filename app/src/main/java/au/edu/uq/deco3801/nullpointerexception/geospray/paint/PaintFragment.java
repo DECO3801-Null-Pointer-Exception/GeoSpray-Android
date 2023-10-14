@@ -11,31 +11,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import com.google.android.material.slider.RangeSlider;
-
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
-import au.edu.uq.deco3801.nullpointerexception.geospray.databinding.ActivityMainBinding;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateOptionsFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ImageGalleryFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.NavigationFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ProfileFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateUploadFragment;
 import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class PaintFragment extends Fragment {
@@ -55,16 +48,18 @@ public class PaintFragment extends Fragment {
 
     private Boolean brush;
 
+    private Toast currentToast;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paint, container, false);
         // getting the reference of the views from their ids
-        paint = (DrawView) rootView.findViewById(R.id.draw_view);
-        rangeSlider = (SeekBar) rootView.findViewById(R.id.brush_slider);
-        undo = (ImageButton) rootView.findViewById(R.id.btn_undo);
-        save = (ImageButton) rootView.findViewById(R.id.btn_save);
-        color = (ImageButton) rootView.findViewById(R.id.btn_color);
-        stroke = (ImageButton) rootView.findViewById(R.id.btn_stroke);
+        paint = rootView.findViewById(R.id.draw_view);
+        rangeSlider = rootView.findViewById(R.id.brush_slider);
+        undo = rootView.findViewById(R.id.btn_undo);
+        save = rootView.findViewById(R.id.btn_save);
+        color = rootView.findViewById(R.id.btn_color);
+        stroke = rootView.findViewById(R.id.btn_stroke);
         brush = false;
         hexColors = new ArrayList<>();
         hexColors.add("#2062af");
@@ -99,23 +94,13 @@ public class PaintFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 toAnimate.setDuration(100);
-                toAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                        undo.setColorFilter((int) valueAnimator.getAnimatedValue());
-                    }
-                });
+                toAnimate.addUpdateListener(valueAnimator -> undo.setColorFilter((int) valueAnimator.getAnimatedValue()));
                 toAnimate.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         endAnimate.setDuration(400);
-                        endAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                                undo.setColorFilter((int) valueAnimator.getAnimatedValue());
-                            }
-                        });
+                        endAnimate.addUpdateListener(valueAnimator -> undo.setColorFilter((int) valueAnimator.getAnimatedValue()));
                         endAnimate.start();
                     }
                 });
@@ -131,25 +116,16 @@ public class PaintFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showToast("Saving...");
 
                 toAnimate.setDuration(100);
-                toAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                        save.setColorFilter((int) valueAnimator.getAnimatedValue());
-                    }
-                });
+                toAnimate.addUpdateListener(valueAnimator -> save.setColorFilter((int) valueAnimator.getAnimatedValue()));
                 toAnimate.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         endAnimate.setDuration(400);
-                        endAnimate.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                                save.setColorFilter((int) valueAnimator.getAnimatedValue());
-                            }
-                        });
+                        endAnimate.addUpdateListener(valueAnimator -> save.setColorFilter((int) valueAnimator.getAnimatedValue()));
                         endAnimate.start();
                     }
                 });
@@ -183,59 +159,68 @@ public class PaintFragment extends Fragment {
 
                     // close the output stream after use
                     imageOutStream.close();
+
+                    showToast("Image saved.");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                // Send image to CreateUploadFragment
+                Bundle args = new Bundle();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                args.putByteArray("image", stream.toByteArray());
+
+                CreateUploadFragment createUploadFragment = new CreateUploadFragment();
+                createUploadFragment.setArguments(args);
+
+                ((MainActivity) requireActivity()).replaceFrag(createUploadFragment);
             }
         });
 
         // the color button will allow the user
         // to select the color of his brush
-        color.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                color.setColorFilter(Color.rgb(253, 129, 74));
-                final ColorPicker colorPicker = new ColorPicker(requireActivity());
-                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
-                            @Override
-                            public void setOnFastChooseColorListener(int position, int color2) {
-                                // get the integer value of color
-                                // selected from the dialog box and
-                                // set it as the stroke color
-                                paint.setColor(color2);
-                                color.setColorFilter(null);
-                            }
-                            @Override
-                            public void onCancel() {
-                                color.setColorFilter(null);
-                                colorPicker.dismissDialog();
-                            }
-                        })
-                        // set the number of color columns
-                        // you want  to show in dialog.
-                        .setColumns(5)
-                        // set a default color selected
-                        // in the dialog
-                        .setDefaultColorButton(Color.parseColor("#000000"))
-                        .setRoundColorButton(true)
-                        .setColors(hexColors)
-                        .show();
+        color.setOnClickListener(view -> {
+            color.setColorFilter(Color.rgb(253, 129, 74));
+            final ColorPicker colorPicker = new ColorPicker(requireActivity());
+            colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
+                        @Override
+                        public void setOnFastChooseColorListener(int position, int color2) {
+                            // get the integer value of color
+                            // selected from the dialog box and
+                            // set it as the stroke color
+                            paint.setColor(color2);
+                            color.setColorFilter(null);
+                        }
+                        @Override
+                        public void onCancel() {
+                            color.setColorFilter(null);
+                            colorPicker.dismissDialog();
+                        }
+                    })
+                    // set the number of color columns
+                    // you want  to show in dialog.
+                    .setColumns(5)
+                    // set a default color selected
+                    // in the dialog
+                    .setDefaultColorButton(Color.parseColor("#000000"))
+                    .setRoundColorButton(true)
+                    .setColors(hexColors)
+                    .show();
 
-            }
         });
         // the button will toggle the visibility of the RangeBar/RangeSlider
-        stroke.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (rangeSlider.getVisibility() == View.VISIBLE) {
-                    rangeSlider.setVisibility(View.GONE);
-                    stroke.setColorFilter(Color.rgb(152, 154, 157));
-                } else {
-                    rangeSlider.setVisibility(View.VISIBLE);
-                    stroke.setColorFilter(Color.rgb(253, 129, 74));
-                }
-
+        stroke.setOnClickListener(view -> {
+            if (rangeSlider.getVisibility() == View.VISIBLE) {
+                rangeSlider.setVisibility(View.GONE);
+                stroke.setColorFilter(Color.rgb(152, 154, 157));
+            } else {
+                rangeSlider.setVisibility(View.VISIBLE);
+                stroke.setColorFilter(Color.rgb(253, 129, 74));
             }
+
         });
 
         // set the range of the RangeSlider
@@ -282,5 +267,14 @@ public class PaintFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void showToast(String message) {
+        if (currentToast != null) {
+            currentToast.cancel();
+        }
+
+        currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT);
+        currentToast.show();
     }
 }
