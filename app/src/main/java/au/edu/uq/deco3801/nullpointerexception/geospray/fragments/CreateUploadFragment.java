@@ -155,7 +155,7 @@ public class CreateUploadFragment extends Fragment {
             currentToast.cancel();
         }
 
-        currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT);
+        currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG);
         currentToast.show();
     }
 }

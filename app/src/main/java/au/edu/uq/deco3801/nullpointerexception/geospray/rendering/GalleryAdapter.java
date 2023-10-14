@@ -55,7 +55,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
             ((MyViewHolder) holder).image.setOnClickListener(view -> {
                 Bundle args = new Bundle();
-                args.putInt("shortcode", image.getShort_code());
+                args.putInt("shortcode", image.getShortCode());
 
                 PreviewFragment previewFragment = new PreviewFragment();
                 previewFragment.setArguments(args);

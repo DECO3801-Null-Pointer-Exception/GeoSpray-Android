@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -17,7 +17,6 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
@@ -61,7 +60,7 @@ public class PreviewFragment extends Fragment {
         firebaseManager.getImageLocation(shortCode, location -> ((TextView) rootView.findViewById(R.id.preview_location)).setText(location));
 
         // TODO: Send to navigation page
-        ImageButton navigationButton = rootView.findViewById(R.id.preview_navigate);
+        LinearLayout navigationButton = rootView.findViewById(R.id.preview_navigate);
         navigationButton.setOnClickListener(view -> {
             Bundle args = new Bundle();
             args.putInt("shortcode", shortCode);

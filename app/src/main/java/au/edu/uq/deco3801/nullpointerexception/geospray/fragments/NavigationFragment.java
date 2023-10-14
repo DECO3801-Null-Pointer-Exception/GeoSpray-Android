@@ -79,6 +79,10 @@ public class NavigationFragment extends Fragment {
                     map.getMapAsync(googleMap -> {
                         addClusteredMarkers(googleMap);
 
+                        if (shortCode == 0) {
+                            return;
+                        }
+
                         if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                                 && ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
@@ -86,7 +90,7 @@ public class NavigationFragment extends Fragment {
 
                         fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
                                 requireActivity(), location -> {
-                                    if (location != null && shortCode != 0) {
+                                    if (location != null) {
                                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
                                     }
