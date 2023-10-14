@@ -711,7 +711,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           bitmap.compress(Bitmap.CompressFormat.PNG, 100, imageOutStream);
           imageOutStream.close();
 
-          showToast("Image saved.");
+          requireActivity().runOnUiThread(() -> showToast("Image saved."));
         } catch (Exception e) {
           e.printStackTrace();
         }
