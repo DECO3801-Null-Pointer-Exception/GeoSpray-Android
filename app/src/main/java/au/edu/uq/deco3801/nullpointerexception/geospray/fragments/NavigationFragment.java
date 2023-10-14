@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MarkerInfoWindowAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.Place;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
@@ -54,9 +55,11 @@ public class NavigationFragment extends Fragment {
                         continue;
                     }
 
-                    Place place = new Place(child.getKey(), new LatLng(
-                            child.child("lat").getValue(Double.class),
-                            child.child("long").getValue(Double.class)));
+                    Place place = new Place(Integer.parseInt(child.getKey()),
+                            child.child("title").getValue(String.class),
+                            child.child("location").getValue(String.class),
+                            new LatLng(child.child("lat").getValue(Double.class),
+                                    child.child("long").getValue(Double.class)));
 
                     if (!places.contains(place)) {
                         places.add(place);
@@ -106,6 +109,17 @@ public class NavigationFragment extends Fragment {
         clusterManager.setRenderer(new PlaceRenderer(getContext(), googleMap, clusterManager));
 
         clusterManager.getMarkerCollection().setInfoWindowAdapter(new MarkerInfoWindowAdapter(getContext()));
+
+        clusterManager.setOnClusterItemInfoWindowClickListener(item -> {
+            // Send to camera page
+            Bundle args = new Bundle();
+            args.putInt("shortcode", item.getShortCode());
+
+            CloudAnchorFragment cloudAnchorFragment = new CloudAnchorFragment();
+            cloudAnchorFragment.setArguments(args);
+
+            ((MainActivity) requireActivity()).replaceFrag(cloudAnchorFragment);
+        });
 
         clusterManager.addItems(places);
         clusterManager.cluster();

@@ -16,22 +16,26 @@
 
 package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -66,6 +70,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -96,7 +101,6 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRend
  * <p>This is where the AR Session and the Cloud Anchors are managed.
  */
 public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Renderer {
-
   private static final String TAG = CloudAnchorFragment.class.getSimpleName();
 
   // Rendering. The Renderers are created here, and initialized when the GL surface is created.
@@ -123,8 +127,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   @Nullable
   private Future future = null;
 
-  private Button resolveButton;
-  private Button uploadButton;
+  private ImageButton uploadButton;
 
   private StorageReference storageReference;
   private UploadTask uploadTask;
@@ -148,6 +151,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private String title;
   private String description;
   private String location;
+  private int shortCode;
+
+  private boolean resolved = false;
 
   private Toast currentToast;
 
@@ -181,11 +187,29 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     surfaceView.setWillNotDraw(false);
 
-    Button clearButton = rootView.findViewById(R.id.clear_button);
-    clearButton.setOnClickListener(v -> onClearButtonPressed());
+    // Retrieve arguments
+    Bundle args = this.getArguments();
 
-    resolveButton = rootView.findViewById(R.id.resolve_button);
-    resolveButton.setOnClickListener(v -> onResolveButtonPressed());
+    if (args != null) {
+      imageBytes = args.getByteArray("image");
+      title = args.getString("title");
+      description = args.getString("description");
+      location = args.getString("location");
+
+      shortCode = args.getInt("shortcode");
+
+      if (imageBytes != null) {
+        chosenImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+      }
+    }
+
+    ImageButton rectButton = rootView.findViewById(R.id.rect_button);
+
+    ImageButton shutterButton = rootView.findViewById(R.id.shutter_button);
+    shutterButton.setOnClickListener(v -> onShutterButtonPressed());
+
+    ImageButton clearButton = rootView.findViewById(R.id.clear_button);
+    clearButton.setOnClickListener(v -> onClearButtonPressed());
 
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
@@ -199,18 +223,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     uploadButton.setOnClickListener(v -> onUploadButtonPressed());
     uploadButton.setEnabled(false);
 
-    // Retrieve arguments
-    Bundle args = this.getArguments();
-
-    if (args != null) {
-      imageBytes = args.getByteArray("image");
-      title = args.getString("title");
-      description = args.getString("description");
-      location = args.getString("location");
-
-      if (imageBytes != null) {
-        chosenImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-      }
+    if (shortCode != 0) {
+      rotationBar.setVisibility(View.GONE);
+      scaleBar.setVisibility(View.GONE);
+      uploadButton.setVisibility(View.GONE);
+      clearButton.setVisibility(View.GONE);
+      rectButton.setVisibility(View.GONE);
     }
 
     return rootView;
@@ -341,6 +359,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file.", e);
     }
+
+    if (!resolved) {
+      onShortCodeEntered(shortCode);
+      resolved = true;
+    }
   }
 
   @Override
@@ -441,7 +464,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
   private void handleTap(Frame frame, Camera camera) {
-    if (currentAnchor != null) {
+    if (currentAnchor != null || shortCode == 0) {
       return; // Do nothing if there was already an anchor.
     }
 
@@ -468,7 +491,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
           currentAnchor = hit.createAnchor();
           requireActivity().runOnUiThread(() -> {
-            resolveButton.setEnabled(false);
             uploadButton.setEnabled(true);
             scaleBar.setEnabled(true);
             rotationBar.setEnabled(true);
@@ -513,7 +535,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     rotationBar.setProgress(180);
     scaleBar.setProgress(100);
 
-    resolveButton.setEnabled(true);
     uploadButton.setEnabled(false);
   }
 
@@ -590,17 +611,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
   }
 
-  private void onResolveButtonPressed() {
-    image = null;
-
-    ResolveDialogFragment dialog = ResolveDialogFragment.createWithOkListener(
-        this::onShortCodeEntered);
-    dialog.show(requireActivity().getSupportFragmentManager(), "Resolve");
-  }
-
   private void onShortCodeEntered(int shortCode) {
-    resolveButton.setEnabled(false);
-
     StorageReference imageReference = storageReference.child("images/" + shortCode);
     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
             bytes -> {
@@ -648,7 +659,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       scaleBar.setProgress(100);
     } else {
       requireActivity().runOnUiThread(() -> showToast("Error while resolving anchor with short code " + shortCode + ". Error: " + cloudState.toString()));
-      resolveButton.setEnabled(true);
     }
   }
 
@@ -680,6 +690,35 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     public void onStopTrackingTouch(SeekBar seekBar) {}
   };
 
+  private void onShutterButtonPressed() {
+    // Screenshot view
+    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
+
+    PixelCopy.request(surfaceView, bitmap, result -> {
+      if (result == PixelCopy.SUCCESS) {
+        // Save image
+        OutputStream imageOutStream;
+        ContentValues cv = new ContentValues();
+
+        cv.put(MediaStore.Images.Media.DISPLAY_NAME, "capture.png");
+        cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+        Uri uri = requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+
+        try {
+          imageOutStream = requireContext().getContentResolver().openOutputStream(uri);
+          bitmap.compress(Bitmap.CompressFormat.PNG, 100, imageOutStream);
+          imageOutStream.close();
+
+          showToast("Image saved.");
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }, new Handler(Looper.getMainLooper()));
+  }
+
   // Hides previous toast then shows a new one
   private void showToast(String message) {
     if (message.isEmpty()) {
@@ -690,7 +729,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       currentToast.cancel();
     }
 
-    currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT);
+    currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG);
     currentToast.show();
   }
 }
