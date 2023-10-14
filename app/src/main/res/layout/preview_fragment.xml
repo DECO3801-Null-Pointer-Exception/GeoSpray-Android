@@ -94,24 +94,55 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="-5dp" />
 
-        <TextView
-            android:id="@+id/preview_location"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UQ Modwest"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/preview_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UQ Modwest"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/preview_navigate"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/navigation"
+                android:background="#00FFFFFF"
+                app:tint="#E55A53"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:contentDescription="Navigate" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp" >
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/preview_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2023-10-7"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" • "
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/preview_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="393"
+                android:textColor="#E55A53"
                 android:textSize="11sp" />
 
             <TextView
@@ -121,10 +152,17 @@
                 android:textSize="11sp" />
 
             <TextView
-                android:id="@+id/preview_date"
+                android:id="@+id/preview_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2023-10-7"
+                android:text="2"
+                android:textColor="#E55A53"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Comments"
                 android:textSize="11sp" />
 
         </LinearLayout>

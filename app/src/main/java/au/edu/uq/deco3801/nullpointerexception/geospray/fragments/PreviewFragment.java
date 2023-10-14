@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
@@ -56,8 +58,20 @@ public class PreviewFragment extends Fragment {
 
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
-        // TODO: Send to navigation page
         firebaseManager.getImageLocation(shortCode, location -> ((TextView) rootView.findViewById(R.id.preview_location)).setText(location));
+
+        // TODO: Send to navigation page
+        ImageButton navigationButton = rootView.findViewById(R.id.preview_navigate);
+        navigationButton.setOnClickListener(view -> {
+            Bundle args = new Bundle();
+            args.putInt("shortcode", shortCode);
+
+            NavigationFragment navigationFragment = new NavigationFragment();
+            navigationFragment.setArguments(args);
+
+            ((MainActivity) requireActivity()).replaceFrag(navigationFragment);
+        });
+
         firebaseManager.getImageDate(shortCode, date -> ((TextView) rootView.findViewById(R.id.preview_date)).setText(date));
 
         // Initialise bottom sheet
