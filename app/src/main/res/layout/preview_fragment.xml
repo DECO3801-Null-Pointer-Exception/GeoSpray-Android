@@ -95,6 +95,7 @@
             android:layout_marginBottom="-5dp" />
 
         <LinearLayout
+            android:id="@+id/preview_navigate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp">
@@ -107,7 +108,6 @@
                 android:textSize="25sp" />
 
             <ImageButton
-                android:id="@+id/preview_navigate"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/navigation"
@@ -132,42 +132,36 @@
                 android:id="@+id/preview_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2023-10-7"
-                android:textSize="11sp" />
+                android:text="2023-10-7" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" • "
-                android:textSize="11sp" />
+                android:text=" • " />
 
             <TextView
                 android:id="@+id/preview_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="393"
-                android:textColor="#E55A53"
-                android:textSize="11sp" />
+                android:textColor="#E55A53" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Likes • "
-                android:textSize="11sp" />
+                android:text=" Likes • " />
 
             <TextView
                 android:id="@+id/preview_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2"
-                android:textColor="#E55A53"
-                android:textSize="11sp" />
+                android:textColor="#E55A53" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Comments"
-                android:textSize="11sp" />
+                android:text=" Comments" />
 
         </LinearLayout>
 
