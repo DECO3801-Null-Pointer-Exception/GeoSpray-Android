@@ -68,7 +68,7 @@ public class ImageGalleryFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    StorageReference imageReference = storageReference.child("images/" + child.getKey());
+                    StorageReference imageReference = storageReference.child("previews/" + child.getKey());
                     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
                             bytes -> {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
