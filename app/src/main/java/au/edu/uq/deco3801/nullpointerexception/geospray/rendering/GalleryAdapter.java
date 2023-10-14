@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +18,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
     private Context context;
-    private ArrayList<GalleryImage> GalleryImages;
+    private ArrayList<GalleryImage> galleryImages;
     private int currentIndex;
+    private FirebaseManager firebaseManager;
 
-    public GalleryAdapter(Context context, ArrayList<GalleryImage> GalleryImages) {
+    public GalleryAdapter(Context context, ArrayList<GalleryImage> galleryImages) {
         this.context = context;
-        this.GalleryImages = GalleryImages;
+        this.galleryImages = galleryImages;
         currentIndex = 0;
+
+        firebaseManager = new FirebaseManager(context);
     }
 
     @NonNull
@@ -50,7 +55,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyViewHolder) {
-            GalleryImage image = GalleryImages.get(position);
+            GalleryImage image = galleryImages.get(position);
 
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
             ((MyViewHolder) holder).image.setOnClickListener(view -> {
@@ -62,6 +67,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 ((MainActivity) context).replaceFrag(previewFragment);
             });
+
+            firebaseManager.getImageTitle(image.getShortCode(), title -> ((MyViewHolder) holder).name.setText(title));
 
 //            for (int i = 0; i < 16; i++) {
 //                // Never exceed gallery_images max index
@@ -94,20 +101,22 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return GalleryImages.size();
+        return galleryImages.size();
     }
 
     public int getItemViewType(int position) {
-        return GalleryImages.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return galleryImages.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         List<ImageView> images = new ArrayList<>();
         ImageView image;
+        TextView name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.view_image);
+            name = itemView.findViewById(R.id.image_name);
 //            images.add(itemView.findViewById(R.id.g1));
 //            images.add(itemView.findViewById(R.id.g2));
 //            images.add(itemView.findViewById(R.id.g3));

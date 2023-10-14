@@ -34,7 +34,7 @@ public class ImageGalleryFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private GalleryAdapter adapter;
-    private ArrayList<GalleryImage> GalleryImages;
+    private ArrayList<GalleryImage> galleryImages;
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -47,9 +47,9 @@ public class ImageGalleryFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
 
-        GalleryImages = new ArrayList<>();
+        galleryImages = new ArrayList<>();
 
-        adapter = new GalleryAdapter(context, GalleryImages);
+        adapter = new GalleryAdapter(context, galleryImages);
     }
 
     @Nullable
@@ -76,17 +76,15 @@ public class ImageGalleryFragment extends Fragment {
                                 if (child.getKey() != null) {
                                     GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
-                                    if (!GalleryImages.contains(image)) {
-                                        GalleryImages.add(image);
-
+                                    if (!galleryImages.contains(image)) {
+                                        galleryImages.add(image);
                                     }
+
                                     adapter.notifyDataSetChanged();
                                 }
                             }
                     );
                 }
-
-
             }
 
             @Override

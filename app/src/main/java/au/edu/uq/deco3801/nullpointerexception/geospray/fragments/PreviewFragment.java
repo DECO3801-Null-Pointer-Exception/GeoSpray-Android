@@ -59,7 +59,6 @@ public class PreviewFragment extends Fragment {
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
         firebaseManager.getImageLocation(shortCode, location -> ((TextView) rootView.findViewById(R.id.preview_location)).setText(location));
 
-        // TODO: Send to navigation page
         LinearLayout navigationButton = rootView.findViewById(R.id.preview_navigate);
         navigationButton.setOnClickListener(view -> {
             Bundle args = new Bundle();
