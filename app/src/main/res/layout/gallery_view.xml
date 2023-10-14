@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:background="@color/dark_purple"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -11,8 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="20dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp">
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
