@@ -361,7 +361,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
 
     if (!resolved) {
-      onShortCodeEntered(shortCode);
+      if (shortCode != 0) {
+        onShortCodeEntered(shortCode);
+      }
       resolved = true;
     }
   }
@@ -464,7 +466,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
   private void handleTap(Frame frame, Camera camera) {
-    if (currentAnchor != null || shortCode == 0) {
+    if (currentAnchor != null || shortCode != 0) {
       return; // Do nothing if there was already an anchor.
     }
 
@@ -539,6 +541,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   private void onUploadButtonPressed() {
+    // TODO: Error if not currently tracking
+    if (!hasTrackingPlane()) {
+      showToast("Please point the camera at the image.");
+      return;
+    }
+
     requireActivity().runOnUiThread(() -> showToast("Now hosting anchor..."));
     future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
@@ -569,7 +577,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     PixelCopy.request(surfaceView, bitmap, result -> {
       if (result == PixelCopy.SUCCESS) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         preview = stream.toByteArray();
       }
     }, new Handler(Looper.getMainLooper()));
@@ -582,15 +590,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
           firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location, date);
-          requireActivity().runOnUiThread(() -> showToast("Cloud anchor hosted. Short code: " + shortCode + "."));
 
           StorageReference imageReference = storageReference.child("images/" + shortCode);
           uploadTask = imageReference.putBytes(imageBytes);
 
           uploadTask.addOnFailureListener(
                   e -> requireActivity().runOnUiThread(() -> showToast("Upload failed: " + e + "."))
-          ).addOnSuccessListener(
-                  taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
           );
 
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
