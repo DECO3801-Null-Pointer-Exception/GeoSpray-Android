@@ -86,7 +86,7 @@ public class NavigationFragment extends Fragment {
 
                         fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
                                 requireActivity(), location -> {
-                                    if (location != null) {
+                                    if (location != null && shortCode != 0) {
                                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
                                     }
@@ -130,6 +130,8 @@ public class NavigationFragment extends Fragment {
 
         clusterManager.addItems(places);
         clusterManager.cluster();
+
+//        clusterManager.getMarkerCollection().getMarkers().stream().filter(item -> ((Place) item.getTag()).getShortCode() == shortCode);
 
         for (Place place : places) {
             if (place.getShortCode() == shortCode) {
