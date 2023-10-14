@@ -78,13 +78,15 @@ public class ImageGalleryFragment extends Fragment {
 
                                     if (!GalleryImages.contains(image)) {
                                         GalleryImages.add(image);
+
                                     }
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
                     );
                 }
 
-                adapter.notifyDataSetChanged();
+
             }
 
             @Override

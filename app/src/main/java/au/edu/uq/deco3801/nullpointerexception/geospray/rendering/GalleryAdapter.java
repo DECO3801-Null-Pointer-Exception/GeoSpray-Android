@@ -39,7 +39,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         View view;
 
         if (viewType == VIEW_TYPE_ITEM) {
-            view = inflater.inflate(R.layout.grid_gallery, parent, false);
+            view = inflater.inflate(R.layout.gallery_view, parent, false);
         } else {
             view = inflater.inflate(R.layout.gallery_loading, parent, false);
         }
@@ -50,30 +50,43 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyViewHolder) {
-            for (int i = 0; i < 16; i++) {
-                // Never exceed gallery_images max index
-                int index = (currentIndex++) % GalleryImages.size();
+            GalleryImage image = GalleryImages.get(position);
 
-                GalleryImage image = GalleryImages.get(index);
+            ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
+            ((MyViewHolder) holder).image.setOnClickListener(view -> {
+                Bundle args = new Bundle();
+                args.putInt("shortcode", image.getShort_code());
 
-                if (image != null) {
-                    ((MyViewHolder) holder).images.get(i).setImageBitmap(image.getImg());
-                    ((MyViewHolder) holder).images.get(i).setOnClickListener(view -> {
-                        Bundle args = new Bundle();
-                        args.putInt("shortcode", image.getShort_code());
+                PreviewFragment previewFragment = new PreviewFragment();
+                previewFragment.setArguments(args);
 
-                        PreviewFragment previewFragment = new PreviewFragment();
-                        previewFragment.setArguments(args);
+                ((MainActivity) context).replaceFrag(previewFragment);
+            });
 
-                        ((MainActivity) context).replaceFrag(previewFragment);
-                    });
-                }
-            }
-
-            // Make sure images aren't skipped
-            if (currentIndex > GalleryImages.size()) {
-                currentIndex = GalleryImages.size();
-            }
+//            for (int i = 0; i < 16; i++) {
+//                // Never exceed gallery_images max index
+//                int index = (currentIndex++) % GalleryImages.size();
+//
+//                GalleryImage image = GalleryImages.get(index);
+//
+//                if (image != null) {
+//                    ((MyViewHolder) holder).images.get(i).setImageBitmap(image.getImg());
+//                    ((MyViewHolder) holder).images.get(i).setOnClickListener(view -> {
+//                        Bundle args = new Bundle();
+//                        args.putInt("shortcode", image.getShort_code());
+//
+//                        PreviewFragment previewFragment = new PreviewFragment();
+//                        previewFragment.setArguments(args);
+//
+//                        ((MainActivity) context).replaceFrag(previewFragment);
+//                    });
+//                }
+//            }
+//
+//            // Make sure images aren't skipped
+//            if (currentIndex > GalleryImages.size()) {
+//                currentIndex = GalleryImages.size();
+//            }
         } else if (holder instanceof LoadingviewHolder) {
             showLoadingView((LoadingviewHolder) holder, position);
         }
@@ -90,25 +103,27 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         List<ImageView> images = new ArrayList<>();
+        ImageView image;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            images.add(itemView.findViewById(R.id.g1));
-            images.add(itemView.findViewById(R.id.g2));
-            images.add(itemView.findViewById(R.id.g3));
-            images.add(itemView.findViewById(R.id.g4));
-            images.add(itemView.findViewById(R.id.g5));
-            images.add(itemView.findViewById(R.id.g6));
-            images.add(itemView.findViewById(R.id.g7));
-            images.add(itemView.findViewById(R.id.g8));
-            images.add(itemView.findViewById(R.id.g9));
-            images.add(itemView.findViewById(R.id.g10));
-            images.add(itemView.findViewById(R.id.g11));
-            images.add(itemView.findViewById(R.id.g12));
-            images.add(itemView.findViewById(R.id.g13));
-            images.add(itemView.findViewById(R.id.g14));
-            images.add(itemView.findViewById(R.id.g15));
-            images.add(itemView.findViewById(R.id.g16));
+            image = itemView.findViewById(R.id.view_image);
+//            images.add(itemView.findViewById(R.id.g1));
+//            images.add(itemView.findViewById(R.id.g2));
+//            images.add(itemView.findViewById(R.id.g3));
+//            images.add(itemView.findViewById(R.id.g4));
+//            images.add(itemView.findViewById(R.id.g5));
+//            images.add(itemView.findViewById(R.id.g6));
+//            images.add(itemView.findViewById(R.id.g7));
+//            images.add(itemView.findViewById(R.id.g8));
+//            images.add(itemView.findViewById(R.id.g9));
+//            images.add(itemView.findViewById(R.id.g10));
+//            images.add(itemView.findViewById(R.id.g11));
+//            images.add(itemView.findViewById(R.id.g12));
+//            images.add(itemView.findViewById(R.id.g13));
+//            images.add(itemView.findViewById(R.id.g14));
+//            images.add(itemView.findViewById(R.id.g15));
+//            images.add(itemView.findViewById(R.id.g16));
         }
     }
 
