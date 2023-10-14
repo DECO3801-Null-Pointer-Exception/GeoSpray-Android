@@ -39,12 +39,19 @@ public class NavigationFragment extends Fragment {
     public static final String TAG = NavigationFragment.class.getName();
     private List<Place> places = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private int shortCode;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         FirebaseManager firebaseManager = new FirebaseManager(context);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+
+        Bundle args = this.getArguments();
+
+        if (args != null) {
+            shortCode = args.getInt("shortcode");
+        }
 
         firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,6 +130,12 @@ public class NavigationFragment extends Fragment {
 
         clusterManager.addItems(places);
         clusterManager.cluster();
+
+        for (Place place : places) {
+            if (place.getShortCode() == shortCode) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getPosition(), 20.0f));
+            }
+        }
 
         googleMap.setOnCameraIdleListener(clusterManager);
     }
