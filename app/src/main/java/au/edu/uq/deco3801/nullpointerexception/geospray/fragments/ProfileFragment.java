@@ -1,14 +1,20 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -16,16 +22,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
+import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
 public class ProfileFragment extends Fragment {
+    private static final String TAG = ImageGalleryFragment.class.getName();
+    private RecyclerView recyclerView;
+    private ProfileAdapter adapter;
+    private ArrayList<GalleryImage> yourImages;
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -37,6 +50,11 @@ public class ProfileFragment extends Fragment {
         firebaseManager = new FirebaseManager(context);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
+
+        yourImages = new ArrayList<>();
+        adapter = new ProfileAdapter(context, yourImages);
+
+
     }
 
     @Override
@@ -71,6 +89,42 @@ public class ProfileFragment extends Fragment {
 
                 your_works.setColorFilter(Color.rgb(152, 154, 157));
                 your_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
+            }
+        });
+
+        recyclerView = rootView.findViewById(R.id.profile_recycler);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+
+        firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    StorageReference imageReference = storageReference.child("previews/" + child.getKey());
+                    imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
+                            bytes -> {
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                                if (child.getKey() != null) {
+                                    GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
+
+                                    if (!yourImages.contains(image)) {
+                                        yourImages.add(image);
+                                    }
+
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                    );
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(
+                        TAG,
+                        "The Firebase operation for addMarkers was cancelled.",
+                        error.toException());
             }
         });
 

@@ -221,110 +221,37 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.gridlayout.widget.GridLayout
+                    <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
+                        android:id="@+id/profile_recycler"
                         android:layout_height="wrap_content"
-                        app:columnCount="2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/profile_buttons">
 
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
-                        <com.google.android.material.imageview.ShapeableImageView
-                            app:shapeAppearanceOverlay="@style/rounded_corner"
-                            android:layout_height="180dp"
-                            android:layout_width="180dp"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1"
-                            app:layout_columnSpan="1"
-                            app:layout_rowSpan="1"
-                            android:layout_marginTop="20dp"
-                            app:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/isa"/>
+                    </androidx.recyclerview.widget.RecyclerView>
 
-                    </androidx.gridlayout.widget.GridLayout>
+<!--                    <androidx.gridlayout.widget.GridLayout-->
+<!--                        android:id="@+id/profile_display"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:columnCount="2"-->
+<!--                        app:layout_constraintTop_toBottomOf="@id/profile_buttons">-->
+
+<!--                        <com.google.android.material.imageview.ShapeableImageView-->
+<!--                            app:shapeAppearanceOverlay="@style/rounded_corner"-->
+<!--                            android:layout_height="180dp"-->
+<!--                            android:layout_width="180dp"-->
+<!--                            app:layout_columnWeight="1"-->
+<!--                            app:layout_rowWeight="1"-->
+<!--                            app:layout_columnSpan="1"-->
+<!--                            app:layout_rowSpan="1"-->
+<!--                            android:layout_marginTop="20dp"-->
+<!--                            app:layout_gravity="center"-->
+<!--                            android:scaleType="centerCrop"-->
+<!--                            android:src="@drawable/isa"/>-->
+
+<!--                    </androidx.gridlayout.widget.GridLayout>-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
