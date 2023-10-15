@@ -79,14 +79,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_home) {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        createToast("User is:"+ currentUser);
-        if(currentUser != null){
-          replaceFrag(new ProfileFragment());
-        } else {
-          Intent login = new Intent(getApplicationContext(), UserLogin.class);
-          startActivity(login);
-        }
+        setupProfile();
       }
       return true;
     });
@@ -104,8 +97,30 @@ public class MainActivity extends AppCompatActivity {
       // TODO Testing user interaction
     } else {
       //set user to be anon
-//      mAuth.signInAnonymously();
+      mAuth.signInAnonymously();
 
+    }
+  }
+
+  public void setupProfile() {
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    createToast("User is:"+ currentUser);
+    if(currentUser != null) {
+      if (currentUser.isAnonymous()) {
+        // user is anonymous
+        //go to sign in page or login
+        Intent login = new Intent(getApplicationContext(), UserLogin.class);
+        startActivity(login);
+
+      } else {
+        // user is not anonymous (signed in)
+        replaceFrag(new ProfileFragment());
+      }
+    } else {
+      // user does not exist
+      mAuth.signInAnonymously();
+      Intent login = new Intent(getApplicationContext(), UserLogin.class);
+      startActivity(login);
     }
   }
 
