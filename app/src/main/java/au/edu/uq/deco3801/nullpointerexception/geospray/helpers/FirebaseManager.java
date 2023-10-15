@@ -128,7 +128,7 @@ public class FirebaseManager {
     rootRef.child("" + shortCode).child("description").setValue(description);
     rootRef.child("" + shortCode).child("location").setValue(location);
     rootRef.child("" + shortCode).child("date").setValue(date);
-    rootRef.child("" + shortCode).child("userUploaded").setValue(userUploaded);
+    rootRef.child("" + shortCode).child("userUploaded").setValue(userUploaded); // todo
   }
 
   /**

@@ -79,7 +79,30 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_home) {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
-        setupProfile();
+//        setupProfile();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        createToast("User is:"+ currentUser); //todo
+
+        if(currentUser != null) {
+          if (!currentUser.isAnonymous()) {
+            // user is not anonymous (signed in)
+            replaceFrag(new ProfileFragment());
+
+          } else {
+            //user is anonymous
+            Intent login = new Intent(getApplicationContext(), UserLogin.class);
+            startActivity(login);
+          }
+          // user a person
+        } else {
+          // user does not exist
+          mAuth.signInAnonymously(); //create a user for them
+          Intent login = new Intent(getApplicationContext(), UserLogin.class);
+          startActivity(login);
+        }
+        //go to sign in page or login
+
+
       }
       return true;
     });
@@ -90,34 +113,20 @@ public class MainActivity extends AppCompatActivity {
     super.onStart();
 //         Check if user is signed in (non-null) and update UI accordingly.
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    if (currentUser != null) {
+    if (currentUser != null && !currentUser.isAnonymous()) { //todo needed for toast to work with no email
 //      createToast("User is Loaded");
 //      createToast(currentUser.getDisplayName());
       createToast(currentUser.getEmail());
       // TODO Testing user interaction
     } else {
       //set user to be anon
-      mAuth.signInAnonymously();
+//      mAuth.signInAnonymously();
 
     }
   }
-
+//todo
   public void setupProfile() {
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-    createToast("User is:"+ currentUser);
-    if(currentUser != null) {
-      if (!currentUser.isAnonymous()) {
-        // user is not anonymous (signed in)
-        replaceFrag(new ProfileFragment());
-      }
-      // user is anonymous
-    } else {
-      // user does not exist
-      mAuth.signInAnonymously();
-    }
-    //go to sign in page or login
-    Intent login = new Intent(getApplicationContext(), UserLogin.class);
-    startActivity(login);
+
   }
 
   public void replaceFrag(Fragment fragment) {

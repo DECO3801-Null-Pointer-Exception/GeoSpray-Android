@@ -1,6 +1,7 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -29,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
+import au.edu.uq.deco3801.nullpointerexception.geospray.UserLogin;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
@@ -42,6 +47,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
+    private FirebaseAuth mAuth;
+
+    private View rootView;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -59,7 +67,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.profile, container, false);
+        rootView = inflater.inflate(R.layout.profile, container, false);
 
 
         ConstraintLayout your_area = rootView.findViewById(R.id.your_area);
@@ -129,5 +137,20 @@ public class ProfileFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.isAnonymous()) {
+            // user should not be here
+            Intent login = new Intent(getContext(), UserLogin.class);
+            startActivity(login); //send to login class
+        } else {
+            TextView username = rootView.findViewById(R.id.username);
+            username.setText(user.getDisplayName());
+        }
     }
 }

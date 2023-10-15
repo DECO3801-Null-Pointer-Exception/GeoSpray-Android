@@ -591,6 +591,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         if (shortCode != null) {
           String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
+          // todo user uploaded
           firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location, date, 1);
 
           StorageReference imageReference = storageReference.child("images/" + shortCode);
