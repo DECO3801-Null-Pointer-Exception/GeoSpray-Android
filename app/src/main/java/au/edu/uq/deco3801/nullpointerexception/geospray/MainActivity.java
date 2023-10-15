@@ -49,6 +49,9 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper
  */
 public class MainActivity extends AppCompatActivity {
   private ActivityMainBinding binding;
+  private CreateOptionsFragment createOptionsFragment = new CreateOptionsFragment();
+  private NavigationFragment navigationFragment = new NavigationFragment();
+  private ImageGalleryFragment imageGalleryFragment = new ImageGalleryFragment();
 
   private FirebaseAuth mAuth;
 
@@ -70,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
-        replaceFrag(new CreateOptionsFragment());
+        replaceFrag(createOptionsFragment);
       } else if (item.getItemId() == R.id.bot_navigation) {
-        replaceFrag(new NavigationFragment());
+        replaceFrag(navigationFragment);
       } else if (item.getItemId() == R.id.bot_home) {
-        replaceFrag(new ImageGalleryFragment());
+        replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         createToast("User is:"+ currentUser);
@@ -84,9 +87,6 @@ public class MainActivity extends AppCompatActivity {
           Intent login = new Intent(getApplicationContext(), UserLogin.class);
           startActivity(login);
         }
-
-      } else if (item.getItemId() == R.id.bot_search) {
-        replaceFrag(new PreviewFragment());
       }
       return true;
     });
