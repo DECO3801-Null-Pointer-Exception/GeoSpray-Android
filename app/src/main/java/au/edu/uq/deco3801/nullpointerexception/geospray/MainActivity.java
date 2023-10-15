@@ -106,22 +106,18 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser currentUser = mAuth.getCurrentUser();
     createToast("User is:"+ currentUser);
     if(currentUser != null) {
-      if (currentUser.isAnonymous()) {
-        // user is anonymous
-        //go to sign in page or login
-        Intent login = new Intent(getApplicationContext(), UserLogin.class);
-        startActivity(login);
-
-      } else {
+      if (!currentUser.isAnonymous()) {
         // user is not anonymous (signed in)
         replaceFrag(new ProfileFragment());
       }
+      // user is anonymous
     } else {
       // user does not exist
       mAuth.signInAnonymously();
-      Intent login = new Intent(getApplicationContext(), UserLogin.class);
-      startActivity(login);
     }
+    //go to sign in page or login
+    Intent login = new Intent(getApplicationContext(), UserLogin.class);
+    startActivity(login);
   }
 
   public void replaceFrag(Fragment fragment) {
