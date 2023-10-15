@@ -176,6 +176,29 @@ public class FirebaseManager {
                         });
     }
 
+    public void getImageUid(int shortCode, ImageRotationListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("uid")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onImageRotationAvailable(dataSnapshot.getValue(Integer.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageRotation was cancelled.",
+                                        error.toException());
+                                listener.onImageRotationAvailable(null);
+                            }
+                        });
+    }
+
     public void getImageScale(int shortCode, ImageScaleListener listener) {
         rootRef
                 .child("" + shortCode)

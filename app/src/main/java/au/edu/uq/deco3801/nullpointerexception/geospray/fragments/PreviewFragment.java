@@ -26,6 +26,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,12 +41,15 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 public class PreviewFragment extends Fragment {
     private Bundle args;
     private int shortCode;
+    private Bitmap image;
     private FirebaseManager firebaseManager;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private boolean liked;
     private Toast currentToast;
-    private Bitmap image;
+    private Bitmap pImage;
+    private Integer iconid;
+    private String name;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -53,7 +58,6 @@ public class PreviewFragment extends Fragment {
         firebaseManager = new FirebaseManager(context);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
-
         args = this.getArguments();
     }
 
@@ -63,18 +67,29 @@ public class PreviewFragment extends Fragment {
 
         if (args != null) {
             shortCode = args.getInt("shortcode");
+            pImage = args.getParcelable("BitmapImage");
+            iconid = args.getInt("iconid");
+            name = args.getString("username");
         }
 
         ImageView previewImage = rootView.findViewById(R.id.preview_image);
+        ImageView icon = rootView.findViewById(R.id.preview_profile_picture);
+        TextView username = rootView.findViewById(R.id.username);
+        TextView userhandle = rootView.findViewById(R.id.user_handle);
+
+        icon.setImageDrawable(getResources().getDrawable(iconid));
+        username.setText(name);
+        userhandle.setText("@" + name);
 
         // Retrieve image, title, location, description from shortCode
-        StorageReference imageReference = storageReference.child("previews/" + shortCode);
-        imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
-                bytes -> {
-                    image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    previewImage.setImageBitmap(image);
-                }
-        );
+//        StorageReference imageReference = storageReference.child("previews/" + shortCode);
+//        imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
+//                bytes -> {
+//                    image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                    previewImage.setImageBitmap(image);
+//                }
+//        );
+        previewImage.setImageBitmap(pImage);
 
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
