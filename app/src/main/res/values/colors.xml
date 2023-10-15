@@ -11,5 +11,6 @@
     <color name="light_grey">#948DA0</color>
     <color name="text_color">#DBD6E3</color>
     <color name="dark_purple">#FF3B3448</color>
+    <color name="red">#E55A53</color>
 
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#484155">
+    android:background="#2F283B">
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36sp"
         android:hint="@string/email"
-        android:textColorHint="#B0BEC5"
+        android:textColorHint="#989A9D"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:hint="@string/password"
-        android:textColorHint="#B0BEC5"
+        android:textColorHint="#989A9D"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_textField">
@@ -72,7 +72,7 @@
         android:backgroundTint="@color/button"
         android:text="@string/login"
         android:textAllCaps="false"
-        android:textColor="#311B92"
+        android:textColor="@color/text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_textField" />
@@ -85,7 +85,7 @@
         android:background="#00FFFFFF"
         android:text="@string/forgot_your_password"
         android:textAllCaps="false"
-        android:textColor="#B0BEC5"
+        android:textColor="#989A9D"
         android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
         android:background="#00FFFFFF"
         android:text="@string/not_a_user_create_your_account"
         android:textAllCaps="false"
-        android:textColor="#B0BEC5"
+        android:textColor="#989A9D"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

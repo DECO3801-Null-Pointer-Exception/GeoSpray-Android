@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#484155">
-
+    android:background="#2F283B">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -43,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35sp"
                 android:layout_marginHorizontal="30sp">
+
                 <com.google.android.material.imageview.ShapeableImageView
                     app:shapeAppearanceOverlay="@style/box_corner"
                     android:id="@+id/create_upload_image"
@@ -53,7 +53,8 @@
                     android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:background="@drawable/rounded_corner"
-                    android:contentDescription="@string/image_upload" />
+                    android:contentDescription="@string/image_upload"
+                    android:backgroundTint="#20192D" />
                 
                 <TextView
                     android:id="@+id/create_upload_image_text"
@@ -61,7 +62,9 @@
                     android:layout_height="wrap_content"
                     android:text="Upload image"
                     android:layout_gravity="center"
-                    android:textSize="23sp"/>
+                    android:textSize="23sp"
+                    android:textColor="#E55A53"/>
+
             </FrameLayout>
 
             <TextView
@@ -73,7 +76,7 @@
                 android:layout_marginTop="30sp"
                 android:text="@string/title"
                 android:textSize="23sp"
-                android:textColor="@color/text_color"/>
+                android:textColor="#E55A53" />
 
             <EditText
                 android:id="@+id/create_title"
@@ -87,9 +90,9 @@
                 android:background="@drawable/rounded_corner"
                 android:textColor="@color/white"
                 android:ems="10"
-                android:hint="@string/title"
                 android:inputType="text"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:backgroundTint="#20192D" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,11 +103,10 @@
                 android:layout_marginHorizontal="30sp"
                 android:text="@string/description"
                 android:textSize="23sp"
-                android:textColor="@color/text_color" />
+                android:textColor="#E55A53" />
 
             <EditText
                 android:id="@+id/create_description"
-                android:hint="@string/description"
                 android:layout_width="match_parent"
                 android:layout_height="150sp"
                 android:layout_marginHorizontal="30sp"
@@ -119,7 +121,8 @@
                 android:ems="10"
                 android:inputType="textMultiLine"
                 android:autofillHints="Description"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:backgroundTint="#20192D" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -130,7 +133,7 @@
                 android:layout_marginHorizontal="30sp"
                 android:text="@string/location"
                 android:textSize="23sp"
-                android:textColor="@color/text_color" />
+                android:textColor="#E55A53" />
 
             <EditText
                 android:paddingStart="15dp"
@@ -144,9 +147,9 @@
                 android:textColor="@color/white"
                 android:ems="10"
                 android:inputType="text"
-                android:hint="@string/location"
                 android:autofillHints="location"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:backgroundTint="#20192D" />
 
             <Button
                 android:id="@+id/create_upload_submit"
