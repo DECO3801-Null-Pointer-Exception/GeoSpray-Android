@@ -129,6 +129,9 @@ public class PreviewFragment extends Fragment {
             popupMenu.show();
         });
 
+        ImageButton backButton = rootView.findViewById(R.id.preview_page_back);
+        backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+
         firebaseManager.getImageDate(shortCode, date -> ((TextView) rootView.findViewById(R.id.preview_date)).setText(date));
 
         // Initialise bottom sheet
