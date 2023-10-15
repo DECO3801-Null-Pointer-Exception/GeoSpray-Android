@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">GeoSpray</string>
     <string name="forgot_your_password">Forgot your password?</string>
-    <string name="not_a_user_create_your_account">Not a user? Create your account</string>
+    <string name="not_a_user_create_your_account">Not a user? Create your account.</string>
     <string name="login">Log in</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
