@@ -79,7 +79,7 @@ public class NavigationFragment extends Fragment {
                     map.getMapAsync(googleMap -> {
                         addClusteredMarkers(googleMap);
 
-                        if (shortCode == 0) {
+                        if (shortCode != 0) {
                             return;
                         }
 
