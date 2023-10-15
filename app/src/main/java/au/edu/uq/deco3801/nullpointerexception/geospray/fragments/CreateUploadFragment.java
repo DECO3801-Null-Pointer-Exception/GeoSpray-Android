@@ -35,7 +35,6 @@ public class CreateUploadFragment extends Fragment {
     private ImageView imageView;
     private EditText title;
     private EditText description;
-    private EditText location;
     private Bitmap bitmap;
     private View rootView;
     private TextView imageText;
@@ -65,7 +64,6 @@ public class CreateUploadFragment extends Fragment {
 
         title = rootView.findViewById(R.id.create_title);
         description = rootView.findViewById(R.id.create_description);
-        location = rootView.findViewById(R.id.create_location);
 
         Bundle args = this.getArguments();
 
@@ -116,7 +114,6 @@ public class CreateUploadFragment extends Fragment {
     private void onSubmitButtonPressed() {
         String titleText = title.getText().toString();
         String descriptionText = description.getText().toString();
-        String locationText = location.getText().toString();
 
         if (bitmap == null) {
             showToast("Please choose an image.");
@@ -126,9 +123,6 @@ public class CreateUploadFragment extends Fragment {
             return;
         } else if (descriptionText.isEmpty()) {
             showToast("Please enter a description.");
-            return;
-        } else if (locationText.isEmpty()) {
-            showToast("Please enter a location.");
             return;
         }
 
@@ -147,7 +141,6 @@ public class CreateUploadFragment extends Fragment {
         args.putByteArray("image", stream.toByteArray());
         args.putString("title", titleText);
         args.putString("description", descriptionText);
-        args.putString("location", locationText);
 
         cloudAnchorFragment.setArguments(args);
 

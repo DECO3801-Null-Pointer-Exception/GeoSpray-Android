@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +30,13 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -148,7 +154,31 @@ public class PreviewFragment extends Fragment {
 
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
-        firebaseManager.getImageLocation(shortCode, location -> ((TextView) rootView.findViewById(R.id.preview_location)).setText(location));
+        firebaseManager.getImageLat(shortCode, lat -> firebaseManager.getImageLong(shortCode, longitude -> {
+            try {
+                Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+                StringBuilder location = new StringBuilder();
+                List<Address> addresses = geocoder.getFromLocation(lat, longitude, 1);
+
+                if (addresses != null && !addresses.isEmpty()) {
+                    Address address = addresses.get(0);
+
+                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                        location.append(address.getAddressLine(i));
+
+                        if (i != address.getMaxAddressLineIndex()) {
+                            location.append("\n");
+                        }
+                    }
+                } else {
+                    location.append("Unknown");
+                }
+
+                ((TextView) rootView.findViewById(R.id.preview_location)).setText(location);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
 
         LinearLayout navigationButton = rootView.findViewById(R.id.preview_navigate);
         navigationButton.setOnClickListener(view -> {

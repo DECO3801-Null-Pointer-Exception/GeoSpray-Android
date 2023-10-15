@@ -116,20 +116,26 @@
 
                 <LinearLayout
                     android:id="@+id/preview_navigate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:id="@+id/preview_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
                         android:text="UQ Modwest"
-                        android:textSize="25sp" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="5sp"
+                        app:autoSizeMaxTextSize="40sp"
+                        app:autoSizeStepGranularity="1sp"
+                        android:layout_weight="1" />
 
                     <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/navigation"
                         android:background="#00FFFFFF"
                         app:tint="#E55A53"

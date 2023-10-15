@@ -124,33 +124,6 @@
                 android:imeOptions="actionNext"
                 android:backgroundTint="#20192D" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30sp"
-                android:layout_marginBottom="7sp"
-                android:layout_marginHorizontal="30sp"
-                android:text="@string/location"
-                android:textSize="23sp"
-                android:textColor="#E55A53" />
-
-            <EditText
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:id="@+id/create_location"
-                android:layout_marginHorizontal="30sp"
-                android:layout_width="match_parent"
-                android:layout_height="48sp"
-                android:layout_gravity="center"
-                android:background="@drawable/rounded_corner"
-                android:textColor="@color/white"
-                android:ems="10"
-                android:inputType="text"
-                android:autofillHints="location"
-                android:imeOptions="actionNext"
-                android:backgroundTint="#20192D" />
-
             <Button
                 android:id="@+id/create_upload_submit"
                 android:layout_width="match_parent"
