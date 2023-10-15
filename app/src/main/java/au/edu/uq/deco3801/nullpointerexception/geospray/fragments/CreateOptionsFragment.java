@@ -19,26 +19,14 @@ public class CreateOptionsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.create_page_options_fragment, container, false);
 
         ImageButton backButton = rootView.findViewById(R.id.create_option_back);
-        backButton.setOnClickListener(v -> onBackButtonPressed());
+        backButton.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
         ImageButton uploadButton = rootView.findViewById(R.id.create_upload);
-        uploadButton.setOnClickListener(v -> onUploadButtonPressed());
+        uploadButton.setOnClickListener(v -> ((MainActivity) requireActivity()).replaceFrag(new CreateUploadFragment()));
 
         ImageButton createButton = rootView.findViewById(R.id.create_create);
-        createButton.setOnClickListener(v -> onCreateButtonPressed());
+        createButton.setOnClickListener(v -> ((MainActivity) requireActivity()).replaceFrag(new PaintFragment()));
 
         return rootView;
-    }
-
-    private void onBackButtonPressed() {
-
-    }
-
-    private void onUploadButtonPressed() {
-        ((MainActivity) requireActivity()).replaceFrag(new CreateUploadFragment());
-    }
-
-    private void onCreateButtonPressed() {
-        ((MainActivity) requireActivity()).replaceFrag(new PaintFragment());
     }
 }

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,9 @@ public class CreateUploadFragment extends Fragment {
 
         Button submitButton = rootView.findViewById(R.id.create_upload_submit);
         submitButton.setOnClickListener(v -> onSubmitButtonPressed());
+
+        ImageButton backButton = rootView.findViewById(R.id.create_page_back);
+        backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
         title = rootView.findViewById(R.id.create_title);
         description = rootView.findViewById(R.id.create_description);

@@ -211,6 +211,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     ImageButton clearButton = rootView.findViewById(R.id.clear_button);
     clearButton.setOnClickListener(v -> onClearButtonPressed());
 
+    ImageButton backButton = rootView.findViewById(R.id.camera_page_back);
+    backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
     rotationBar.setEnabled(false);
