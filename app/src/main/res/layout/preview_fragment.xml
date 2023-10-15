@@ -24,14 +24,14 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:background="@drawable/bottom_sheet"
         android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:paddingBottom="25dp">
+        android:paddingRight="25dp">
 
         <!-- Shown -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="vertical">
+
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
@@ -43,6 +43,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/preview_profile_picture"
                     android:layout_width="50dp"
@@ -57,7 +58,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/preview_profile_picture">
+
                     <TextView
+                        android:id="@+id/username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Username"
@@ -65,9 +68,11 @@
                         android:textColor="@color/white" />
 
                     <TextView
+                        android:id="@+id/user_handle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="\@user_handle" />
+
                 </LinearLayout>
 
                 <ImageButton
@@ -80,135 +85,628 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="10dp"
                     android:background="#00FFFFFF" />
+
             </RelativeLayout>
+
         </LinearLayout>
 
         <!-- Hidden -->
-        <View style="@style/divider" />
-
-        <TextView
-            android:id="@+id/preview_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vibrant Dreamscape"
-            android:textStyle="bold"
-            android:textSize="35sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="-5dp" />
-
-        <LinearLayout
-            android:id="@+id/preview_navigate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-
-            <TextView
-                android:id="@+id/preview_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="UQ Modwest"
-                android:textSize="25sp" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/navigation"
-                android:background="#00FFFFFF"
-                app:tint="#E55A53"
-                android:scaleType="centerCrop"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:contentDescription="Navigate" />
-        </LinearLayout>
-
-        <View style="@style/divider" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/preview_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2023-10-7" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" • " />
-
-            <TextView
-                android:id="@+id/preview_likes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="393"
-                android:textColor="#E55A53" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" Likes • " />
-
-            <TextView
-                android:id="@+id/preview_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"
-                android:textColor="#E55A53" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" Comments" />
-
-        </LinearLayout>
-
-        <View style="@style/divider" />
-
-        <TextView
-            android:id="@+id/preview_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&quot;Vibrant Dreamscape&quot; is a mesmerizing artwork that marries bold colors with ethereal forms. Swirling strokes of cerulean and magenta create a sense of fluidity and depth, drawing the viewer into a surreal world of endless possibilities. This piece evokes a sense of wonder and invites contemplation of the unknown."
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
-
-        <View style="@style/divider" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comments"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
-
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:srcCompat="@drawable/profile_picture"
-                app:shapeAppearanceOverlay="@style/circular_image" />
+            android:layout_height="400dp"
+            android:scrollbars="vertical">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_corner"
-                android:inputType="text"
-                android:hint="Leave a comment..."
-                android:textSize="11sp"
-                android:layout_gravity="center"
-                android:padding="5dp"
-                android:layout_marginStart="10dp"
-                android:autofillHints="comment"
-                android:backgroundTint="#20192D"/>
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:id="@+id/preview_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vibrant Dreamscape"
+                    android:textStyle="bold"
+                    android:textSize="35sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="-5dp" />
+
+                <LinearLayout
+                    android:id="@+id/preview_navigate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/preview_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="UQ Modwest"
+                        android:textSize="25sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/navigation"
+                        android:background="#00FFFFFF"
+                        app:tint="#E55A53"
+                        android:scaleType="centerCrop"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:contentDescription="Navigate" />
+
+                </LinearLayout>
+
+                <View style="@style/divider" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/preview_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2023-10-7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" • " />
+
+                    <TextView
+                        android:id="@+id/preview_likes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="393"
+                        android:textColor="#E55A53" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Likes • " />
+
+                    <TextView
+                        android:id="@+id/preview_comments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        android:textColor="#E55A53" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Comments" />
+
+                </LinearLayout>
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:id="@+id/preview_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="&quot;Vibrant Dreamscape&quot; is a mesmerizing artwork that marries bold colors with ethereal forms. Swirling strokes of cerulean and magenta create a sense of fluidity and depth, drawing the viewer into a surreal world of endless possibilities. This piece evokes a sense of wonder and invites contemplation of the unknown."
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp" />
+
+                <View style="@style/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comments"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="15dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/profile_picture"
+                        app:shapeAppearanceOverlay="@style/circular_image" />
+
+                    <EditText
+                        android:id="@+id/comment_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_corner"
+                        android:inputType="text"
+                        android:hint="Leave a comment..."
+                        android:textSize="11sp"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:layout_marginStart="10dp"
+                        android:autofillHints="comment"
+                        android:backgroundTint="#20192D"
+                        android:imeOptions="actionDone" />
+
+                </LinearLayout>
+
+                <!-- User comment -->
+                <LinearLayout
+                    android:id="@+id/user_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_user_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_user_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_user_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_user_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_user_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 1 -->
+                <LinearLayout
+                    android:id="@+id/comment_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_1_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_1_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_1_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_1_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_1_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 2 -->
+                <LinearLayout
+                    android:id="@+id/comment_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_2_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_2_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_2_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_2_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_2_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 3 -->
+                <LinearLayout
+                    android:id="@+id/comment_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_3_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_3_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_3_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_3_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_3_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 4 -->
+                <LinearLayout
+                    android:id="@+id/comment_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_4_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_4_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_4_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_4_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_4_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 5 -->
+                <LinearLayout
+                    android:id="@+id/comment_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_5_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_5_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_5_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_5_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_5_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Comment 6 -->
+                <LinearLayout
+                    android:id="@+id/comment_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View style="@style/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/comment_6_picture"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/profile_picture"
+                                app:shapeAppearanceOverlay="@style/circular_image" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/comment_6_picture">
+
+                                <TextView
+                                    android:id="@+id/comment_6_username"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Username"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:textSize="11dp" />
+
+                                <TextView
+                                    android:id="@+id/comment_6_handle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="\@user_handle"
+                                    android:textSize="11dp" />
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/comment_6_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Comment"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
     </LinearLayout>
 
     <!-- Back button -->
