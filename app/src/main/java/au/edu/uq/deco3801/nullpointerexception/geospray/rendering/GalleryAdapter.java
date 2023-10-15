@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private FirebaseManager firebaseManager;
     private ArrayList<Integer> icons;
     private ArrayList<String> usernames;
+    private int[] comments;
+    private int[] likes;
 
     public GalleryAdapter(Context context, ArrayList<GalleryImage> galleryImages) {
         this.context = context;
@@ -57,6 +60,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 "Psychedelics", "AbraKadaBra" , "Mazafacker" , "JediReturn" , "HotAsAshes" ,
                 "realOnline" , "tranquility_tom" , "ACuteAssasin" , "iBookScore" ,
                 "oprah_wind_fury" , "Godistime"));
+
+        comments = new Random().ints(0, 7).limit(35).toArray();
+        likes = new Random().ints(0, 1001).limit(35).toArray();
     }
 
     @NonNull
@@ -82,6 +88,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode()%35)));
             ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode()%35));
             ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(image.getShortCode()%35));
+            ((MyViewHolder) holder).comments.setText(String.valueOf(comments[image.getShortCode() % 35]));
+            ((MyViewHolder) holder).likes.setText(String.valueOf(likes[image.getShortCode() % 35]));
 
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
             ((MyViewHolder) holder).image.setOnClickListener(view -> {
@@ -90,6 +98,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 args.putParcelable("BitmapImage", image.getImg());
                 args.putInt("iconid", icons.get(image.getShortCode()%35));
                 args.putString("username", usernames.get(image.getShortCode()%35));
+                args.putInt("comments", comments[image.getShortCode() % 35]);
+                args.putInt("likes", likes[image.getShortCode() % 35]);
+
                 PreviewFragment previewFragment = new PreviewFragment();
                 previewFragment.setArguments(args);
 
@@ -157,6 +168,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView icon;
         TextView username;
         TextView userhandle;
+        TextView comments;
+        TextView likes;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -165,6 +178,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             icon = itemView.findViewById(R.id.preview_profile_picture);
             username = itemView.findViewById(R.id.image_username);
             userhandle = itemView.findViewById(R.id.user_handle);
+            comments = itemView.findViewById(R.id.image_comments);
+            likes = itemView.findViewById(R.id.image_likes);
 //            images.add(itemView.findViewById(R.id.g1));
 //            images.add(itemView.findViewById(R.id.g2));
 //            images.add(itemView.findViewById(R.id.g3));
