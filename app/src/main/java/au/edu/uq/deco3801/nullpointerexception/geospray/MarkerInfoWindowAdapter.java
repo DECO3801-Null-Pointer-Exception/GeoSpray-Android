@@ -29,8 +29,6 @@ public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.marker_info_contents, null);
-        ((TextView) view.findViewById(R.id.text_view_title)).setText(place.getTitle());
-        ((TextView) view.findViewById(R.id.text_view_address)).setText(place.getLocation());
         ((ImageView) view.findViewById(R.id.image_view_preview)).setImageBitmap(place.getPreview());
 
         return view;

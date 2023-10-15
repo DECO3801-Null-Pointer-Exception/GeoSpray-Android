@@ -1,38 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:padding="8dp">
+<!--    android:background="#2F283B">-->
 
     <ImageView
         android:id="@+id/image_view_preview"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:contentDescription="Preview image" />
-
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:text="Title" />
-
-    <TextView
-        android:id="@+id/text_view_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        tools:text="Location" />
+        android:layout_width="200dp"
+        android:layout_height="350dp"
+        android:contentDescription="Preview image"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:id="@+id/button_view_image"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="View Image"
         android:backgroundTint="#E55A53"
