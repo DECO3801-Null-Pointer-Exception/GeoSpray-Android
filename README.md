@@ -2,7 +2,7 @@
 
 Application that allows users to place virtual artwork on surfaces and share it with other users.
 
-Currently Based Android 
+Currently based on Android.
 
 Built with Android Studio, Using the ARCore Geospatial API and Firebase.
 
