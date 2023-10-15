@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
-    replaceFrag(new ImageGalleryFragment());
+    replaceFrag(imageGalleryFragment);
 
     mAuth = FirebaseAuth.getInstance();
 
