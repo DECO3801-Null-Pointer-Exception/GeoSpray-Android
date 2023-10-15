@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="@string/number_placeholder"
+                        android:text="0"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_color"
@@ -112,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="@string/number_placeholder"
+                        android:text="0"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_color"
@@ -160,7 +160,7 @@
                         android:layout_height="match_parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/left"
+                            android:id="@+id/your_area"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -172,46 +172,49 @@
                                 android:layout_height="30dp"
                                 android:paddingEnd="5dp"
                                 android:src="@drawable/your_works"
+                                android:id="@+id/your_works"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 android:layout_marginBottom="10dp"
-                                app:tint="#DBD6E3" />
+                                app:tint="@color/white" />
 
                             <View
                                 android:id="@+id/your_works_line"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="#989A9D"
+                                android:background="@color/white"
                                 app:layout_constraintBottom_toBottomOf="parent" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="0dp"
+                            android:id="@+id/liked_area"
                             android:layout_height="match_parent"
                             app:layout_constraintWidth_default="percent"
                             app:layout_constraintWidth_percent=".5"
-                            app:layout_constraintStart_toEndOf="@id/left">
+                            app:layout_constraintStart_toEndOf="@id/your_area">
 
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:paddingEnd="5dp"
                                 android:src="@drawable/heart"
+                                android:id="@+id/liked_works"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 android:layout_marginBottom="10dp"
-                                app:tint="#2F283B" />
+                                app:tint="#989A9D" />
 
                             <View
                                 android:id="@+id/liked_line"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:background="#2F283B"
+                                android:background="#989A9D"
                                 app:layout_constraintBottom_toBottomOf="parent" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
