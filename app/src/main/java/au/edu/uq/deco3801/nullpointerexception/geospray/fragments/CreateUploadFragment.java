@@ -106,7 +106,7 @@ public class CreateUploadFragment extends Fragment {
                             imageView.setImageBitmap(bitmap);
                             imageText.setVisibility(View.GONE);
                         } catch (IOException e) {
-                            showToast("Error getting image: " + e + ".");
+                            showToast("Error getting image.");
                         }
                     }
                 }

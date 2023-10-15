@@ -550,7 +550,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       return;
     }
 
-    requireActivity().runOnUiThread(() -> showToast("Now hosting anchor..."));
+    requireActivity().runOnUiThread(() -> showToast("Uploading image..."));
     future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
     // TODO: check necessity
@@ -562,7 +562,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     // Required to stop getCurrentLocation complaining
     if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      requireActivity().runOnUiThread(() -> showToast("No location permission."));
+      requireActivity().runOnUiThread(() -> showToast("Location permission is needed to run this application."));
+      return;
     }
 
     fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
@@ -598,24 +599,21 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           uploadTask = imageReference.putBytes(imageBytes);
 
           uploadTask.addOnFailureListener(
-                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed: " + e + "."))
+                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed."))
           );
 
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
           uploadTask = previewReference.putBytes(preview);
 
           uploadTask.addOnFailureListener(
-                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed: " + e + "."))
+                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed."))
           ).addOnSuccessListener(
                   taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
           );
-        } else {
-          // Firebase could not provide a short code.
-          requireActivity().runOnUiThread(() -> showToast("Cloud anchor hosted, but could not get a short code from Firebase."));
         }
       });
     } else {
-      requireActivity().runOnUiThread(() -> showToast("Error while hosting: " + cloudState.toString()));
+      requireActivity().runOnUiThread(() -> showToast("Upload failed."));
     }
   }
 
@@ -633,7 +631,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     firebaseManager.getImageRotation(shortCode, rotation -> {
       if (rotation == null) {
-        requireActivity().runOnUiThread(() -> showToast("A rotation for the short code " + shortCode + " was not found."));
+        requireActivity().runOnUiThread(() -> showToast("Error retrieving image."));
         return;
       }
       imageRotation = rotation;
@@ -641,7 +639,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     firebaseManager.getImageScale(shortCode, scale -> {
       if (scale == null) {
-        requireActivity().runOnUiThread(() -> showToast("A scale for the short code " + shortCode + " was not found."));
+        requireActivity().runOnUiThread(() -> showToast("Error retrieving image."));
         return;
       }
       imageScale = scale;
@@ -649,7 +647,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     firebaseManager.getCloudAnchorId(shortCode, cloudAnchorId -> {
       if (cloudAnchorId == null || cloudAnchorId.isEmpty()) {
-        requireActivity().runOnUiThread(() -> showToast("A cloud anchor ID for the short code " + shortCode + " was not found."));
+        requireActivity().runOnUiThread(() -> showToast("Error retrieving image."));
         return;
       }
       future = session.resolveCloudAnchorAsync(
@@ -659,14 +657,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private void onResolveComplete(Anchor anchor, CloudAnchorState cloudState, int shortCode) {
     if (cloudState == CloudAnchorState.SUCCESS) {
-      requireActivity().runOnUiThread(() -> showToast("Cloud anchor resolved. Short code: " + shortCode));
+      requireActivity().runOnUiThread(() -> showToast("Image successfully loaded."));
       currentAnchor = anchor;
 
       visualise = false;
       rotationBar.setProgress(180);
       scaleBar.setProgress(100);
     } else {
-      requireActivity().runOnUiThread(() -> showToast("Error while resolving anchor with short code " + shortCode + ". Error: " + cloudState.toString()));
+      requireActivity().runOnUiThread(() -> showToast("Error retrieving image."));
     }
   }
 
