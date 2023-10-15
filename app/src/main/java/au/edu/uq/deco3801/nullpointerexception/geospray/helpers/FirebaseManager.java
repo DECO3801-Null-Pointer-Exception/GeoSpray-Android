@@ -62,6 +62,10 @@ public class FirebaseManager {
         void onImageDateAvailable(String date);
     }
 
+    public interface UserUploadedListener {
+        void onUserUploadedAvailable(Integer userUploaded);
+    }
+
   /** Listener for a new short code from the Firebase Database. */
   public interface ShortCodeListener {
     void onShortCodeAvailable(Integer shortCode);
@@ -114,7 +118,7 @@ public class FirebaseManager {
   }
 
   /** Stores the cloud anchor ID in the configured Firebase Database. */
-  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String location, String date) {
+  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String location, String date, int userUploaded) {
     rootRef.child("" + shortCode).child("anchor").setValue(cloudAnchorId);
     rootRef.child("" + shortCode).child("rotation").setValue(rotation);
     rootRef.child("" + shortCode).child("scale").setValue(scale);
@@ -124,6 +128,7 @@ public class FirebaseManager {
     rootRef.child("" + shortCode).child("description").setValue(description);
     rootRef.child("" + shortCode).child("location").setValue(location);
     rootRef.child("" + shortCode).child("date").setValue(date);
+    rootRef.child("" + shortCode).child("userUploaded").setValue(userUploaded);
   }
 
   /**
@@ -310,6 +315,29 @@ public class FirebaseManager {
                                         "The Firebase operation for getImageDate was cancelled.",
                                         error.toException());
                                 listener.onImageDateAvailable(null);
+                            }
+                        });
+    }
+
+    public void getUserUploaded(int shortCode, UserUploadedListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("userUploaded")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onUserUploadedAvailable(dataSnapshot.getValue(Integer.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageDate was cancelled.",
+                                        error.toException());
+                                listener.onUserUploadedAvailable(null);
                             }
                         });
     }

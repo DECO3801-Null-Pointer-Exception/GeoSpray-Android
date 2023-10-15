@@ -544,7 +544,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   private void onUploadButtonPressed() {
-    // TODO: Error if not currently tracking
     if (!hasTrackingPlane()) {
       showToast("Please point the camera at the image.");
       return;
@@ -553,7 +552,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     requireActivity().runOnUiThread(() -> showToast("Uploading image..."));
     future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
-    // TODO: check necessity
     requireActivity().runOnUiThread(() -> {
       uploadButton.setEnabled(false);
       rotationBar.setEnabled(false);
@@ -593,7 +591,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         if (shortCode != null) {
           String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location, date);
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, location, date, 1);
 
           StorageReference imageReference = storageReference.child("images/" + shortCode);
           uploadTask = imageReference.putBytes(imageBytes);

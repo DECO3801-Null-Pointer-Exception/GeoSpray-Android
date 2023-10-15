@@ -85,27 +85,54 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof MyViewHolder) {
             GalleryImage image = galleryImages.get(position);
 
-            ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode()%35)));
-            ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode()%35));
-            ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(image.getShortCode()%35));
             ((MyViewHolder) holder).comments.setText(String.valueOf(comments[image.getShortCode() % 35]));
             ((MyViewHolder) holder).likes.setText(String.valueOf(likes[image.getShortCode() % 35]));
 
-            ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
-            ((MyViewHolder) holder).image.setOnClickListener(view -> {
-                Bundle args = new Bundle();
-                args.putInt("shortcode", image.getShortCode());
-                args.putParcelable("BitmapImage", image.getImg());
-                args.putInt("iconid", icons.get(image.getShortCode()%35));
-                args.putString("username", usernames.get(image.getShortCode()%35));
-                args.putInt("comments", comments[image.getShortCode() % 35]);
-                args.putInt("likes", likes[image.getShortCode() % 35]);
+            firebaseManager.getUserUploaded(image.getShortCode(), userUploaded -> {
+                if (userUploaded != null && userUploaded == 1) {
+                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
+                    ((MyViewHolder) holder).username.setText(usernames.get(0));
+                    ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(0));
 
-                PreviewFragment previewFragment = new PreviewFragment();
-                previewFragment.setArguments(args);
+                    ((MyViewHolder) holder).image.setOnClickListener(view -> {
+                        Bundle args = new Bundle();
 
-                ((MainActivity) context).replaceFrag(previewFragment);
+                        args.putInt("shortcode", image.getShortCode());
+                        args.putParcelable("BitmapImage", image.getImg());
+                        args.putInt("iconid", icons.get(0));
+                        args.putString("username", usernames.get(0));
+                        args.putInt("comments", comments[image.getShortCode() % 35]);
+                        args.putInt("likes", likes[image.getShortCode() % 35]);
+
+                        PreviewFragment previewFragment = new PreviewFragment();
+                        previewFragment.setArguments(args);
+
+                        ((MainActivity) context).replaceFrag(previewFragment);
+                    });
+                } else {
+                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode()%35)));
+                    ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode()%35));
+                    ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(image.getShortCode()%35));
+
+                    ((MyViewHolder) holder).image.setOnClickListener(view -> {
+                        Bundle args = new Bundle();
+
+                        args.putInt("shortcode", image.getShortCode());
+                        args.putParcelable("BitmapImage", image.getImg());
+                        args.putInt("iconid", icons.get(image.getShortCode() % 35));
+                        args.putString("username", usernames.get(image.getShortCode() % 35));
+                        args.putInt("comments", comments[image.getShortCode() % 35]);
+                        args.putInt("likes", likes[image.getShortCode() % 35]);
+
+                        PreviewFragment previewFragment = new PreviewFragment();
+                        previewFragment.setArguments(args);
+
+                        ((MainActivity) context).replaceFrag(previewFragment);
+                    });
+                }
             });
+
+            ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
 
             firebaseManager.getImageTitle(image.getShortCode(), title -> ((MyViewHolder) holder).name.setText(title));
 
