@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -187,7 +188,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView userhandle;
         TextView comments;
         TextView likes;
-        ImageView more;
+        LinearLayout more;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
