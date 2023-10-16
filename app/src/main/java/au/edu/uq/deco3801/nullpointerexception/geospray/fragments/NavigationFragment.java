@@ -114,7 +114,9 @@ public class NavigationFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.navigation_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.navigation_fragment, container, false);
+        rootView.findViewById(R.id.navigation_page_back).setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        return rootView;
     }
 
     private void addClusteredMarkers(GoogleMap googleMap) {
