@@ -16,6 +16,7 @@
 
 package au.edu.uq.deco3801.nullpointerexception.geospray.fragments;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -210,7 +211,13 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     clearButton.setOnClickListener(v -> onClearButtonPressed());
 
     ImageButton backButton = rootView.findViewById(R.id.camera_page_back);
-    backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+    backButton.setOnClickListener(view -> {
+      if (future != null) {
+        future.cancel();
+      }
+
+      getParentFragmentManager().popBackStack();
+    });
 
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
@@ -543,7 +550,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private void onUploadButtonPressed() {
     if (!hasTrackingPlane()) {
-      showToast("Please point the camera at the image.");
+      requireActivity().runOnUiThread(() -> showToast("Please point the camera at the image."));
       return;
     }
 
@@ -731,7 +738,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       currentToast.cancel();
     }
 
-    currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG);
-    currentToast.show();
+    Activity activity = getActivity();
+
+    if (activity != null) {
+      currentToast = Toast.makeText(activity, message, Toast.LENGTH_LONG);
+      currentToast.show();
+    }
   }
 }
