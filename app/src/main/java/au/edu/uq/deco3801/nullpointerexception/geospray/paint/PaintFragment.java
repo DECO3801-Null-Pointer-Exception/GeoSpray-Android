@@ -39,7 +39,7 @@ public class PaintFragment extends Fragment {
     private DrawView paint;
 
     // creating objects of type button
-    private ImageButton save, color, stroke, undo;
+    private ImageButton save, color, stroke, undo, back;
 
     // creating a RangeSlider object, which will
     // help in selecting the width of the Stroke
@@ -61,6 +61,7 @@ public class PaintFragment extends Fragment {
         save = rootView.findViewById(R.id.btn_save);
         color = rootView.findViewById(R.id.btn_color);
         stroke = rootView.findViewById(R.id.btn_stroke);
+        back = rootView.findViewById(R.id.btn_back);
         brush = false;
         hexColors = new ArrayList<>();
         hexColors.add("#2062af");
@@ -223,6 +224,8 @@ public class PaintFragment extends Fragment {
             }
 
         });
+
+        back.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
         // set the range of the RangeSlider
 //        rangeSlider.setValueFrom(0.0f);
