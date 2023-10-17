@@ -18,6 +18,7 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
           if (!currentUser.isAnonymous()) {
             // user is not anonymous (signed in)
+            Log.i("userinfo", currentUser.getDisplayName()+"");
             replaceFrag(new ProfileFragment());
 
           } else {
