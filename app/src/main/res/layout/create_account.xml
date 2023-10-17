@@ -31,27 +31,50 @@
         app:srcCompat="@drawable/new_user_profile" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_textField"
+        android:id="@+id/username_textField"
         android:layout_width="300sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36sp"
         android:hint="@string/username"
         android:textColorHint="#B0BEC5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/create_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36sp"
+            android:background="@drawable/rounded_corner"
+            android:inputType="text"
+            android:paddingStart="4sp"
+            android:paddingTop="2sp"
+            android:paddingEnd="4sp"
+            android:paddingBottom="2sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email_textField"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18sp"
+        android:hint="@string/email"
+        android:textColorHint="#B0BEC5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_textField">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/create_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2sp"
-            android:paddingBottom="2sp"
-            android:paddingStart="4sp"
-            android:paddingEnd="4sp"
             android:background="@drawable/rounded_corner"
             android:inputType="text"
-            />
+            android:paddingStart="4sp"
+            android:paddingTop="2sp"
+            android:paddingEnd="4sp"
+            android:paddingBottom="2sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
