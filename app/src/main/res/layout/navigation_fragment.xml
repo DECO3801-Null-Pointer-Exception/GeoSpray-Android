@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <fragment
         class="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+
+    <ImageButton
+        android:id="@+id/navigation_page_back"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="10sp"
+        android:background="#00FFFFFF"
+        app:srcCompat="@drawable/back_arrow"
+        android:contentDescription="@string/back_button"/>
+
+</FrameLayout>

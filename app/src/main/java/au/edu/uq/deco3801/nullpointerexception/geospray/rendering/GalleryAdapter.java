@@ -1,26 +1,34 @@
 package au.edu.uq.deco3801.nullpointerexception.geospray.rendering;
 
+import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
+import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -29,17 +37,16 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private Context context;
     private ArrayList<GalleryImage> galleryImages;
-    private int currentIndex;
     private FirebaseManager firebaseManager;
     private ArrayList<Integer> icons;
     private ArrayList<String> usernames;
     private int[] comments;
     private int[] likes;
+    private Toast currentToast;
 
     public GalleryAdapter(Context context, ArrayList<GalleryImage> galleryImages) {
         this.context = context;
         this.galleryImages = galleryImages;
-        currentIndex = 0;
 
         firebaseManager = new FirebaseManager(context);
 
@@ -61,6 +68,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 "realOnline" , "tranquility_tom" , "ACuteAssasin" , "iBookScore" ,
                 "oprah_wind_fury" , "Godistime"));
 
+        // 35 random integers between 0 and 7, and 0 and 1001 respectively
         comments = new Random().ints(0, 7).limit(35).toArray();
         likes = new Random().ints(0, 1001).limit(35).toArray();
     }
@@ -134,46 +142,30 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
 
+            ((MyViewHolder) holder).more.setOnClickListener(view1 -> {
+                PopupMenu popupMenu = new PopupMenu(context, view1);
+                popupMenu.setOnMenuItemClickListener(menuItem -> {
+                    if (menuItem.getItemId() == R.id.share_button) {
+                        onShareButtonPressed(image.getImg());
+                        return true;
+                    } else if (menuItem.getItemId() == R.id.report_button) {
+                        onReportButtonPressed();
+                        return true;
+                    }
+
+                    return false;
+                });
+
+                // Show icons in menu
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    popupMenu.setForceShowIcon(true);
+                }
+
+                popupMenu.inflate(R.menu.preview_menu);
+                popupMenu.show();
+            });
+
             firebaseManager.getImageTitle(image.getShortCode(), title -> ((MyViewHolder) holder).name.setText(title));
-
-
-
-//            firebaseManager.getImageUid(image.getShortCode(), new FirebaseManager.ImageRotationListener() {
-//                @Override
-//                public void onImageRotationAvailable(Integer rotation) {
-//                    if (rotation != null) {
-//                        ((MyViewHolder) holder).icon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), icons.get(rotation)));
-//                        ((MyViewHolder) holder).username.setText(usernames.get(rotation));
-//                        String handle = "@" + usernames.get(rotation);
-//                        ((MyViewHolder) holder).userhandle.setText(handle);
-//                    }
-//                }
-//            });
-
-//            for (int i = 0; i < 16; i++) {
-//                // Never exceed gallery_images max index
-//                int index = (currentIndex++) % GalleryImages.size();
-//
-//                GalleryImage image = GalleryImages.get(index);
-//
-//                if (image != null) {
-//                    ((MyViewHolder) holder).images.get(i).setImageBitmap(image.getImg());
-//                    ((MyViewHolder) holder).images.get(i).setOnClickListener(view -> {
-//                        Bundle args = new Bundle();
-//                        args.putInt("shortcode", image.getShort_code());
-//
-//                        PreviewFragment previewFragment = new PreviewFragment();
-//                        previewFragment.setArguments(args);
-//
-//                        ((MainActivity) context).replaceFrag(previewFragment);
-//                    });
-//                }
-//            }
-//
-//            // Make sure images aren't skipped
-//            if (currentIndex > GalleryImages.size()) {
-//                currentIndex = GalleryImages.size();
-//            }
         } else if (holder instanceof LoadingviewHolder) {
             showLoadingView((LoadingviewHolder) holder, position);
         }
@@ -189,7 +181,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        List<ImageView> images = new ArrayList<>();
         ImageView image;
         TextView name;
         ImageView icon;
@@ -197,6 +188,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView userhandle;
         TextView comments;
         TextView likes;
+        LinearLayout more;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -207,22 +199,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             userhandle = itemView.findViewById(R.id.user_handle);
             comments = itemView.findViewById(R.id.image_comments);
             likes = itemView.findViewById(R.id.image_likes);
-//            images.add(itemView.findViewById(R.id.g1));
-//            images.add(itemView.findViewById(R.id.g2));
-//            images.add(itemView.findViewById(R.id.g3));
-//            images.add(itemView.findViewById(R.id.g4));
-//            images.add(itemView.findViewById(R.id.g5));
-//            images.add(itemView.findViewById(R.id.g6));
-//            images.add(itemView.findViewById(R.id.g7));
-//            images.add(itemView.findViewById(R.id.g8));
-//            images.add(itemView.findViewById(R.id.g9));
-//            images.add(itemView.findViewById(R.id.g10));
-//            images.add(itemView.findViewById(R.id.g11));
-//            images.add(itemView.findViewById(R.id.g12));
-//            images.add(itemView.findViewById(R.id.g13));
-//            images.add(itemView.findViewById(R.id.g14));
-//            images.add(itemView.findViewById(R.id.g15));
-//            images.add(itemView.findViewById(R.id.g16));
+            more = itemView.findViewById(R.id.image_options);
         }
     }
 
@@ -237,5 +214,50 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void showLoadingView(LoadingviewHolder viewHolder, int position) {
         // Progressbar would be displayed
+    }
+
+    private void onShareButtonPressed(Bitmap image) {
+        if (image == null) {
+            return;
+        }
+
+        // Save image
+        OutputStream imageOutStream = null;
+        ContentValues cv = new ContentValues();
+
+        cv.put(MediaStore.Images.Media.DISPLAY_NAME, "share.jpg");
+        cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+        cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+
+        try {
+            imageOutStream = context.getContentResolver().openOutputStream(uri);
+            image.compress(Bitmap.CompressFormat.JPEG, 50, imageOutStream);
+            imageOutStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Share image
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/jpg");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        context.startActivity(Intent.createChooser(shareIntent, "Share image"));
+    }
+
+    private void onReportButtonPressed() {
+        showToast("Report submitted.");
+    }
+
+    private void showToast(String message) {
+        if (currentToast != null) {
+            currentToast.cancel();
+        }
+
+        if (context != null) {
+            currentToast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+            currentToast.show();
+        }
     }
 }

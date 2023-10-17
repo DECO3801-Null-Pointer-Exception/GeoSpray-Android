@@ -6,10 +6,6 @@
         android:icon="@drawable/home_button"
         android:title="home" />
     <item
-        android:id="@+id/bot_search"
-        android:icon="@drawable/search_button"
-        android:title="search" />
-    <item
         android:id="@+id/bot_create"
         android:icon="@drawable/create_button"
         android:title="create" />

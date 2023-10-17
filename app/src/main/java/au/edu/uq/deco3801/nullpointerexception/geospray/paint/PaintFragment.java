@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,7 +39,7 @@ public class PaintFragment extends Fragment {
     private DrawView paint;
 
     // creating objects of type button
-    private ImageButton save, color, stroke, undo;
+    private ImageButton save, color, stroke, undo, back;
 
     // creating a RangeSlider object, which will
     // help in selecting the width of the Stroke
@@ -60,6 +61,7 @@ public class PaintFragment extends Fragment {
         save = rootView.findViewById(R.id.btn_save);
         color = rootView.findViewById(R.id.btn_color);
         stroke = rootView.findViewById(R.id.btn_stroke);
+        back = rootView.findViewById(R.id.btn_back);
         brush = false;
         hexColors = new ArrayList<>();
         hexColors.add("#2062af");
@@ -223,6 +225,8 @@ public class PaintFragment extends Fragment {
 
         });
 
+        back.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+
         // set the range of the RangeSlider
 //        rangeSlider.setValueFrom(0.0f);
 //        rangeSlider.setValueTo(100.0f);
@@ -274,7 +278,11 @@ public class PaintFragment extends Fragment {
             currentToast.cancel();
         }
 
-        currentToast = Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG);
-        currentToast.show();
+        Activity activity = getActivity();
+
+        if (activity != null) {
+            currentToast = Toast.makeText(activity, message, Toast.LENGTH_LONG);
+            currentToast.show();
+        }
     }
 }

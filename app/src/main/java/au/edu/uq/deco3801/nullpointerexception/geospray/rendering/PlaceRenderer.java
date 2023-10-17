@@ -29,7 +29,7 @@ public class PlaceRenderer extends DefaultClusterRenderer<Place> {
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster<Place> cluster) {
-        // Cluster if there are 5 or more nearby points
-        return cluster.getSize() >= 5;
+        // Cluster if there are 20 or more nearby points
+        return cluster.getSize() >= 20;
     }
 }

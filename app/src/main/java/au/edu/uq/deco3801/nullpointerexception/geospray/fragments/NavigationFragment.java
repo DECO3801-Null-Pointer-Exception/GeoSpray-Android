@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -112,7 +114,9 @@ public class NavigationFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.navigation_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.navigation_fragment, container, false);
+        rootView.findViewById(R.id.navigation_page_back).setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        return rootView;
     }
 
     private void addClusteredMarkers(GoogleMap googleMap) {
@@ -132,10 +136,16 @@ public class NavigationFragment extends Fragment {
             ((MainActivity) requireActivity()).replaceFrag(cloudAnchorFragment);
         });
 
+//        clusterManager.setOnClusterClickListener(cluster -> {
+//            for (ClusterItem item : cluster.getItems()) {
+//                item.getPosition();
+//            }
+//
+//            return true;
+//        });
+
         clusterManager.addItems(places);
         clusterManager.cluster();
-
-//        clusterManager.getMarkerCollection().getMarkers().stream().filter(item -> ((Place) item.getTag()).getShortCode() == shortCode);
 
         for (Place place : places) {
             if (place.getShortCode() == shortCode) {

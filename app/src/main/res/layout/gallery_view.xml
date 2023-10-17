@@ -62,17 +62,24 @@
                 app:layout_constraintStart_toEndOf="@+id/preview_profile_picture"
                 app:layout_constraintTop_toBottomOf="@id/image_username" />
 
-            <ImageView
-                android:layout_marginTop="10dp"
+            <LinearLayout
                 android:id="@+id/image_options"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/more_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="#DBD6E3" />
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/more_icon"
+                    app:tint="#DBD6E3"
+                    android:contentDescription="More" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
