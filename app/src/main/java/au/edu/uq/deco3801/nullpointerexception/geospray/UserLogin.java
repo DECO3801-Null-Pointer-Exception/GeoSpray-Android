@@ -73,6 +73,7 @@ public class UserLogin extends AppCompatActivity {
 
 
     private void signIn(String email, String password) {
+        FirebaseUser userdata;
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -108,6 +109,24 @@ public class UserLogin extends AppCompatActivity {
 //                        }
                     }
                 });
+        // setup information
+        userdata = mAuth.getCurrentUser();
+        if (userdata != null) {
+            // The user object has basic properties such as display name, email, etc.
+            String displayName = userdata.getDisplayName();
+            String temail = userdata.getEmail();
+            String photoURL = String.valueOf(userdata.getPhotoUrl());
+            String uid = userdata.getUid();
+
+                        // The user's ID, unique to the Firebase project. Do NOT use
+                        // this value to authenticate with your backend server, if
+                        // you have one. Use User.getToken() instead.
+            Log.i("userinfo", displayName);
+            Log.i("userinfo", temail);
+            Log.i("userinfo", photoURL);
+            Log.i("userinfo", uid);
+
+        }
 
     }
 
