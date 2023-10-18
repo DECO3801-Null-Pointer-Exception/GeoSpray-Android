@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
-
+// TODO: https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
 public class DrawView extends View {
 
     private static final float TOUCH_TOLERANCE = 4;

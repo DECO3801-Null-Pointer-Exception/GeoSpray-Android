@@ -31,7 +31,7 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateUploadFragment;
 import petrov.kristiyan.colorpicker.ColorPicker;
-
+// TODO: https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
 public class PaintFragment extends Fragment {
 
     // creating the object of type DrawView

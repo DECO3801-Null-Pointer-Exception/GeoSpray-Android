@@ -2,7 +2,7 @@ package au.edu.uq.deco3801.nullpointerexception.geospray.paint;
 import android.graphics.Path;
 
 import android.graphics.Path;
-
+// TODO: https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
 public class Stroke {
 
     // color of the stroke

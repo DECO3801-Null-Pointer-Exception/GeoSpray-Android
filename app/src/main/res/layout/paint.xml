@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--TODO: https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/-->
+
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
@@ -79,16 +81,7 @@
                 android:max="100"
                 android:progress="50" />
 
-<!--            <com.google.android.material.slider.RangeSlider-->
-<!--                android:id="@+id/rangebar2"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:visibility="gone" />-->
-
         </LinearLayout>
-
-
-
     </LinearLayout>
 
     <au.edu.uq.deco3801.nullpointerexception.geospray.paint.DrawView

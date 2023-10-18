@@ -78,13 +78,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view;
-
-        if (viewType == VIEW_TYPE_ITEM) {
-            view = inflater.inflate(R.layout.gallery_view, parent, false);
-        } else {
-            view = inflater.inflate(R.layout.gallery_loading, parent, false);
-        }
+        View view = inflater.inflate(R.layout.gallery_view, parent, false);
 
         return new MyViewHolder(view);
     }
@@ -167,9 +161,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
 
             firebaseManager.getImageTitle(image.getShortCode(), title -> ((MyViewHolder) holder).name.setText(title));
-        } else if (holder instanceof LoadingviewHolder) {
-            showLoadingView((LoadingviewHolder) holder, position);
-        }
+        } 
     }
 
     @Override
@@ -202,19 +194,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             likes = itemView.findViewById(R.id.image_likes);
             more = itemView.findViewById(R.id.image_options);
         }
-    }
-
-    private class LoadingviewHolder extends RecyclerView.ViewHolder {
-        ProgressBar progressBar;
-
-        public LoadingviewHolder(@NonNull View itemView) {
-            super(itemView);
-            progressBar = itemView.findViewById(R.id.progressBar);
-        }
-    }
-
-    private void showLoadingView(LoadingviewHolder viewHolder, int position) {
-        // Progressbar would be displayed
     }
 
     private void onShareButtonPressed(Bitmap image) {
