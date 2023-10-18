@@ -85,7 +85,8 @@ public class NavigationFragment extends Fragment {
                     }
                 }
 
-                SupportMapFragment map = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                SupportMapFragment map = (SupportMapFragment) getChildFragmentManager()
+                        .findFragmentById(R.id.map);
 
                 if (map != null) {
                     map.getMapAsync(googleMap -> {
@@ -136,11 +137,13 @@ public class NavigationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.navigation_fragment, container, false);
 
         // Set back button behaviour
-        rootView.findViewById(R.id.navigation_page_back).setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        rootView.findViewById(R.id.navigation_page_back).setOnClickListener(view ->
+                getParentFragmentManager().popBackStack());
 
         return rootView;
     }
@@ -175,13 +178,18 @@ public class NavigationFragment extends Fragment {
         // Zoom view to image from preview page (if applicable)
         for (Place place : places) {
             if (place.getShortCode() == shortCode) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getPosition(), 20.0f));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getPosition(),
+                        20.0f));
             }
         }
 
         googleMap.setOnCameraIdleListener(clusterManager);
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             return;
         }
 

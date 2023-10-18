@@ -127,7 +127,6 @@ public class ProfileFragment extends Fragment {
                             bytes -> {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-
                                 if (child.getKey() != null) {
                                     GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
@@ -135,16 +134,16 @@ public class ProfileFragment extends Fragment {
                                     if (String.valueOf(child.child("uid").getValue()).equals(getUID())) {
                                         if (!yourImages.contains(image)) {
                                             yourImages.add(image);
+                                            yourAdapter.notifyDataSetChanged();
                                         }
-                                        yourAdapter.notifyDataSetChanged();
                                     }
 
                                     // If the image is liked then add it to liked gallery
                                     if (String.valueOf(child.child("liked").getValue()).equals("true")) {
                                         if (!likedImages.contains(image)) {
                                             likedImages.add(image);
+                                            likedAdapter.notifyDataSetChanged();
                                         }
-                                        likedAdapter.notifyDataSetChanged();
                                     }
                                 }
                             }

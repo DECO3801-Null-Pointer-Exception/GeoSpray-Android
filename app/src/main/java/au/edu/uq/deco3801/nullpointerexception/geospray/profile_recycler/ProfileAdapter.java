@@ -17,6 +17,7 @@ import java.util.Random;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
@@ -85,18 +86,32 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyViewHolder) {
             GalleryImage image = profileImages.get(position);
+            FirebaseManager firebaseManager = new FirebaseManager(context);
 
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
 
-            ((MyViewHolder) holder).image.setOnClickListener(view -> {
-                Bundle args = new Bundle();
+            Bundle args = new Bundle();
 
-                args.putInt("shortcode", image.getShortCode());
-                args.putParcelable("BitmapImage", image.getImg());
-                args.putInt("iconid", icons.get(image.getShortCode() % 35));
-                args.putString("username", usernames.get(image.getShortCode() % 35));
-                args.putInt("comments", comments[image.getShortCode() % 35]);
-                args.putInt("likes", likes[image.getShortCode() % 35]);
+            ((MyViewHolder) holder).image.setOnClickListener(view -> {
+                firebaseManager.getImageUid(image.getShortCode(), uid -> {
+                    if (uid != null && uid.equals("0")) {
+                        // Random user
+                        args.putInt("shortcode", image.getShortCode());
+                        args.putParcelable("BitmapImage", image.getImg());
+                        args.putInt("iconid", icons.get(image.getShortCode() % 35));
+                        args.putString("username", usernames.get(image.getShortCode() % 35));
+                        args.putInt("comments", comments[image.getShortCode() % 35]);
+                        args.putInt("likes", likes[image.getShortCode() % 35]);
+                    } else {
+                        // User
+                        args.putInt("shortcode", image.getShortCode());
+                        args.putParcelable("BitmapImage", image.getImg());
+                        args.putInt("iconid", icons.get(0));
+                        args.putString("username", usernames.get(0));
+                        args.putInt("comments", comments[image.getShortCode() % 35]);
+                        args.putInt("likes", likes[image.getShortCode() % 35]);
+                    }
+                });
 
                 PreviewFragment previewFragment = new PreviewFragment();
                 previewFragment.setArguments(args);
