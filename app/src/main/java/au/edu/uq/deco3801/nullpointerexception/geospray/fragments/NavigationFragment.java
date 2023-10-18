@@ -40,6 +40,10 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaceRenderer;
 /**
  * Google maps navigation fragment. Shows the user the location of all images on Google maps.
  * The user is able to tap on an image to either navigate to it or resolve the image in AR.
+ * <br/>
+ * Code adapted from Google Maps Platform 101 Codelab, available at:
+ * <a href="https://github.com/googlecodelabs/maps-platform-101-android">
+ *     https://github.com/googlecodelabs/maps-platform-101-android</a>
  */
 public class NavigationFragment extends Fragment {
     public static final String TAG = NavigationFragment.class.getName();

@@ -10,6 +10,10 @@ import com.google.maps.android.clustering.ClusterItem;
 
 /**
  * A class representing a place on Google maps. A Place has an associated image uploaded by a user.
+ * <br/>
+ * Code adapted from Google Maps Platform 101 Codelab, available at:
+ * <a href="https://github.com/googlecodelabs/maps-platform-101-android">
+ *     https://github.com/googlecodelabs/maps-platform-101-android</a>
  */
 public class Place implements ClusterItem {
     private final int shortCode;

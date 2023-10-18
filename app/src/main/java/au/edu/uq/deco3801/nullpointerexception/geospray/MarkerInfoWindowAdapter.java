@@ -14,6 +14,10 @@ import androidx.annotation.Nullable;
 
 /**
  * Class representing a pop-up when a place is tapped on Google maps in the NavigationFragment.
+ * <br/>
+ * Code adapted from Google Maps Platform 101 Codelab, available at:
+ * <a href="https://github.com/googlecodelabs/maps-platform-101-android">
+ *     https://github.com/googlecodelabs/maps-platform-101-android</a>
  */
 public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final Context context;
