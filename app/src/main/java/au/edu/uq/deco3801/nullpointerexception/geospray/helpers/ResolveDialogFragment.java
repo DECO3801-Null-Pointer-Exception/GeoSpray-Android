@@ -28,7 +28,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-/** A DialogFragment for the Resolve Dialog Box. */
+/**
+ * A DialogFragment for the Resolve Dialog Box.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public class ResolveDialogFragment extends DialogFragment {
 
   // The maximum number of characters that can be entered in the EditText.

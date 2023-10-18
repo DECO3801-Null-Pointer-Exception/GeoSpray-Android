@@ -10,6 +10,17 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+/**
+ * Helper to ask for location permissions.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ * <br/>
+ * Modified by: Raymond Dufty.
+ * <br/>
+ * Modifications include: changing from camera permission to location permission.
+ */
 public class LocationPermissionHelper {
     private static final int LOCATION_PERMISSION_CODE = 1;
     private static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;

@@ -30,7 +30,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 
-/** Helper class for Firebase storage of cloud anchor IDs. */
+/**
+ * Helper class for Firebase storage of cloud anchor IDs.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ * <br/>
+ * Modified by: Raymond Dufty, Xingyun Wang, Esmond Wu.
+ * <br/>
+ * Modifications include: adding additional fields to the database.
+ */
 public class FirebaseManager {
 
   /** Listener for a new Cloud Anchor ID from the Firebase Database. */
@@ -38,38 +48,47 @@ public class FirebaseManager {
     void onCloudAnchorIdAvailable(String cloudAnchorId);
   }
 
+  /** Listener for a new image rotation from the Firebase Database. */
   public interface ImageRotationListener {
     void onImageRotationAvailable(Integer rotation);
   }
 
+    /** Listener for a new image scale from the Firebase Database. */
   public interface ImageScaleListener {
     void onImageScaleAvailable(Float scale);
   }
 
+    /** Listener for a new image title from the Firebase Database. */
     public interface ImageTitleListener {
         void onImageTitleAvailable(String title);
     }
 
+    /** Listener for a new image description from the Firebase Database. */
     public interface ImageDescriptionListener {
         void onImageDescriptionAvailable(String description);
     }
 
+    /** Listener for a new image date from the Firebase Database. */
     public interface ImageDateListener {
         void onImageDateAvailable(String date);
     }
 
+    /** Listener for a new user ID from the Firebase Database. */
     public interface ImageUidListener {
         void onImageUidAvailable(String uid);
     }
 
+    /** Listener for a new latitude from the Firebase Database. */
     public interface ImageLatListener {
         void onImageLatAvailable(Double lat);
     }
 
+    /** Listener for a new longitude from the Firebase Database. */
     public interface ImageLongListener {
         void onImageLongAvailable(Double longitude);
     }
 
+    /** Listener for a new like from the Firebase Database. */
     public interface ImageLikedListener {
         void onImageLikedAvailable(Boolean liked);
     }
@@ -125,7 +144,7 @@ public class FirebaseManager {
             });
   }
 
-  /** Stores the cloud anchor ID in the configured Firebase Database. */
+  /** Stores the image and associated data in the configured Firebase Database. */
   public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String date, String uid) {
     rootRef.child("" + shortCode).child("anchor").setValue(cloudAnchorId);
     rootRef.child("" + shortCode).child("rotation").setValue(rotation);
@@ -165,6 +184,10 @@ public class FirebaseManager {
             });
   }
 
+    /**
+     * Retrieves the image rotation using a short code. Returns an empty string if an image rotation
+     * was not stored for this short code.
+     */
     public void getImageRotation(int shortCode, ImageRotationListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -188,6 +211,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the UID using a short code. Returns an empty string if a UID
+     * was not stored for this short code.
+     */
     public void getImageUid(int shortCode, ImageUidListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -211,6 +238,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image scale using a short code. Returns an empty string if an image scale
+     * was not stored for this short code.
+     */
     public void getImageScale(int shortCode, ImageScaleListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -234,6 +265,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image title using a short code. Returns an empty string if an image title
+     * was not stored for this short code.
+     */
     public void getImageTitle(int shortCode, ImageTitleListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -257,6 +292,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image description using a short code. Returns an empty string if an image description
+     * was not stored for this short code.
+     */
     public void getImageDescription(int shortCode, ImageDescriptionListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -280,6 +319,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image date using a short code. Returns an empty string if an image date
+     * was not stored for this short code.
+     */
     public void getImageDate(int shortCode, ImageDateListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -303,6 +346,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image latitude using a short code. Returns an empty string if a latitude
+     * was not stored for this short code.
+     */
     public void getImageLat(int shortCode, ImageLatListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -326,6 +373,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image longitude using a short code. Returns an empty string if a longitude
+     * was not stored for this short code.
+     */
     public void getImageLong(int shortCode, ImageLongListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -349,6 +400,10 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Retrieves the image like status using a short code. Returns an empty string if a like
+     * was not stored for this short code.
+     */
     public void getImageLiked(int shortCode, ImageLikedListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -372,6 +427,11 @@ public class FirebaseManager {
                         });
     }
 
+    /**
+     * Returns a reference to the root of the database.
+     *
+     * @return The database root.
+     */
     public DatabaseReference getRootRef() {
         return rootRef;
     }

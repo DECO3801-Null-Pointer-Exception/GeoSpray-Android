@@ -30,6 +30,10 @@ import com.google.ar.core.Session;
  * Helper to track the display rotations. In particular, the 180 degree rotations are not notified
  * by the onSurfaceChanged() callback, and thus they require listening to the android display
  * events.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
  */
 public final class DisplayRotationHelper implements DisplayListener {
   private boolean viewportChanged;

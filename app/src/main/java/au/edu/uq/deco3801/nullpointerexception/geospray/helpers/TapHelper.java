@@ -25,6 +25,10 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Helper to detect taps using Android GestureDetector, and pass the taps between UI thread and
  * render thread.
+ *
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
  */
 public final class TapHelper implements OnTouchListener {
   private final GestureDetector gestureDetector;

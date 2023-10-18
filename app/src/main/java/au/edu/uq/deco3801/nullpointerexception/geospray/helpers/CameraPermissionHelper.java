@@ -23,7 +23,13 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-/** Helper to ask camera permission. */
+/**
+ * Helper to ask camera permission.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public final class CameraPermissionHelper {
   private static final int CAMERA_PERMISSION_CODE = 0;
   private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;

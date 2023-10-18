@@ -20,7 +20,13 @@ import com.google.ar.core.Camera;
 import com.google.ar.core.TrackingFailureReason;
 import com.google.ar.core.TrackingState;
 
-/** Gets human readibly tracking failure reasons and suggested actions. */
+/**
+ * Gets human-readable tracking failure reasons and suggested actions.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public final class TrackingStateHelper {
   private static final String INSUFFICIENT_FEATURES_MESSAGE =
       "Can't find anything. Aim device at a surface with more texture or color.";

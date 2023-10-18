@@ -17,7 +17,13 @@ package au.edu.uq.deco3801.nullpointerexception.geospray.helpers;
 import android.app.Activity;
 import android.view.View;
 
-/** Helper to set up the Android full screen mode. */
+/**
+ * Helper to set up the Android full screen mode.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public final class FullScreenHelper {
   /**
    * Sets the Android fullscreen flags. Expected to be called from {@link
