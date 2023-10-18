@@ -6,7 +6,7 @@ import android.graphics.Path;
 
 /**
  * Class representing a stroke on a canvas.
- *
+ * <br/>
  * Code adapted from geeksforgeeks, available at:
  * <a href="https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/">
  *     https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android</a>
