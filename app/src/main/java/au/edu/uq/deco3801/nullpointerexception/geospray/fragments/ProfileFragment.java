@@ -80,9 +80,11 @@ public class ProfileFragment extends Fragment {
 
         Button signOutButton = rootView.findViewById(R.id.sign_out_button);
         signOutButton.setOnClickListener(v -> {
+            // Sign out and go back to home page.
             FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signOut();
             auth.signInAnonymously();
+
             MainActivity mainActivity = (MainActivity) requireActivity();
             mainActivity.replaceFrag(mainActivity.getImageGalleryFragment());
         });
