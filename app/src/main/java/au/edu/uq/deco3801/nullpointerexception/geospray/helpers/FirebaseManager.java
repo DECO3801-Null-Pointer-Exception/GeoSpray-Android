@@ -122,7 +122,7 @@ public class FirebaseManager {
   }
 
   /** Stores the cloud anchor ID in the configured Firebase Database. */
-  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String date, int userUploaded) {
+  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String date, String userUploaded) {
     rootRef.child("" + shortCode).child("anchor").setValue(cloudAnchorId);
     rootRef.child("" + shortCode).child("rotation").setValue(rotation);
     rootRef.child("" + shortCode).child("scale").setValue(scale);
