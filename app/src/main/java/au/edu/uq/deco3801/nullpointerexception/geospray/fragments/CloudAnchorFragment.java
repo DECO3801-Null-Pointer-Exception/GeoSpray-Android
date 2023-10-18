@@ -159,7 +159,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private Toast currentToast;
 
-  private FirebaseUser mAuth;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -629,10 +628,10 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   private String getUID() {
-    mAuth = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    if (mAuth != null) {
-      return mAuth.getUid();
+    if (user != null) {
+      return user.getUid();
     }
 
     // Set user identifier to 0 for anonymous

@@ -21,15 +21,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -38,7 +34,6 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CloudAnchorFra
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateOptionsFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ImageGalleryFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.NavigationFragment;
-import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.ProfileFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
@@ -61,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-
     mAuth = FirebaseAuth.getInstance();
 
 //    mAuth.signOut(); //just for testing purposes
@@ -69,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     if (mAuth.getCurrentUser() == null) {
       mAuth.signInAnonymously();
     }
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -86,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 //        setupProfile();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         createToast("User is:"+ currentUser); //todo
+
 
         if(currentUser != null) {
           if (!currentUser.isAnonymous()) {

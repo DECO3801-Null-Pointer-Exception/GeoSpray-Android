@@ -96,8 +96,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyViewHolder) holder).comments.setText(String.valueOf(comments[image.getShortCode() % 35]));
             ((MyViewHolder) holder).likes.setText(String.valueOf(likes[image.getShortCode() % 35]));
 
-            firebaseManager.getUserUploaded(image.getShortCode(), userUploaded -> {
-                if (userUploaded != null && userUploaded == 1) {
+            firebaseManager.getImageUid(image.getShortCode(), uid -> {
+                if (uid != null && uid.equals("0")) {
                     ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
                     ((MyViewHolder) holder).username.setText(usernames.get(0));
                     ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(0));

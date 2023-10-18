@@ -116,7 +116,7 @@ public class ProfileFragment extends Fragment {
                             bytes -> {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                                if (child.getKey() != null) {
+                                if (child.getKey() != null && String.valueOf(child.child("uid").getValue()).equals(getUID())) {
                                     GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
                                     if (!yourImages.contains(image)) {
@@ -164,5 +164,16 @@ public class ProfileFragment extends Fragment {
             }
 
         }
+    }
+
+    private String getUID() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            return user.getUid();
+        }
+
+        // Set user identifier to 0 for anonymous
+        return "0";
     }
 }
