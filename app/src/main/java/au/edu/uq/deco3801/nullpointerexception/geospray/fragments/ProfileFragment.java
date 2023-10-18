@@ -37,8 +37,13 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManagerU
 import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
+/**
+ * User profile fragment. Shows the user's profile and their details (followers, etc.). Also shows
+ * artwork they have uploaded.
+ */
 public class ProfileFragment extends Fragment {
     private static final String TAG = ImageGalleryFragment.class.getName();
+
     private RecyclerView recyclerView;
     private ProfileAdapter adapter;
     private ArrayList<GalleryImage> yourImages;
@@ -57,14 +62,13 @@ public class ProfileFragment extends Fragment {
 
         yourImages = new ArrayList<>();
         adapter = new ProfileAdapter(context, yourImages);
-
-
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile, container, false);
 
+        // Get view elements
         ConstraintLayout your_area = rootView.findViewById(R.id.your_area);
         ImageView your_works = rootView.findViewById(R.id.your_works);
         View your_works_line = rootView.findViewById(R.id.your_works_line);
@@ -73,6 +77,7 @@ public class ProfileFragment extends Fragment {
         ImageView liked_works = rootView.findViewById(R.id.liked_works);
         View liked_works_line = rootView.findViewById(R.id.liked_line);
 
+        // Switch tab selection on tap
         your_area.setOnClickListener(view -> {
             your_works.setColorFilter(Color.rgb(219, 214, 227));
             your_works_line.setBackgroundColor(Color.rgb(255, 255, 255));
@@ -93,6 +98,7 @@ public class ProfileFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
+        // Get all images from the database uploaded by the user
         firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,27 +137,34 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+
         if (user == null || user.isAnonymous()) {
             // user should not be here
             Intent login = new Intent(getContext(), UserLogin.class);
             startActivity(login); //send to login class
         } else {
             TextView username = rootView.findViewById(R.id.username);
+
             if (user.getDisplayName() != null) {
                 username.setText(user.getDisplayName());
                 Log.d("ProfileUID",user.getUid());
                 // todo
-                FirebaseManagerUsers userdatabase = new FirebaseManagerUsers(getContext());
-                userdatabase.storeUser(user.getUid());
+                FirebaseManagerUsers userDatabase = new FirebaseManagerUsers(getContext());
+                userDatabase.storeUser(user.getUid());
             } else {
                 username.setText("Display Name");
             }
-
         }
     }
 
+    /**
+     * Returns the user's ID (UID).
+     *
+     * @return The user's ID.
+     */
     private String getUID() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
