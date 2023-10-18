@@ -70,7 +70,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     /**
-     * Class representing a container for a View's images.
+     * Class representing a container for an Adapter's images.
      */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;

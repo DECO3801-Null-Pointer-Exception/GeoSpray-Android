@@ -29,6 +29,10 @@ import java.nio.FloatBuffer;
 /**
  * This class renders the AR background from camera feed. It creates and hosts the texture given to
  * ARCore to be filled with the camera image.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
  */
 public class BackgroundRenderer {
   private static final String TAG = BackgroundRenderer.class.getSimpleName();

@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +30,9 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.PreviewFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
+/**
+ * Class used to show images on the home page in a scrollable fashion.
+ */
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
@@ -44,12 +46,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int[] likes;
     private Toast currentToast;
 
+    /**
+     * Constructor for a GalleryAdapter.
+     *
+     * @param context The Context of this Adapter.
+     * @param galleryImages The list of images this Adapter is to display.
+     */
     public GalleryAdapter(Context context, ArrayList<GalleryImage> galleryImages) {
         this.context = context;
         this.galleryImages = galleryImages;
 
         firebaseManager = new FirebaseManager(context);
 
+        // Initialise a preset list of profile pictures
         icons = new ArrayList<>(Arrays.asList(R.drawable.profile_picture, R.drawable.i1,
                 R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6,
                 R.drawable.i7, R.drawable.i8, R.drawable.i9, R.drawable.i10, R.drawable.i11,
@@ -59,6 +68,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 R.drawable.i27, R.drawable.i28, R.drawable.i29, R.drawable.i30, R.drawable.i31,
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
+        // Initialise a preset list of usernames
         usernames = new ArrayList<>(Arrays.asList("guest", "SpaceCadet", "CaptainSporty", "FarmHick",
                 "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
@@ -68,8 +78,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 "realOnline" , "tranquility_tom" , "ACuteAssasin" , "iBookScore" ,
                 "oprah_wind_fury" , "Godistime"));
 
-        // 35 random integers between 0 and 7, and 0 and 1001 respectively
-        // TODO: https://stackoverflow.com/questions/22584244/how-to-generate-6-different-random-numbers-in-java
+        // Generate 35 random integers between 0 and 7, and 0 and 1001, respectively
+        // https://stackoverflow.com/questions/22584244/how-to-generate-6-different-random-numbers-in-java
+        // Accessed on October 16.
         comments = new Random().ints(0, 7).limit(35).toArray();
         likes = new Random().ints(0, 1001).limit(35).toArray();
     }
@@ -91,11 +102,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyViewHolder) holder).comments.setText(String.valueOf(comments[image.getShortCode() % 35]));
             ((MyViewHolder) holder).likes.setText(String.valueOf(likes[image.getShortCode() % 35]));
 
+            // Gets the UID associated with this image and either sets the uploader to a random
+            // user or the current user
             firebaseManager.getImageUid(image.getShortCode(), uid -> {
                 if (uid != null && uid.equals("0")) {
+                    // Current user
                     ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
                     ((MyViewHolder) holder).username.setText(usernames.get(0));
-                    ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(0));
+                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(0));
 
                     ((MyViewHolder) holder).image.setOnClickListener(view -> {
                         Bundle args = new Bundle();
@@ -113,9 +127,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         ((MainActivity) context).replaceFrag(previewFragment);
                     });
                 } else {
-                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode()%35)));
-                    ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode()%35));
-                    ((MyViewHolder) holder).userhandle.setText("@" + usernames.get(image.getShortCode()%35));
+                    // Random user
+                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode() % 35)));
+                    ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode() % 35));
+                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(image.getShortCode() % 35));
 
                     ((MyViewHolder) holder).image.setOnClickListener(view -> {
                         Bundle args = new Bundle();
@@ -137,6 +152,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             ((MyViewHolder) holder).image.setImageBitmap(image.getImg());
 
+            // More menu
             ((MyViewHolder) holder).more.setOnClickListener(view1 -> {
                 PopupMenu popupMenu = new PopupMenu(context, view1);
                 popupMenu.setOnMenuItemClickListener(menuItem -> {
@@ -169,39 +185,58 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return galleryImages.size();
     }
 
+    /**
+     * Returns the type of the image at the given position.
+     *
+     * @param position Position to query.
+     * @return The image's type.
+     */
     public int getItemViewType(int position) {
         return galleryImages.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
+    /**
+     * Class representing a container for an Adapter item.
+     */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView name;
         ImageView icon;
         TextView username;
-        TextView userhandle;
+        TextView userHandle;
         TextView comments;
         TextView likes;
         LinearLayout more;
 
+        /**
+         * Constructor for a MyViewHolder.
+         *
+         * @param itemView The associated ItemView.
+         */
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.view_image);
             name = itemView.findViewById(R.id.image_name);
             icon = itemView.findViewById(R.id.preview_profile_picture);
             username = itemView.findViewById(R.id.image_username);
-            userhandle = itemView.findViewById(R.id.user_handle);
+            userHandle = itemView.findViewById(R.id.user_handle);
             comments = itemView.findViewById(R.id.image_comments);
             likes = itemView.findViewById(R.id.image_likes);
             more = itemView.findViewById(R.id.image_options);
         }
     }
 
+    /**
+     * Handles pressing the share button by opening a share dialog.
+     *
+     * @param image The image to share.
+     */
     private void onShareButtonPressed(Bitmap image) {
         if (image == null) {
             return;
         }
 
-        // Save image
+        // Save image (code adapted from PaintFragment)
         OutputStream imageOutStream = null;
         ContentValues cv = new ContentValues();
 
@@ -219,17 +254,25 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             e.printStackTrace();
         }
 
-        // Share image
+        // Open share dialog
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/jpg");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         context.startActivity(Intent.createChooser(shareIntent, "Share image"));
     }
 
+    /**
+     * Handles the user tapping the report button by simulating a report submission.
+     */
     private void onReportButtonPressed() {
         showToast("Report submitted.");
     }
 
+    /**
+     * Shows the given message in a toast pop-up.
+     *
+     * @param message The message to show.
+     */
     private void showToast(String message) {
         if (currentToast != null) {
             currentToast.cancel();
