@@ -13,19 +13,28 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.paint.PaintFragment;
 
+/**
+ * Create page fragment. Allows the user to either upload a pre-made artwork or create a new one in
+ * the paint fragment.
+ */
 public class CreateOptionsFragment extends Fragment {
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.create_page_options_fragment, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.create_page_options_fragment, container,
+                false);
 
+        // Set button behaviours
         ImageButton backButton = rootView.findViewById(R.id.create_option_back);
         backButton.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
         ImageButton uploadButton = rootView.findViewById(R.id.create_upload);
-        uploadButton.setOnClickListener(v -> ((MainActivity) requireActivity()).replaceFrag(new CreateUploadFragment()));
+        uploadButton.setOnClickListener(v ->
+                ((MainActivity) requireActivity()).replaceFrag(new CreateUploadFragment()));
 
         ImageButton createButton = rootView.findViewById(R.id.create_create);
-        createButton.setOnClickListener(v -> ((MainActivity) requireActivity()).replaceFrag(new PaintFragment()));
+        createButton.setOnClickListener(v ->
+                ((MainActivity) requireActivity()).replaceFrag(new PaintFragment()));
 
         return rootView;
     }
