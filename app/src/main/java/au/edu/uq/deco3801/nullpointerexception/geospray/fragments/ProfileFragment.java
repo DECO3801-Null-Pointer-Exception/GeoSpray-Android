@@ -46,8 +46,8 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = ImageGalleryFragment.class.getName();
 
     private RecyclerView recyclerView;
-    private ProfileAdapter adapter;
-    private ArrayList<GalleryImage> yourImages;
+    private ProfileAdapter yourAdapter, likedAdapter;
+    private ArrayList<GalleryImage> yourImages, likedImages;
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -62,7 +62,9 @@ public class ProfileFragment extends Fragment {
         storageReference = firebaseStorage.getReference();
 
         yourImages = new ArrayList<>();
-        adapter = new ProfileAdapter(context, yourImages);
+        likedImages = new ArrayList<>();
+        yourAdapter = new ProfileAdapter(context, yourImages);
+        likedAdapter = new ProfileAdapter(context, likedImages);
     }
 
     @Override
@@ -95,6 +97,9 @@ public class ProfileFragment extends Fragment {
 
             liked_works.setColorFilter(Color.rgb(152, 154, 157));
             liked_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
+
+            // Set the gallery images to user created ones
+            recyclerView.setAdapter(yourAdapter);
         });
 
         liked_area.setOnClickListener(view -> {
@@ -103,10 +108,13 @@ public class ProfileFragment extends Fragment {
 
             your_works.setColorFilter(Color.rgb(152, 154, 157));
             your_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
+
+            // Set the gallery images to user liked ones
+            recyclerView.setAdapter(likedAdapter);
         });
 
         recyclerView = rootView.findViewById(R.id.profile_recycler);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(yourAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
         // Get all images from the database uploaded by the user
@@ -119,14 +127,25 @@ public class ProfileFragment extends Fragment {
                             bytes -> {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                                if (child.getKey() != null && String.valueOf(child.child("uid").getValue()).equals(getUID())) {
+
+                                if (child.getKey() != null) {
                                     GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
-                                    if (!yourImages.contains(image)) {
-                                        yourImages.add(image);
+                                    // If the image uid matches user uid then add it to user_created gallery
+                                    if (String.valueOf(child.child("uid").getValue()).equals(getUID())) {
+                                        if (!yourImages.contains(image)) {
+                                            yourImages.add(image);
+                                        }
+                                        yourAdapter.notifyDataSetChanged();
                                     }
 
-                                    adapter.notifyDataSetChanged();
+                                    // If the image is liked then add it to liked gallery
+                                    if (String.valueOf(child.child("liked").getValue()).equals("true")) {
+                                        if (!likedImages.contains(image)) {
+                                            likedImages.add(image);
+                                        }
+                                        likedAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
                     );
