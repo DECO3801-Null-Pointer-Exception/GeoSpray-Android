@@ -91,9 +91,8 @@ public class ImageGalleryFragment extends Fragment {
 
                                                 if (!galleryImages.contains(image)) {
                                                     galleryImages.add(image);
+                                                    adapter.notifyDataSetChanged();
                                                 }
-
-                                                adapter.notifyDataSetChanged();
                                             }
                                         }
                                 );
@@ -130,9 +129,8 @@ public class ImageGalleryFragment extends Fragment {
 
                                     if (!galleryImages.contains(image)) {
                                         galleryImages.add(image);
+                                        adapter.notifyDataSetChanged();
                                     }
-
-                                    adapter.notifyDataSetChanged();
                                 }
                             }
                     );
