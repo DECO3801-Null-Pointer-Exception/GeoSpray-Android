@@ -34,6 +34,7 @@ public class UserLogin extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     private TextInputEditText email;
     private TextInputEditText password;
@@ -44,6 +45,7 @@ public class UserLogin extends AppCompatActivity {
         setContentView(R.layout.login);
 
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         email = this.findViewById(R.id.log_email);
         password = this.findViewById(R.id.log_password);
@@ -63,6 +65,15 @@ public class UserLogin extends AppCompatActivity {
         Button btnCreateAccount = findViewById(R.id.log_create_user);
         btnCreateAccount.setOnClickListener(v -> onCreateUserButtonPressed());
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (user != null && !user.isAnonymous()) {
+            //user has registered an account and should brought back to the main page
+            finish();
+        }
     }
 
     private void onCreateUserButtonPressed() {
@@ -90,23 +101,19 @@ public class UserLogin extends AppCompatActivity {
         }
 }
 
-
+    // TODO https://firebase.google.com/docs/auth/android/password-auth 16/10/2023
     private void signIn(String email, String password) {
         FirebaseUser userdata;
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
-                        createToast("Signed In");
                         FirebaseUser user = mAuth.getCurrentUser();
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
                         if (task.getException() != null) {
-                            createToast(task.getException().getMessage());
                             try {
                                 throw task.getException();
                             } catch (FirebaseAuthInvalidUserException e) {
@@ -123,24 +130,9 @@ public class UserLogin extends AppCompatActivity {
                             }
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             updateUI(null);
-
                         } else {
                             createToast("Authentication failed.");
                         }
-
-//                        if(!task.isSuccessful()) {
-//                            try {
-//                                throw task.getException();
-//                            } catch(FirebaseAuthWeakPasswordException e) {
-//                                //do somethig
-//                            } catch(FirebaseAuthInvalidCredentialsException e) {
-//                                //do somethig
-//                            } catch(FirebaseAuthUserCollisionException e) {
-//                                //do somethig
-//                            } catch(Exception e) {
-//                                Log.e("TAG", e.getMessage());
-//                            }
-//                        }
                     }
                 });
 
@@ -152,53 +144,6 @@ public class UserLogin extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser user) {
-
-//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                .setDisplayName("Jane Q. User")
-//                .build();
-//
-//        user.updateProfile(profileUpdates)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d("test", "User profile updated.");
-//                            Log.i("test", user.getDisplayName()+"");
-//                        }
-//                    }
-//                });
-//            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                    .setDisplayName("Jane Q. User")
-//                    .build();
-//
-//            userdata.updateProfile(profileUpdates)
-////                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-////                        @Override
-////                        public void onComplete(@NonNull Task<Void> task) {
-////                            if (task.isSuccessful()) {
-////                                Log.i("userinfo", "User profile updated.");
-////                            } else {
-////                                Log.i("userinfo", "User profile not update");
-////                            }
-////                        }
-////                    });
-//
-//            // The user object has basic properties such as display name, email, etc.
-//            String displayName = userdata.getDisplayName();
-//            String temail = userdata.getEmail();
-//            String photoURL = String.valueOf(userdata.getPhotoUrl());
-//            String uid = userdata.getUid();
-//
-//
-//
-//                        // The user's ID, unique to the Firebase project. Do NOT use
-//                        // this value to authenticate with your backend server, if
-//                        // you have one. Use User.getToken() instead.
-//            Log.i("userinfo", displayName+" ");
-//            Log.i("userinfo", temail+" ");
-//            Log.i("userinfo", photoURL+" ");
-//            Log.i("userinfo", uid);
-//            Log.i("metadata", userdata.getMetadata().toString()+" ");
         finish();
     }
 

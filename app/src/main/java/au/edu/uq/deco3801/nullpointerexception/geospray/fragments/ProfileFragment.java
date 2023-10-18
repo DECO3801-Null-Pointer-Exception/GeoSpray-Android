@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.UserLogin;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManagerUsers;
 import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
@@ -147,15 +146,14 @@ public class ProfileFragment extends Fragment {
             startActivity(login); //send to login class
         } else {
             TextView username = rootView.findViewById(R.id.username);
+            TextView handle = rootView.findViewById(R.id.user_handle);
 
             if (user.getDisplayName() != null) {
                 username.setText(user.getDisplayName());
                 Log.d("ProfileUID",user.getUid());
-                // todo
-                FirebaseManagerUsers userDatabase = new FirebaseManagerUsers(getContext());
-                userDatabase.storeUser(user.getUid());
-            } else {
-                username.setText("Display Name");
+                String handleString = user.getDisplayName().toLowerCase()
+                        .replace(" ", "_");
+                handle.setText(handleString);
             }
         }
     }
@@ -171,7 +169,6 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             return user.getUid();
         }
-
         // Set user identifier to 0 for anonymous
         return "0";
     }
