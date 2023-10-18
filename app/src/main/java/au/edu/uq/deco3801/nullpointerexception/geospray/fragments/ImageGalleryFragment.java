@@ -67,6 +67,50 @@ public class ImageGalleryFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.gallery_recycler);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    // Retrieve all images from the database and add them to the list of images to display
+                    firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot child : snapshot.getChildren()) {
+                                StorageReference imageReference = storageReference.child("previews/" +
+                                        child.getKey());
+                                imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
+                                        bytes -> {
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                                                    bytes.length);
+
+                                            if (child.getKey() != null) {
+                                                GalleryImage image = new GalleryImage(Integer.parseInt(
+                                                        child.getKey()), bitmap);
+
+                                                if (!galleryImages.contains(image)) {
+                                                    galleryImages.add(image);
+                                                }
+
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e(
+                                    TAG,
+                                    "The Firebase operation for addMarkers was cancelled.",
+                                    error.toException());
+                        }
+                    });
+                }
+            }
+        });
 
         // Retrieve all images from the database and add them to the list of images to display
         firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {

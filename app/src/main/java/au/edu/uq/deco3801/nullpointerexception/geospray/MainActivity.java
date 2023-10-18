@@ -86,7 +86,11 @@ public class MainActivity extends AppCompatActivity {
     // Replace the displayed fragment when a navigation icon is tapped
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
-        replaceFrag(createOptionsFragment);
+        if (mAuth.getCurrentUser() != null && !mAuth.getCurrentUser().isAnonymous()) {
+          replaceFrag(createOptionsFragment);
+        } else {
+          createToast("You must be signed in to do that.");
+        }
       } else if (item.getItemId() == R.id.bot_navigation) {
         replaceFrag(navigationFragment);
       } else if (item.getItemId() == R.id.bot_home) {

@@ -158,25 +158,29 @@ public class PreviewFragment extends Fragment {
             // https://stackoverflow.com/questions/31248257/androidgoogle-maps-get-the-address-of-location-on-touch
             // Accessed on October 15.
             try {
-                Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
-                StringBuilder location = new StringBuilder();
-                List<Address> addresses = geocoder.getFromLocation(lat, longitude, 1);
+                Context context = getContext();
 
-                if (addresses != null && !addresses.isEmpty()) {
-                    Address address = addresses.get(0);
+                if (context != null) {
+                    Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+                    StringBuilder location = new StringBuilder();
+                    List<Address> addresses = geocoder.getFromLocation(lat, longitude, 1);
 
-                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                        location.append(address.getAddressLine(i));
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
 
-                        if (i != address.getMaxAddressLineIndex()) {
-                            location.append("\n");
+                        for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                            location.append(address.getAddressLine(i));
+
+                            if (i != address.getMaxAddressLineIndex()) {
+                                location.append("\n");
+                            }
                         }
+                    } else {
+                        location.append("Unknown");
                     }
-                } else {
-                    location.append("Unknown");
-                }
 
-                ((TextView) rootView.findViewById(R.id.preview_location)).setText(location);
+                    ((TextView) rootView.findViewById(R.id.preview_location)).setText(location);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

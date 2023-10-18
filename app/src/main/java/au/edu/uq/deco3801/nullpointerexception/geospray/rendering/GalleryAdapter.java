@@ -106,30 +106,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((MyViewHolder) holder).likes.setText(String.valueOf(likes[image.getShortCode() % 35]));
 
             // Gets the UID associated with this image and either sets the uploader to a random
-            // user or the current user
+            // user or the appropriate user
             firebaseManager.getImageUid(image.getShortCode(), uid -> {
-                if (uid != null && uid.equals(getUID())) {
-                    // Current user
-                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
-                    ((MyViewHolder) holder).username.setText(usernames.get(0));
-                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(0).replaceAll(" ", ""));
-
-                    ((MyViewHolder) holder).image.setOnClickListener(view -> {
-                        Bundle args = new Bundle();
-
-                        args.putInt("shortcode", image.getShortCode());
-                        args.putParcelable("BitmapImage", image.getImg());
-                        args.putInt("iconid", icons.get(0));
-                        args.putString("username", usernames.get(0));
-                        args.putInt("comments", comments[image.getShortCode() % 35]);
-                        args.putInt("likes", likes[image.getShortCode() % 35]);
-
-                        PreviewFragment previewFragment = new PreviewFragment();
-                        previewFragment.setArguments(args);
-
-                        ((MainActivity) context).replaceFrag(previewFragment);
-                    });
-                } else {
+                if (uid != null && uid.equals("0")) {
                     // Random user
                     ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(image.getShortCode() % 35)));
                     ((MyViewHolder) holder).username.setText(usernames.get(image.getShortCode() % 35));
@@ -142,6 +121,27 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         args.putParcelable("BitmapImage", image.getImg());
                         args.putInt("iconid", icons.get(image.getShortCode() % 35));
                         args.putString("username", usernames.get(image.getShortCode() % 35));
+                        args.putInt("comments", comments[image.getShortCode() % 35]);
+                        args.putInt("likes", likes[image.getShortCode() % 35]);
+
+                        PreviewFragment previewFragment = new PreviewFragment();
+                        previewFragment.setArguments(args);
+
+                        ((MainActivity) context).replaceFrag(previewFragment);
+                    });
+                } else {
+                    // User
+                    ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
+                    ((MyViewHolder) holder).username.setText(usernames.get(0));
+                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(0).replaceAll(" ", "_"));
+
+                    ((MyViewHolder) holder).image.setOnClickListener(view -> {
+                        Bundle args = new Bundle();
+
+                        args.putInt("shortcode", image.getShortCode());
+                        args.putParcelable("BitmapImage", image.getImg());
+                        args.putInt("iconid", icons.get(0));
+                        args.putString("username", usernames.get(0));
                         args.putInt("comments", comments[image.getShortCode() % 35]);
                         args.putInt("likes", likes[image.getShortCode() % 35]);
 
