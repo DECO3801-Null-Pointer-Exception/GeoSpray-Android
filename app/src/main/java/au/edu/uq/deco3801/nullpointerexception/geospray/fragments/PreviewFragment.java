@@ -252,6 +252,7 @@ public class PreviewFragment extends Fragment {
         // Initialise bottom sheet
         BottomSheetBehavior<View> behavior =
                 BottomSheetBehavior.from(rootView.findViewById(R.id.bottom_sheet));
+
         // Convert 100 dp to px
         // https://stackoverflow.com/questions/29664993/how-to-convert-dp-px-sp-among-each-other-especially-dp-and-sp
         // Accessed on October 10.
