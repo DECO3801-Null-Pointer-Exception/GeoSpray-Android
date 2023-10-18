@@ -622,6 +622,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     );
 
     // Screenshot the view
+    // https://stackoverflow.com/questions/25086263/take-screenshot-of-surfaceview
+    // Accessed on October 9
     Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
             Bitmap.Config.ARGB_8888);
 
@@ -809,6 +811,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
    */
   private void onShutterButtonPressed() {
     // Screenshot view
+    // https://stackoverflow.com/questions/25086263/take-screenshot-of-surfaceview
+    // Accessed on October 9
     Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
             Bitmap.Config.ARGB_8888);
 
