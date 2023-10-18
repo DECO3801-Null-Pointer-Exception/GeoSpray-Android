@@ -37,8 +37,13 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PlaceRenderer;
 
+/**
+ * Google maps navigation fragment. Shows the user the location of all images on Google maps.
+ * The user is able to tap on an image to either navigate to it or resolve the image in AR.
+ */
 public class NavigationFragment extends Fragment {
     public static final String TAG = NavigationFragment.class.getName();
+
     private List<Place> places = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
     private int shortCode;
@@ -49,12 +54,14 @@ public class NavigationFragment extends Fragment {
         FirebaseManager firebaseManager = new FirebaseManager(context);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
+        // Get any arguments from preview page redirect
         Bundle args = this.getArguments();
 
         if (args != null) {
             shortCode = args.getInt("shortcode");
         }
 
+        // Retrieve the location of all images
         firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,26 +86,35 @@ public class NavigationFragment extends Fragment {
 
                 if (map != null) {
                     map.getMapAsync(googleMap -> {
-                        // Default to Australia
+                        // Default camera to Australia
                         LatLng defaultLatLng = new LatLng(-25, 135);
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(defaultLatLng));
 
                         addClusteredMarkers(googleMap);
 
+                        // Redirect the camera to the user's location if not redirected from the
+                        // preview page.
                         if (shortCode != 0) {
                             return;
                         }
 
-                        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                && ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.checkSelfPermission(requireContext(),
+                                android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                                PackageManager.PERMISSION_GRANTED &&
+                                ActivityCompat.checkSelfPermission(requireContext(),
+                                android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                        PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
 
-                        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
+                        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,
+                                null).addOnSuccessListener(
                                 requireActivity(), location -> {
                                     if (location != null) {
-                                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                                        LatLng latLng = new LatLng(location.getLatitude(),
+                                                location.getLongitude());
+                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+                                                15.0f));
                                     }
                                 }
                         );
@@ -119,15 +135,25 @@ public class NavigationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.navigation_fragment, container, false);
+
+        // Set back button behaviour
         rootView.findViewById(R.id.navigation_page_back).setOnClickListener(view -> getParentFragmentManager().popBackStack());
+
         return rootView;
     }
 
+    /**
+     * Adds the location of all images in the database to a Google map view, then clusters them
+     * (combine them all into one) if there are too many in one location.
+     *
+     * @param googleMap The Google map to add markers to.
+     */
     private void addClusteredMarkers(GoogleMap googleMap) {
         ClusterManager<Place> clusterManager = new ClusterManager<>(requireContext(), googleMap);
         clusterManager.setRenderer(new PlaceRenderer(getContext(), googleMap, clusterManager));
 
-        clusterManager.getMarkerCollection().setInfoWindowAdapter(new MarkerInfoWindowAdapter(getContext()));
+        clusterManager.getMarkerCollection().setInfoWindowAdapter(new MarkerInfoWindowAdapter(
+                getContext()));
 
         clusterManager.setOnClusterItemInfoWindowClickListener(item -> {
             // Send to camera page
@@ -140,17 +166,10 @@ public class NavigationFragment extends Fragment {
             ((MainActivity) requireActivity()).replaceFrag(cloudAnchorFragment);
         });
 
-//        clusterManager.setOnClusterClickListener(cluster -> {
-//            for (ClusterItem item : cluster.getItems()) {
-//                item.getPosition();
-//            }
-//
-//            return true;
-//        });
-
         clusterManager.addItems(places);
         clusterManager.cluster();
 
+        // Zoom view to image from preview page (if applicable)
         for (Place place : places) {
             if (place.getShortCode() == shortCode) {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getPosition(), 20.0f));
@@ -163,6 +182,7 @@ public class NavigationFragment extends Fragment {
             return;
         }
 
+        // Show user's current location on the map
         googleMap.setMyLocationEnabled(true);
     }
 }
