@@ -108,14 +108,14 @@ public class PreviewFragment extends Fragment {
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
         // Initialise list of preset usernames
-        usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty", "FarmHick",
-                "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
-                "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
-                "ur_buddha" , "Funkysticks" , "Warrior666" , "RapidRacket" , "GunSly Lee" ,
-                "DEADPOOL" , "Gun Guru GG" , "Odin" , "LegoLord" , "lonely boy" , "wizard harry" ,
-                "Psychedelics", "AbraKadaBra" , "Mazafacker" , "JediReturn" , "HotAsAshes" ,
-                "realOnline" , "tranquility_tom" , "ACuteAssasin" , "iBookScore" ,
-                "oprah_wind_fury" , "Godistime"));
+        usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty",
+                "FarmHick", "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
+                "Faulty Devils", "DarkLord", "NoTolerance", "unfriend_now", "im_watching_you",
+                "ur_buddha", "Funkysticks", "Warrior666", "RapidRacket", "GunSly Lee",
+                "DEADPOOL", "Gun Guru GG", "Odin" , "LegoLord", "lonely boy", "wizard harry",
+                "Psychedelics", "AbraKadaBra", "Mazafacker", "JediReturn", "HotAsAshes",
+                "realOnline", "tranquility_tom", "ACuteAssasin", "iBookScore",
+                "oprah_wind_fury", "Godistime"));
     }
 
     @Override
