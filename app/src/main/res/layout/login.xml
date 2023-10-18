@@ -37,7 +37,7 @@
             android:paddingStart="4sp"
             android:paddingEnd="4sp"
             android:background="@drawable/rounded_corner"
-            android:inputType="text" />
+            android:inputType="text|textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

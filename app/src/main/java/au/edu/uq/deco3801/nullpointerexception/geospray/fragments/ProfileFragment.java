@@ -11,27 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
-import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
 public class ProfileFragment extends Fragment {
@@ -98,7 +97,7 @@ public class ProfileFragment extends Fragment {
                             bytes -> {
                                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                                if (child.getKey() != null) {
+                                if (child.getKey() != null && String.valueOf(child.child("uid").getValue()).equals(getUID())) {
                                     GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
 
                                     if (!yourImages.contains(image)) {
@@ -122,5 +121,16 @@ public class ProfileFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private String getUID() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            return user.getUid();
+        }
+
+        // Set user identifier to 0 for anonymous
+        return "0";
     }
 }

@@ -60,16 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    mAuth = FirebaseAuth.getInstance();
+
+    if (mAuth.getCurrentUser() == null) {
+      mAuth.signInAnonymously();
+    }
+
+//    mAuth.signOut(); //just for testing purposes
+    //otherwise user stays signed in
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
     replaceFrag(imageGalleryFragment);
-
-    mAuth = FirebaseAuth.getInstance();
-
-    mAuth.signOut(); //just for testing purposes
-    //otherwise user stays signed in
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
@@ -81,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         createToast("User is:"+ currentUser);
-        if(currentUser != null){
+        if(currentUser != null && !currentUser.isAnonymous()) {
           replaceFrag(new ProfileFragment());
         } else {
           Intent login = new Intent(getApplicationContext(), UserLogin.class);
@@ -100,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     if (currentUser != null) {
 //      createToast("User is Loaded");
 //      createToast(currentUser.getDisplayName());
-      createToast(currentUser.getEmail());
+//      createToast(currentUser.getEmail());
       // TODO Testing user interaction
     } else {
       //set user to be anon
