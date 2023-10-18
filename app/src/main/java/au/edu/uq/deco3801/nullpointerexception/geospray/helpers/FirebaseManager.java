@@ -58,8 +58,8 @@ public class FirebaseManager {
         void onImageDateAvailable(String date);
     }
 
-    public interface ImageUidListener {
-        void onImageUidAvailable(String uid);
+    public interface UserUploadedListener {
+        void onUserUploadedAvailable(Integer userUploaded);
     }
 
     public interface ImageLatListener {
@@ -68,10 +68,6 @@ public class FirebaseManager {
 
     public interface ImageLongListener {
         void onImageLongAvailable(Double longitude);
-    }
-
-    public interface ImageLikedListener {
-        void onImageLikedAvailable(Boolean liked);
     }
 
   /** Listener for a new short code from the Firebase Database. */
@@ -126,7 +122,7 @@ public class FirebaseManager {
   }
 
   /** Stores the cloud anchor ID in the configured Firebase Database. */
-  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String date, String uid) {
+  public void storeUsingShortCode(int shortCode, String cloudAnchorId, int rotation, float scale, double latitude, double longitude, String title, String description, String date, String userUploaded) {
     rootRef.child("" + shortCode).child("anchor").setValue(cloudAnchorId);
     rootRef.child("" + shortCode).child("rotation").setValue(rotation);
     rootRef.child("" + shortCode).child("scale").setValue(scale);
@@ -135,7 +131,7 @@ public class FirebaseManager {
     rootRef.child("" + shortCode).child("title").setValue(title);
     rootRef.child("" + shortCode).child("description").setValue(description);
     rootRef.child("" + shortCode).child("date").setValue(date);
-    rootRef.child("" + shortCode).child("uid").setValue(uid);
+    rootRef.child("" + shortCode).child("userUploaded").setValue(userUploaded); // todo
   }
 
   /**
@@ -188,7 +184,7 @@ public class FirebaseManager {
                         });
     }
 
-    public void getImageUid(int shortCode, ImageUidListener listener) {
+    public void getImageUid(int shortCode, ImageRotationListener listener) {
         rootRef
                 .child("" + shortCode)
                 .child("uid")
@@ -197,16 +193,16 @@ public class FirebaseManager {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // Listener invoked when the data is successfully read from Firebase.
-                                listener.onImageUidAvailable(dataSnapshot.getValue(String.class));
+                                listener.onImageRotationAvailable(dataSnapshot.getValue(Integer.class));
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e(
                                         TAG,
-                                        "The Firebase operation for getImageUid was cancelled.",
+                                        "The Firebase operation for getImageRotation was cancelled.",
                                         error.toException());
-                                listener.onImageUidAvailable(null);
+                                listener.onImageRotationAvailable(null);
                             }
                         });
     }
@@ -303,6 +299,29 @@ public class FirebaseManager {
                         });
     }
 
+    public void getUserUploaded(int shortCode, UserUploadedListener listener) {
+        rootRef
+                .child("" + shortCode)
+                .child("userUploaded")
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Listener invoked when the data is successfully read from Firebase.
+                                listener.onUserUploadedAvailable(dataSnapshot.getValue(Integer.class));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e(
+                                        TAG,
+                                        "The Firebase operation for getImageDate was cancelled.",
+                                        error.toException());
+                                listener.onUserUploadedAvailable(null);
+                            }
+                        });
+    }
+
     public void getImageLat(int shortCode, ImageLatListener listener) {
         rootRef
                 .child("" + shortCode)
@@ -319,7 +338,7 @@ public class FirebaseManager {
                             public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e(
                                         TAG,
-                                        "The Firebase operation for getImageLat was cancelled.",
+                                        "The Firebase operation for getImageDate was cancelled.",
                                         error.toException());
                                 listener.onImageLatAvailable(null);
                             }
@@ -342,32 +361,9 @@ public class FirebaseManager {
                             public void onCancelled(@NonNull DatabaseError error) {
                                 Log.e(
                                         TAG,
-                                        "The Firebase operation for getImageLong was cancelled.",
+                                        "The Firebase operation for getImageDate was cancelled.",
                                         error.toException());
                                 listener.onImageLongAvailable(null);
-                            }
-                        });
-    }
-
-    public void getImageLiked(int shortCode, ImageLikedListener listener) {
-        rootRef
-                .child("" + shortCode)
-                .child("liked")
-                .addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                // Listener invoked when the data is successfully read from Firebase.
-                                listener.onImageLikedAvailable(dataSnapshot.getValue(Boolean.class));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Log.e(
-                                        TAG,
-                                        "The Firebase operation for getImageLiked was cancelled.",
-                                        error.toException());
-                                listener.onImageLikedAvailable(null);
                             }
                         });
     }
