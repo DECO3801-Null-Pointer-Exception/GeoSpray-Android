@@ -130,28 +130,25 @@
                         app:layout_constraintStart_toEndOf="@id/followers_number"
                         app:layout_constraintTop_toBottomOf="@id/user_handle"/>
 
-<!--                    <ImageButton-->
-<!--                        android:id="@+id/expand_description_button"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="24dp"-->
-<!--                        android:background="#484155"-->
-<!--                        android:contentDescription="@string/down_arrow"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@id/follow_text_centre"-->
-<!--                        app:srcCompat="@drawable/down_arrow" />-->
+                    <Button
+                        android:layout_marginTop="12dp"
+                        android:id="@+id/sign_out_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign out"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/followers_text"
+                        android:backgroundTint="#E55A53" />
 
                     <LinearLayout
                         android:id="@+id/grid_switch"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        app:layout_constraintTop_toBottomOf="@+id/follow_text_centre"
+                        app:layout_constraintTop_toBottomOf="@+id/sign_out_button"
                         app:layout_scrollFlags="scroll|enterAlways"
                         android:orientation="vertical">
                     </LinearLayout>
-
-
                     
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

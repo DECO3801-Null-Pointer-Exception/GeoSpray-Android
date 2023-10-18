@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.UserLogin;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
@@ -75,6 +77,15 @@ public class ProfileFragment extends Fragment {
         ConstraintLayout liked_area = rootView.findViewById(R.id.liked_area);
         ImageView liked_works = rootView.findViewById(R.id.liked_works);
         View liked_works_line = rootView.findViewById(R.id.liked_line);
+
+        Button signOutButton = rootView.findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(v -> {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            auth.signInAnonymously();
+            MainActivity mainActivity = (MainActivity) requireActivity();
+            mainActivity.replaceFrag(mainActivity.getImageGalleryFragment());
+        });
 
         // Switch tab selection on tap
         your_area.setOnClickListener(view -> {

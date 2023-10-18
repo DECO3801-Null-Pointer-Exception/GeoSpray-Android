@@ -162,4 +162,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.LENGTH_SHORT).show();
   }
 
+  /**
+   * Returns the ImageGalleryFragment.
+   *
+   * @return The Activity's ImageGalleryFragment.
+   */
+  public ImageGalleryFragment getImageGalleryFragment() {
+    return imageGalleryFragment;
+  }
 }
