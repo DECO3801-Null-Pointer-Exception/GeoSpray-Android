@@ -169,6 +169,7 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             return user.getUid();
         }
+
         // Set user identifier to 0 for anonymous
         return "0";
     }

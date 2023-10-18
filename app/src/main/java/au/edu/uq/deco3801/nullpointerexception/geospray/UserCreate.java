@@ -28,12 +28,10 @@ import java.util.Objects;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
-
 public class UserCreate extends AppCompatActivity {
-
     private static final String TAG = "UsernameEmailPassword";
-    private FirebaseAuth mAuth;
 
+    private FirebaseAuth mAuth;
     private TextInputEditText email;
     private TextInputEditText password;
     private TextInputEditText username;
@@ -51,7 +49,6 @@ public class UserCreate extends AppCompatActivity {
 
         Button btn = findViewById(R.id.create_login);
         btn.setOnClickListener(v -> onCreateButtonPressed());
-
     }
 
     private void onCreateButtonPressed() {
@@ -67,7 +64,6 @@ public class UserCreate extends AppCompatActivity {
             password.setError("Please Enter a Password");
             return;
         } else {
-
             String emailString = email.getText().toString();
             String passwordString = password.getText().toString();
             String usernameString = username.getText().toString();

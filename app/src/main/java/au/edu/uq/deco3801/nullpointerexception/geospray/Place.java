@@ -8,20 +8,30 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.maps.android.clustering.ClusterItem;
 
+/**
+ * A class representing a place on Google maps. A Place has an associated image uploaded by a user.
+ */
 public class Place implements ClusterItem {
     private final int shortCode;
     private final String title;
-    private final String location;
     private final LatLng position;
     private Bitmap preview;
 
-    public Place(int shortCode, String title, String location, LatLng position) {
+    /**
+     * Constructor for a Place.
+     *
+     * @param shortCode This place's short code.
+     * @param title This place's title.
+     * @param position This place's position.
+     */
+    public Place(int shortCode, String title, LatLng position) {
         this.shortCode = shortCode;
         this.title = title;
-        this.location = location;
         this.position = position;
 
-        StorageReference imageReference = FirebaseStorage.getInstance().getReference().child("previews/" + shortCode);
+        // Get the associated image corresponding to the short code from the database
+        StorageReference imageReference = FirebaseStorage.getInstance().getReference()
+                .child("previews/" + shortCode);
         imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
                 bytes -> preview = BitmapFactory.decodeByteArray(bytes, 0, bytes.length)
         );
@@ -42,15 +52,21 @@ public class Place implements ClusterItem {
         return null;
     }
 
+    /**
+     * Returns the short code associated with this Place.
+     *
+     * @return This Place's short code.
+     */
     public int getShortCode() {
         return shortCode;
     }
 
+    /**
+     * Returns the preview image associated with this Place.
+     *
+     * @return This Place's preview image.
+     */
     public Bitmap getPreview() {
         return preview;
-    }
-
-    public String getLocation() {
-        return location;
     }
 }

@@ -12,9 +12,17 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * Class representing a pop-up when a place is tapped on Google maps in the NavigationFragment.
+ */
 public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     private final Context context;
 
+    /**
+     * Constructor for a MarkerInfoWindowAdapter.
+     *
+     * @param context The Context of this Adapter.
+     */
     public MarkerInfoWindowAdapter(Context context) {
         this.context = context;
     }
