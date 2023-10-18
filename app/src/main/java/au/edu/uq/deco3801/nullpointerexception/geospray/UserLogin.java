@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
@@ -94,7 +95,16 @@ public class UserLogin extends AppCompatActivity {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         if (task.getException() != null) {
                             createToast(task.getException().getMessage());
-                            // todo implement textbox errors using catch
+                            try {
+                                throw task.getException();
+                            } catch(FirebaseAuthInvalidCredentialsException e) {
+                                //do somethig
+                            } catch(FirebaseAuthUserCollisionException e) {
+                                //do somethig
+                            } catch(Exception e) {
+                                Log.e("TAG", e.getMessage());
+                                // todo implement textbox errors using catch
+                            }
 
                         } else {
                             createToast("Authentication failed.");
@@ -125,23 +135,20 @@ public class UserLogin extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName("Jane Q. User")
-                .build();
-
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("test", "User profile updated.");
-                            Log.i("test", user.getDisplayName()+"");
-                        }
-                    }
-                });
-
-
-
+//        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                .setDisplayName("Jane Q. User")
+//                .build();
+//
+//        user.updateProfile(profileUpdates)
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d("test", "User profile updated.");
+//                            Log.i("test", user.getDisplayName()+"");
+//                        }
+//                    }
+//                });
 //            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                    .setDisplayName("Jane Q. User")
 //                    .build();
@@ -174,7 +181,7 @@ public class UserLogin extends AppCompatActivity {
 //            Log.i("userinfo", photoURL+" ");
 //            Log.i("userinfo", uid);
 //            Log.i("metadata", userdata.getMetadata().toString()+" ");
-//        finish();
+        finish();
     }
 
     @Override

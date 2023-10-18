@@ -150,7 +150,13 @@ public class ProfileFragment extends Fragment {
             startActivity(login); //send to login class
         } else {
             TextView username = rootView.findViewById(R.id.username);
-            username.setText(user.getDisplayName()); //todo set display name correcly as it is currently blank
+            if (user.getDisplayName() != null) {
+                username.setText(user.getDisplayName());
+                Log.d("ProfileUID",user.getUid());
+            } else {
+                username.setText("Display Name");
+            }
+
         }
     }
 }
