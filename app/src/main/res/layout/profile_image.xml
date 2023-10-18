@@ -11,5 +11,4 @@
     app:layout_rowSpan="1"
     android:layout_marginTop="20dp"
     app:layout_gravity="center"
-    android:scaleType="centerCrop"
-    android:src="@drawable/isa"/>
+    android:scaleType="centerCrop" />
