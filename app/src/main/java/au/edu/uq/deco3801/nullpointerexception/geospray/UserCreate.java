@@ -25,6 +25,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Objects;
 
+
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
 
@@ -84,7 +85,7 @@ public class UserCreate extends AppCompatActivity {
             this.reload();
         }
     }
-
+    // TODO https://firebase.google.com/docs/auth/android/password-auth 16/10/2023
     private void createAccount(String email, String password, String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -102,7 +103,6 @@ public class UserCreate extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "User profile updated.");
-                                                Log.i(TAG, user.getDisplayName() + "");
                                             } else {
                                                 Log.d(TAG,"Display Name Error");
                                             }
@@ -118,18 +118,6 @@ public class UserCreate extends AppCompatActivity {
                         } else {
                             createToast("Authentication failed.");
                         }
-                    }
-                });
-    }
-
-    private void sendEmailVerification() {
-        final FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        user.sendEmailVerification()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // Email sent
                     }
                 });
     }
