@@ -29,6 +29,10 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
 
+/**
+ * Scrolling image gallery fragment. Displays all artworks in the database in a vertically scrolling
+ * view.
+ */
 public class ImageGalleryFragment extends Fragment {
     private static final String TAG = ImageGalleryFragment.class.getName();
 
@@ -48,13 +52,13 @@ public class ImageGalleryFragment extends Fragment {
         storageReference = firebaseStorage.getReference();
 
         galleryImages = new ArrayList<>();
-
         adapter = new GalleryAdapter(context, galleryImages);
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.image_gallery, container, false);
 
         SwipeRefreshLayout refreshLayout = rootView.findViewById(R.id.refresh_gallery2);
@@ -64,17 +68,21 @@ public class ImageGalleryFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        // Retrieve all images from the database and add them to the list of images to display
         firebaseManager.getRootRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    StorageReference imageReference = storageReference.child("previews/" + child.getKey());
+                    StorageReference imageReference = storageReference.child("previews/" +
+                            child.getKey());
                     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
                             bytes -> {
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                                        bytes.length);
 
                                 if (child.getKey() != null) {
-                                    GalleryImage image = new GalleryImage(Integer.parseInt(child.getKey()), bitmap);
+                                    GalleryImage image = new GalleryImage(Integer.parseInt(
+                                            child.getKey()), bitmap);
 
                                     if (!galleryImages.contains(image)) {
                                         galleryImages.add(image);
