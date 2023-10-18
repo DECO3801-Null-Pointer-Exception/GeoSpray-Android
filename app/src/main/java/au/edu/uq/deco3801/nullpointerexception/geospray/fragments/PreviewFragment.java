@@ -116,7 +116,8 @@ public class PreviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.preview_fragment, container, false);
 
         Bundle args = this.getArguments();
@@ -148,9 +149,12 @@ public class PreviewFragment extends Fragment {
         // Retrieve image, title, location, description from shortCode
         previewImage.setImageBitmap(pImage);
 
-        firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
-        firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
-        firebaseManager.getImageLat(shortCode, lat -> firebaseManager.getImageLong(shortCode, longitude -> {
+        firebaseManager.getImageTitle(shortCode, title ->
+                ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
+        firebaseManager.getImageDescription(shortCode, description ->
+                ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
+        firebaseManager.getImageLat(shortCode, lat ->
+                firebaseManager.getImageLong(shortCode, longitude -> {
             // https://stackoverflow.com/questions/31248257/androidgoogle-maps-get-the-address-of-location-on-touch
             // Accessed on October 15.
             try {
@@ -203,7 +207,8 @@ public class PreviewFragment extends Fragment {
                 likeTextView.setText(String.valueOf(likes));
             }
 
-            firebaseManager.getRootRef().child("" + shortCode).child("liked").setValue(liked);
+            firebaseManager.getRootRef().child("" + shortCode).child("liked")
+                    .setValue(liked);
 
             ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(colour));
         });
@@ -235,10 +240,12 @@ public class PreviewFragment extends Fragment {
         ImageButton backButton = rootView.findViewById(R.id.preview_page_back);
         backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
-        firebaseManager.getImageDate(shortCode, date -> ((TextView) rootView.findViewById(R.id.preview_date)).setText(date));
+        firebaseManager.getImageDate(shortCode, date ->
+                ((TextView) rootView.findViewById(R.id.preview_date)).setText(date));
 
         // Initialise bottom sheet
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(rootView.findViewById(R.id.bottom_sheet));
+        BottomSheetBehavior<View> behavior =
+                BottomSheetBehavior.from(rootView.findViewById(R.id.bottom_sheet));
         // Convert 100 dp to px
         // https://stackoverflow.com/questions/29664993/how-to-convert-dp-px-sp-among-each-other-especially-dp-and-sp
         // Accessed on October 10.
@@ -256,19 +263,26 @@ public class PreviewFragment extends Fragment {
 
         // Hide user comment until a comment is written
         rootView.findViewById(commentViewElements.get(0).get(0)).setVisibility(View.GONE);
-        ((ShapeableImageView) rootView.findViewById(commentViewElements.get(0).get(1))).setImageDrawable(requireContext().getResources().getDrawable(icons.get(0)));
-        ((TextView) rootView.findViewById(commentViewElements.get(0).get(2))).setText(usernames.get(0));
-        ((TextView) rootView.findViewById(commentViewElements.get(0).get(3))).setText("@" + usernames.get(0));
+        ((ShapeableImageView) rootView.findViewById(commentViewElements.get(0).get(1)))
+                .setImageDrawable(requireContext().getResources().getDrawable(icons.get(0)));
+        ((TextView) rootView.findViewById(commentViewElements.get(0).get(2)))
+                .setText(usernames.get(0));
+        ((TextView) rootView.findViewById(commentViewElements.get(0).get(3)))
+                .setText("@" + usernames.get(0));
 
         // Set randomised comments
         for (int i = 1; i < commentViewElements.size(); i++) {
             if (i <= comments) {
                 int index = new Random().nextInt(icons.size());
 
-                ((ShapeableImageView) rootView.findViewById(commentViewElements.get(i).get(1))).setImageDrawable(requireContext().getResources().getDrawable(icons.get(index)));
-                ((TextView) rootView.findViewById(commentViewElements.get(i).get(2))).setText(usernames.get(index));
-                ((TextView) rootView.findViewById(commentViewElements.get(i).get(3))).setText("@" + usernames.get(index));
-                ((TextView) rootView.findViewById(commentViewElements.get(i).get(4))).setText(commentMessages.get(i));
+                ((ShapeableImageView) rootView.findViewById(commentViewElements.get(i).get(1)))
+                        .setImageDrawable(requireContext().getResources().getDrawable(icons.get(index)));
+                ((TextView) rootView.findViewById(commentViewElements.get(i).get(2)))
+                        .setText(usernames.get(index));
+                ((TextView) rootView.findViewById(commentViewElements.get(i).get(3)))
+                        .setText("@" + usernames.get(index));
+                ((TextView) rootView.findViewById(commentViewElements.get(i).get(4)))
+                        .setText(commentMessages.get(i));
             } else {
                 rootView.findViewById(commentViewElements.get(i).get(0)).setVisibility(View.GONE);
             }
@@ -279,7 +293,8 @@ public class PreviewFragment extends Fragment {
         commentField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {
                 rootView.findViewById(commentViewElements.get(0).get(0)).setVisibility(View.VISIBLE);
-                ((TextView) rootView.findViewById(commentViewElements.get(0).get(4))).setText(commentField.getText());
+                ((TextView) rootView.findViewById(commentViewElements.get(0).get(4)))
+                        .setText(commentField.getText());
                 commentField.setText("");
                 commentTextView.setText(String.valueOf(comments + 1));
 
@@ -309,7 +324,8 @@ public class PreviewFragment extends Fragment {
         cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
         cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
-        Uri uri = requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+        Uri uri = requireContext().getContentResolver()
+                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
 
         try {
             imageOutStream = requireContext().getContentResolver().openOutputStream(uri);
