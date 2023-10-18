@@ -16,9 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -97,14 +99,20 @@ public class UserLogin extends AppCompatActivity {
                             createToast(task.getException().getMessage());
                             try {
                                 throw task.getException();
-                            } catch(FirebaseAuthInvalidCredentialsException e) {
-                                //do somethig
-                            } catch(FirebaseAuthUserCollisionException e) {
-                                //do somethig
-                            } catch(Exception e) {
-                                Log.e("TAG", e.getMessage());
-                                // todo implement textbox errors using catch
+                            } catch (FirebaseAuthInvalidUserException e) {
+                                this.email.setError("Invalid Emaild Id");
+                                this.email.requestFocus();
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                Log.d(TAG, "email :" + email);
+                                this.password.setError("Invalid Password");
+                                this.password.requestFocus();
+                            } catch (FirebaseNetworkException e) {
+                                createToast("error: no network");
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getMessage() + "");
                             }
+                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            updateUI(null);
 
                         } else {
                             createToast("Authentication failed.");
