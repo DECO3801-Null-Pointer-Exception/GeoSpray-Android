@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
   private ImageGalleryFragment imageGalleryFragment = new ImageGalleryFragment();
 
   private FirebaseAuth mAuth;
+  private Boolean profileRedirect;
 
 //  private ProfileFragment profile;
   // TODO save profile information
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     mAuth = FirebaseAuth.getInstance();
+    profileRedirect = false;
 
     if (mAuth.getCurrentUser() == null) {
       mAuth.signInAnonymously();
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        createToast("User is:"+ currentUser); //todo
 
         if(currentUser != null) {
           if (!currentUser.isAnonymous()) {
@@ -95,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
           } else {
             //user is anonymous
+            profileRedirect = true;
             Intent login = new Intent(getApplicationContext(), UserLogin.class);
             startActivity(login);
           }
-          // user a person
         } else {
           // user does not exist
+          profileRedirect = true;
           mAuth.signInAnonymously(); //create a user for them
           Intent login = new Intent(getApplicationContext(), UserLogin.class);
           startActivity(login);
@@ -118,16 +120,11 @@ public class MainActivity extends AppCompatActivity {
     super.onStart();
 //         Check if user is signed in (non-null) and update UI accordingly.
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    if (currentUser != null && !currentUser.isAnonymous()) { //todo needed for toast to work with no email
-//      createToast("User is Loaded");
-//      createToast(currentUser.getDisplayName());
-//      createToast(currentUser.getEmail());
+    if (currentUser != null && !currentUser.isAnonymous() && profileRedirect) { //todo needed for toast to work with no email
+      profileRedirect = false;
+      replaceFrag(new ProfileFragment());
       // TODO Testing user interaction
-    } else {
-      //set user to be anon
-//      mAuth.signInAnonymously();
-
-    }
+    } else {}
   }
 
   public void replaceFrag(Fragment fragment) {
