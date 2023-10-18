@@ -38,7 +38,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Renders the detected AR planes. */
+/**
+ * Renders the detected AR planes.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public class PlaneRenderer {
   private static final String TAG = PlaneRenderer.class.getSimpleName();
 

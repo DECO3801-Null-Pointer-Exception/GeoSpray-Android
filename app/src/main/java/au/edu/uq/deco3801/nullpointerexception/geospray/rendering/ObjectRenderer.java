@@ -27,7 +27,13 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
-/** Renders an object loaded from an OBJ file in OpenGL. */
+/**
+ * Renders an object loaded from an OBJ file in OpenGL.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public class ObjectRenderer {
   private static final String TAG = ObjectRenderer.class.getSimpleName();
 

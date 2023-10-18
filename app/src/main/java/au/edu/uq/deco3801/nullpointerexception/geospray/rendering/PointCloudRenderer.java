@@ -21,7 +21,13 @@ import android.opengl.Matrix;
 import com.google.ar.core.PointCloud;
 import java.io.IOException;
 
-/** Renders a point cloud. */
+/**
+ * Renders a point cloud.
+ *
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public class PointCloudRenderer {
   private static final String TAG = PointCloud.class.getSimpleName();
 

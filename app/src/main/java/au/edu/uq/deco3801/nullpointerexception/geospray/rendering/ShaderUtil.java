@@ -22,7 +22,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/** Shader helper functions. */
+/**
+ * Shader helper functions.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ */
 public class ShaderUtil {
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.

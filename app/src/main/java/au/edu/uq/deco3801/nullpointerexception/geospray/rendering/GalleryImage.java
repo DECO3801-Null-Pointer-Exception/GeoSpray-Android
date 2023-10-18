@@ -2,6 +2,9 @@ package au.edu.uq.deco3801.nullpointerexception.geospray.rendering;
 
 import android.graphics.Bitmap;
 
+/**
+ * Class representing an image in a Gallery.
+ */
 public class GalleryImage {
     int shortCode;
     Bitmap img;

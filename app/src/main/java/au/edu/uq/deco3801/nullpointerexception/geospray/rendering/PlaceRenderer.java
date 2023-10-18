@@ -11,6 +11,9 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.Place;
 
+/**
+ * Class used to set cluster properties.
+ */
 public class PlaceRenderer extends DefaultClusterRenderer<Place> {
     public PlaceRenderer(Context context, GoogleMap map, ClusterManager<Place> clusterManager) {
         super(context, map, clusterManager);
