@@ -96,22 +96,20 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 firebaseManager.getImageUid(image.getShortCode(), uid -> {
                     if (uid != null && uid.equals("0")) {
                         // Random user
-                        args.putInt("shortcode", image.getShortCode());
-                        args.putParcelable("BitmapImage", image.getImg());
                         args.putInt("iconid", icons.get(image.getShortCode() % 35));
                         args.putString("username", usernames.get(image.getShortCode() % 35));
-                        args.putInt("comments", comments[image.getShortCode() % 35]);
-                        args.putInt("likes", likes[image.getShortCode() % 35]);
                     } else {
                         // User
-                        args.putInt("shortcode", image.getShortCode());
-                        args.putParcelable("BitmapImage", image.getImg());
                         args.putInt("iconid", icons.get(0));
                         args.putString("username", usernames.get(0));
-                        args.putInt("comments", comments[image.getShortCode() % 35]);
-                        args.putInt("likes", likes[image.getShortCode() % 35]);
                     }
                 });
+
+                args.putInt("shortcode", image.getShortCode());
+                args.putParcelable("BitmapImage", image.getImg());
+                args.putBoolean("fromProfile", true);
+                args.putInt("comments", comments[image.getShortCode() % 35]);
+                args.putInt("likes", likes[image.getShortCode() % 35]);
 
                 PreviewFragment previewFragment = new PreviewFragment();
                 previewFragment.setArguments(args);

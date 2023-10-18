@@ -62,6 +62,7 @@ public class PreviewFragment extends Fragment {
     private String name;
     private int comments;
     private int likes;
+    private boolean fromProfile;
     private ArrayList<ArrayList<Integer>> commentViewElements;
     private ArrayList<String> commentMessages;
     private ArrayList<Integer> icons;
@@ -131,6 +132,7 @@ public class PreviewFragment extends Fragment {
             name = args.getString("username");
             comments = args.getInt("comments");
             likes = args.getInt("likes");
+            fromProfile = args.getBoolean("fromProfile");
         }
 
         // Retrieve view components
@@ -246,7 +248,13 @@ public class PreviewFragment extends Fragment {
         });
 
         ImageButton backButton = rootView.findViewById(R.id.preview_page_back);
-        backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
+        backButton.setOnClickListener(view -> {
+            if (fromProfile) {
+                ((MainActivity) requireActivity()).replaceFrag(new ProfileFragment());
+            } else {
+                getParentFragmentManager().popBackStack();
+            }
+        });
 
         firebaseManager.getImageDate(shortCode, date ->
                 ((TextView) rootView.findViewById(R.id.preview_date)).setText(date));
