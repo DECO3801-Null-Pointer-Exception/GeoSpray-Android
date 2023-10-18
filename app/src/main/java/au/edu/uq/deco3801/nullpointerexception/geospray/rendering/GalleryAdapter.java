@@ -18,6 +18,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,7 +72,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
         // Initialise a preset list of usernames
-        usernames = new ArrayList<>(Arrays.asList("guest", "SpaceCadet", "CaptainSporty", "FarmHick",
+        usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty", "FarmHick",
                 "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
                 "ur_buddha" , "Funkysticks" , "Warrior666" , "RapidRacket" , "GunSly Lee" ,
@@ -105,11 +108,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Gets the UID associated with this image and either sets the uploader to a random
             // user or the current user
             firebaseManager.getImageUid(image.getShortCode(), uid -> {
-                if (uid != null && uid.equals("0")) {
+                if (uid != null && uid.equals(getUID())) {
                     // Current user
                     ((MyViewHolder) holder).icon.setImageDrawable(context.getResources().getDrawable(icons.get(0)));
                     ((MyViewHolder) holder).username.setText(usernames.get(0));
-                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(0));
+                    ((MyViewHolder) holder).userHandle.setText("@" + usernames.get(0).replaceAll(" ", ""));
 
                     ((MyViewHolder) holder).image.setOnClickListener(view -> {
                         Bundle args = new Bundle();
@@ -266,6 +269,22 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private void onReportButtonPressed() {
         showToast("Report submitted.");
+    }
+
+    /**
+     * Gets the current user's user ID (UID).
+     *
+     * @return The current user's ID.
+     */
+    private String getUID() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            return user.getUid();
+        }
+
+        // Set user identifier to 0 for anonymous users
+        return "0";
     }
 
     /**
