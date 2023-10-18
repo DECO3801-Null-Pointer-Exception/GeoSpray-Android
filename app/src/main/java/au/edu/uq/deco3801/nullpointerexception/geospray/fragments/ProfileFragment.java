@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.UserLogin;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
+import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManagerUsers;
 import au.edu.uq.deco3801.nullpointerexception.geospray.profile_recycler.ProfileAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.GalleryImage;
@@ -153,6 +156,9 @@ public class ProfileFragment extends Fragment {
             if (user.getDisplayName() != null) {
                 username.setText(user.getDisplayName());
                 Log.d("ProfileUID",user.getUid());
+                // todo
+                FirebaseManagerUsers userdatabase = new FirebaseManagerUsers(getContext());
+                userdatabase.storeUser(user.getUid());
             } else {
                 username.setText("Display Name");
             }
