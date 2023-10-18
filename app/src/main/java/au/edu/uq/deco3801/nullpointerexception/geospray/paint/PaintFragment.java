@@ -31,9 +31,18 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.fragments.CreateUploadFragment;
 import petrov.kristiyan.colorpicker.ColorPicker;
-// TODO: https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
-public class PaintFragment extends Fragment {
 
+/**
+ * The artwork painting fragment. Allows the user to paint their own artwork to attach to a surface
+ * in AR.
+ * <br/>
+ * Code adapted from geeksforgeeks, available at:
+ * <a href="https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/">
+ *     https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android</a>
+ * <br/>
+ * Accessed on October 13.
+ */
+public class PaintFragment extends Fragment {
     // creating the object of type DrawView
     // in order to get the reference of the View
     private DrawView paint;
@@ -54,6 +63,7 @@ public class PaintFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paint, container, false);
+
         // getting the reference of the views from their ids
         paint = rootView.findViewById(R.id.draw_view);
         rangeSlider = rootView.findViewById(R.id.brush_slider);
@@ -62,8 +72,11 @@ public class PaintFragment extends Fragment {
         color = rootView.findViewById(R.id.btn_color);
         stroke = rootView.findViewById(R.id.btn_stroke);
         back = rootView.findViewById(R.id.btn_back);
+
         brush = false;
+
         hexColors = new ArrayList<>();
+
         hexColors.add("#2062af");
         hexColors.add("#58AEB7");
         hexColors.add("#F4B528");
@@ -228,19 +241,11 @@ public class PaintFragment extends Fragment {
         back.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
         // set the range of the RangeSlider
-//        rangeSlider.setValueFrom(0.0f);
-//        rangeSlider.setValueTo(100.0f);
         rangeSlider.setProgress(20);
 
         // adding a OnChangeListener which will
         // change the stroke width
         // as soon as the user slides the slider
-//        rangeSlider.addOnChangeListener(new RangeSlider.OnChangeListener() {
-//            @Override
-//            public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
-//                paint.setStrokeWidth((int) value);
-//            }
-//        });
         rangeSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -265,14 +270,22 @@ public class PaintFragment extends Fragment {
             @Override
             public void onGlobalLayout() {
                 paint.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
                 int width = paint.getMeasuredWidth();
                 int height = paint.getMeasuredHeight();
+
                 paint.init(height, width);
             }
         });
+
         return rootView;
     }
 
+    /**
+     * Shows the given message in a toast pop-up.
+     *
+     * @param message The message to display in a pop-up.
+     */
     private void showToast(String message) {
         if (currentToast != null) {
             currentToast.cancel();
