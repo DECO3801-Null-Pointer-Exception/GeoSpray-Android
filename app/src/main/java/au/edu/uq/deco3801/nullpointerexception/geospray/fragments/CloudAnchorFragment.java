@@ -206,8 +206,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       }
     }
 
-    ImageButton rectButton = rootView.findViewById(R.id.rect_button);
-
     ImageButton shutterButton = rootView.findViewById(R.id.shutter_button);
     shutterButton.setOnClickListener(v -> onShutterButtonPressed());
 
@@ -240,7 +238,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       scaleBar.setVisibility(View.GONE);
       uploadButton.setVisibility(View.GONE);
       clearButton.setVisibility(View.GONE);
-      rectButton.setVisibility(View.GONE);
     }
 
     return rootView;
