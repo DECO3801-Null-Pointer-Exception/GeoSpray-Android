@@ -49,8 +49,11 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 
+/**
+ * Image preview fragment. Shows a preview of the chosen artwork and its associated details
+ * (title, description, location, comments, etc.).
+ */
 public class PreviewFragment extends Fragment {
-    private Bundle args;
     private int shortCode;
     private Bitmap image;
     private FirebaseManager firebaseManager;
@@ -75,8 +78,8 @@ public class PreviewFragment extends Fragment {
         firebaseManager = new FirebaseManager(context);
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
-        args = this.getArguments();
 
+        // Get view elements of each comment
         commentViewElements = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(R.id.user_comment, R.id.comment_user_picture, R.id.comment_user_username, R.id.comment_user_handle, R.id.comment_user_message)),
                 new ArrayList<>(Arrays.asList(R.id.comment_1, R.id.comment_1_picture, R.id.comment_1_username, R.id.comment_1_handle, R.id.comment_1_message)),
@@ -87,6 +90,7 @@ public class PreviewFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(R.id.comment_6, R.id.comment_6_picture, R.id.comment_6_username, R.id.comment_6_handle, R.id.comment_6_message))
         ));
 
+        // Initialise list of preset comments
         commentMessages = new ArrayList<>(Arrays.asList("This is stunning!", "I love the colors!",
                 "The detail is incredible.", "It really evokes emotion.", "This speaks to me.",
                 "The composition is perfect.", "Such a unique perspective.",
@@ -98,6 +102,7 @@ public class PreviewFragment extends Fragment {
                 "This has a timeless quality.", "It's both bold and delicate.",
                 "The contrast is striking."));
 
+        // Initialise list of preset profile pictures
         icons = new ArrayList<>(Arrays.asList(R.drawable.profile_picture, R.drawable.i1,
                 R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6,
                 R.drawable.i7, R.drawable.i8, R.drawable.i9, R.drawable.i10, R.drawable.i11,
@@ -107,6 +112,7 @@ public class PreviewFragment extends Fragment {
                 R.drawable.i27, R.drawable.i28, R.drawable.i29, R.drawable.i30, R.drawable.i31,
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
+        // Initialise list of preset usernames
         usernames = new ArrayList<>(Arrays.asList("guest", "SpaceCadet", "CaptainSporty", "FarmHick",
                 "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
@@ -121,6 +127,8 @@ public class PreviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.preview_fragment, container, false);
 
+        Bundle args = this.getArguments();
+
         if (args != null) {
             shortCode = args.getInt("shortcode");
             pImage = args.getParcelable("BitmapImage");
@@ -130,16 +138,18 @@ public class PreviewFragment extends Fragment {
             likes = args.getInt("likes");
         }
 
+        // Retrieve view components
         ImageView previewImage = rootView.findViewById(R.id.preview_image);
         ImageView icon = rootView.findViewById(R.id.preview_profile_picture);
         TextView username = rootView.findViewById(R.id.username);
-        TextView userhandle = rootView.findViewById(R.id.user_handle);
+        TextView userHandle = rootView.findViewById(R.id.user_handle);
         TextView commentTextView = rootView.findViewById(R.id.preview_comments);
         TextView likeTextView = rootView.findViewById(R.id.preview_likes);
 
+        // Set view components
         icon.setImageDrawable(getResources().getDrawable(iconid));
         username.setText(name);
-        userhandle.setText("@" + name);
+        userHandle.setText("@" + name);
         commentTextView.setText(String.valueOf(comments));
         likeTextView.setText(String.valueOf(likes));
 
@@ -149,7 +159,6 @@ public class PreviewFragment extends Fragment {
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
         firebaseManager.getImageLat(shortCode, lat -> firebaseManager.getImageLong(shortCode, longitude -> {
-
             // https://stackoverflow.com/questions/31248257/androidgoogle-maps-get-the-address-of-location-on-touch
             // Accessed on October 15.
             try {
@@ -177,13 +186,14 @@ public class PreviewFragment extends Fragment {
             }
         }));
 
+        // Set button behaviour
         LinearLayout navigationButton = rootView.findViewById(R.id.preview_navigate);
         navigationButton.setOnClickListener(view -> {
-            Bundle args = new Bundle();
-            args.putInt("shortcode", shortCode);
+            Bundle navArgs = new Bundle();
+            navArgs.putInt("shortcode", shortCode);
 
             NavigationFragment navigationFragment = new NavigationFragment();
-            navigationFragment.setArguments(args);
+            navigationFragment.setArguments(navArgs);
 
             ((MainActivity) requireActivity()).replaceFrag(navigationFragment);
         });
@@ -249,13 +259,16 @@ public class PreviewFragment extends Fragment {
         rootView.findViewById(R.id.bottom_sheet).setOnClickListener(null);
 
         // Comment behaviour
+        // Randomise comment messages
         Collections.shuffle(commentMessages);
 
+        // Hide user comment until a comment is written
         rootView.findViewById(commentViewElements.get(0).get(0)).setVisibility(View.GONE);
         ((ShapeableImageView) rootView.findViewById(commentViewElements.get(0).get(1))).setImageDrawable(requireContext().getResources().getDrawable(icons.get(0)));
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(2))).setText(usernames.get(0));
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(3))).setText("@" + usernames.get(0));
 
+        // Set randomised comments
         for (int i = 1; i < commentViewElements.size(); i++) {
             if (i <= comments) {
                 int index = new Random().nextInt(icons.size());
@@ -269,6 +282,7 @@ public class PreviewFragment extends Fragment {
             }
         }
 
+        // Show user comment
         EditText commentField = rootView.findViewById(R.id.comment_field);
         commentField.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {
@@ -286,12 +300,16 @@ public class PreviewFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Handle behaviour when the share button is pressed. Open a share dialog with the image preview
+     * selected as the item to share.
+     */
     private void onShareButtonPressed() {
         if (image == null) {
             return;
         }
 
-        // Save image
+        // Save image (code adapted from PaintFragment)
         OutputStream imageOutStream = null;
         ContentValues cv = new ContentValues();
 
@@ -316,10 +334,18 @@ public class PreviewFragment extends Fragment {
         startActivity(Intent.createChooser(shareIntent, "Share image"));
     }
 
+    /**
+     * Handle behaviour when the report button is pressed by simulating a report submission.
+     */
     private void onReportButtonPressed() {
         showToast("Report submitted.");
     }
 
+    /**
+     * Shows a toast pop-up that replaces the previous pop-up.
+     *
+     * @param message The message to show in a pop-up.
+     */
     private void showToast(String message) {
         if (currentToast != null) {
             currentToast.cancel();
