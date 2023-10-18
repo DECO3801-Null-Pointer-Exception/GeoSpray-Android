@@ -85,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        createToast("User is:"+ currentUser); //todo
-
+//        createToast("User is:"+ currentUser); //todo
 
         if(currentUser != null) {
           if (!currentUser.isAnonymous()) {
