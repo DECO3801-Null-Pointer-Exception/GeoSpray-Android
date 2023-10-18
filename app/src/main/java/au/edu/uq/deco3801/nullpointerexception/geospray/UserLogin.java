@@ -30,12 +30,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
+/**
+ * Activity allowing a user to sign into an account.
+ */
 public class UserLogin extends AppCompatActivity {
-
     private static final String TAG = "EmailPassword";
+
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-
     private TextInputEditText email;
     private TextInputEditText password;
 
@@ -64,7 +66,6 @@ public class UserLogin extends AppCompatActivity {
 
         Button btnCreateAccount = findViewById(R.id.log_create_user);
         btnCreateAccount.setOnClickListener(v -> onCreateUserButtonPressed());
-
     }
 
     @Override
@@ -76,16 +77,20 @@ public class UserLogin extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles tapping on the create user button by opening the user creation activity.
+     */
     private void onCreateUserButtonPressed() {
         Intent createUser = new Intent(getApplicationContext(), UserCreate.class);
         startActivity(createUser);
     }
 
+    /**
+     * Handles tapping on the login button by checking the provided fields then logging in.
+     */
     private void onLoginButtonPressed() {
-
         email.setError(null);
         password.setError(null);
-
 
         if (TextUtils.isEmpty(email.getText())){
             email.setError("Please Enter an Email");
@@ -99,11 +104,19 @@ public class UserLogin extends AppCompatActivity {
 
             signIn(emailString, passwordString);
         }
-}
+    }
 
-    // TODO https://firebase.google.com/docs/auth/android/password-auth 16/10/2023
+    /**
+     * Handles signing into the account associated with the given email and password combination.
+     *
+     * @param email The account email.
+     * @param password The account password.
+     */
     private void signIn(String email, String password) {
+        //https://firebase.google.com/docs/auth/android/password-auth
+        // Accessed on October 16.
         FirebaseUser userdata;
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -135,9 +148,13 @@ public class UserLogin extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
+    /**
+     * Shows the given message in a toast pop-up.
+     *
+     * @param msg The message to display.
+     */
     public void createToast(String msg) {
         Toast.makeText(getApplicationContext(), (msg),
                 Toast.LENGTH_SHORT).show();

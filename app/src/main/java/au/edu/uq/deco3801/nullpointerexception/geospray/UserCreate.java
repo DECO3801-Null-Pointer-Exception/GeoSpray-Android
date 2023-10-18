@@ -28,12 +28,13 @@ import java.util.Objects;
 
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper;
 
-
+/**
+ * Activity allowing the user to create an account.
+ */
 public class UserCreate extends AppCompatActivity {
-
     private static final String TAG = "UsernameEmailPassword";
-    private FirebaseAuth mAuth;
 
+    private FirebaseAuth mAuth;
     private TextInputEditText email;
     private TextInputEditText password;
     private TextInputEditText username;
@@ -51,9 +52,11 @@ public class UserCreate extends AppCompatActivity {
 
         Button btn = findViewById(R.id.create_login);
         btn.setOnClickListener(v -> onCreateButtonPressed());
-
     }
 
+    /**
+     * Handles pressing the create button by checking the provided fields then creating an account.
+     */
     private void onCreateButtonPressed() {
         email.setError(null);
         password.setError(null);
@@ -67,7 +70,6 @@ public class UserCreate extends AppCompatActivity {
             password.setError("Please Enter a Password");
             return;
         } else {
-
             String emailString = email.getText().toString();
             String passwordString = password.getText().toString();
             String usernameString = username.getText().toString();
@@ -85,8 +87,17 @@ public class UserCreate extends AppCompatActivity {
             this.reload();
         }
     }
-    // TODO https://firebase.google.com/docs/auth/android/password-auth 16/10/2023
+
+    /**
+     * Creates a new account for a user.
+     *
+     * @param email The account email.
+     * @param password The account password.
+     * @param username The account username.
+     */
     private void createAccount(String email, String password, String username) {
+        // https://firebase.google.com/docs/auth/android/password-auth
+        // Accessed on October 16.
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -94,6 +105,7 @@ public class UserCreate extends AppCompatActivity {
                         Log.d(TAG, "createUserWithEmail:success");
                         createToast("Account Created.");
                         FirebaseUser user = mAuth.getCurrentUser();
+
                         if (user != null) {
                             user.updateProfile(new UserProfileChangeRequest.Builder()
                                     .setDisplayName(username)
@@ -109,6 +121,7 @@ public class UserCreate extends AppCompatActivity {
                                         }
                                     });
                         }
+
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
@@ -126,9 +139,13 @@ public class UserCreate extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         finish();
-
     }
 
+    /**
+     * Shows the given message in a toast pop-up.
+     *
+     * @param msg The message to show.
+     */
     public void createToast(String msg) {
         Toast.makeText(getApplicationContext(), (msg),
                 Toast.LENGTH_SHORT).show();

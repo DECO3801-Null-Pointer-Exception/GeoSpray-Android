@@ -44,9 +44,14 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FullScreenHelper
 
 /**
  * Main Activity for the Cloud Anchors Codelab.
- *
- * <p>The bulk of the logic resides in the {@link CloudAnchorFragment}. The activity only creates
- * the fragment and attaches it to this Activity.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ * <br/>
+ * Modified by: Raymond Dufty, Xingyun Wang, Esmond Wu, Denzel Castle.
+ * <br/>
+ * Modifications include: the addition of more fragments to transition to and user authentication.
  */
 public class MainActivity extends AppCompatActivity {
   private ActivityMainBinding binding;
@@ -65,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
     mAuth = FirebaseAuth.getInstance();
     profileRedirect = false;
 
+//    mAuth.signOut(); //just for testing purposes
+    //otherwise user stays signed in
+
     if (mAuth.getCurrentUser() == null) {
       mAuth.signInAnonymously();
     }
-
-//    mAuth.signOut(); //just for testing purposes
-    //otherwise user stays signed in
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     setContentView(binding.getRoot());
     replaceFrag(imageGalleryFragment);
 
+    // Replace the displayed fragment when a navigation icon is tapped
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
         replaceFrag(createOptionsFragment);
@@ -88,12 +94,11 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser != null) {
+        if (currentUser != null) {
           if (!currentUser.isAnonymous()) {
             // user is not anonymous (signed in)
             Log.i("userinfo", currentUser.getDisplayName()+"");
             replaceFrag(new ProfileFragment());
-
           } else {
             //user is anonymous
             profileRedirect = true;
@@ -108,9 +113,8 @@ public class MainActivity extends AppCompatActivity {
           startActivity(login);
         }
         //go to sign in page or login
-
-
       }
+
       return true;
     });
   }
@@ -124,9 +128,17 @@ public class MainActivity extends AppCompatActivity {
       profileRedirect = false;
       replaceFrag(new ProfileFragment());
       // TODO Testing user interaction
-    } else {}
+    } else {
+      //set user to be anon
+//      mAuth.signInAnonymously();
+    }
   }
 
+  /**
+   * Replaces the currently displayed fragment with the given fragment.
+   *
+   * @param fragment The fragment to replace the view with.
+   */
   public void replaceFrag(Fragment fragment) {
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction fmtrans = fm.beginTransaction().replace(R.id.frame_layout, fragment);
@@ -140,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
     FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
   }
 
+  /**
+   * Shows the given message in a toast pop-up.
+   *
+   * @param msg The message to display.
+   */
   public void createToast(String msg) {
     Toast.makeText(getApplicationContext(), (msg),
             Toast.LENGTH_SHORT).show();

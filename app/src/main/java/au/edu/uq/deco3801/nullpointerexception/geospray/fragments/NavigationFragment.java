@@ -73,7 +73,6 @@ public class NavigationFragment extends Fragment {
 
                     Place place = new Place(Integer.parseInt(child.getKey()),
                             child.child("title").getValue(String.class),
-                            child.child("location").getValue(String.class),
                             new LatLng(child.child("lat").getValue(Double.class),
                                     child.child("long").getValue(Double.class)));
 
