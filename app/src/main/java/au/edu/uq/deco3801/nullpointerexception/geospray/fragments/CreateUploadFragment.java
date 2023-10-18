@@ -32,6 +32,10 @@ import androidx.fragment.app.Fragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.R;
 
+/**
+ * Image uploading fragment. Allows the user to upload an image to be placed in the world in AR.
+ * The user can set a title and description for the image to be hosted.
+ */
 public class CreateUploadFragment extends Fragment {
     private CloudAnchorFragment cloudAnchorFragment;
     private ImageView imageView;
@@ -53,10 +57,9 @@ public class CreateUploadFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.create_page_upload_fragment, container, false);
 
+        // Set button behaviour
         imageView = rootView.findViewById(R.id.create_upload_image);
         imageView.setOnClickListener(v -> onImagePressed());
-
-        imageText = rootView.findViewById(R.id.create_upload_image_text);
 
         Button submitButton = rootView.findViewById(R.id.create_upload_submit);
         submitButton.setOnClickListener(v -> onSubmitButtonPressed());
@@ -64,10 +67,12 @@ public class CreateUploadFragment extends Fragment {
         ImageButton backButton = rootView.findViewById(R.id.create_page_back);
         backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
+        imageText = rootView.findViewById(R.id.create_upload_image_text);
         title = rootView.findViewById(R.id.create_title);
-
-        // TODO: https://stackoverflow.com/questions/2986387/multi-line-edittext-with-done-action-button/41022589#41022589
         description = rootView.findViewById(R.id.create_description);
+
+        // Pressing enter in the description box simulates a submit button press
+        // TODO: https://stackoverflow.com/questions/2986387/multi-line-edittext-with-done-action-button/41022589#41022589
         description.setRawInputType(InputType.TYPE_CLASS_TEXT);
         description.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {
@@ -78,6 +83,7 @@ public class CreateUploadFragment extends Fragment {
             return false;
         });
 
+        // Get any arguments passed to this fragment from the paint fragment
         Bundle args = this.getArguments();
 
         if (args != null) {
@@ -93,15 +99,22 @@ public class CreateUploadFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Handles the behaviour when the image is pressed by allowing the user to select an image from
+     * their device.
+     */
     private void onImagePressed() {
         // Open file dialog
+        // TODO: reference
         Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
         selectionDialog.setType("image/*");
         selectionDialog = Intent.createChooser(selectionDialog, "Select image");
         sActivityResultLauncher.launch(selectionDialog);
     }
 
-    // File dialog handler
+    /**
+     * Handles the file dialog behaviour.
+     */
     ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -124,6 +137,10 @@ public class CreateUploadFragment extends Fragment {
             }
     );
 
+    /**
+     * Handles the behaviour when the submit button is pressed by checking if all fields are
+     * populated then sending the necessary information to the camera fragment.
+     */
     private void onSubmitButtonPressed() {
         String titleText = title.getText().toString();
         String descriptionText = description.getText().toString();
@@ -140,6 +157,7 @@ public class CreateUploadFragment extends Fragment {
         }
 
         // Close keyboard
+        // TODO: reference
         InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
 
@@ -160,7 +178,13 @@ public class CreateUploadFragment extends Fragment {
         ((MainActivity) requireActivity()).replaceFrag(cloudAnchorFragment);
     }
 
+    /**
+     * Shows the given message in a toast pop-up, overwriting any previous pop-ups.
+     *
+     * @param message The message to display in a toast pop-up.
+     */
     private void showToast(String message) {
+        // Cancel any current toasts
         if (currentToast != null) {
             currentToast.cancel();
         }

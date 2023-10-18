@@ -645,7 +645,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
-          // TODO: reference
+          // https://stackoverflow.com/questions/8654990/how-can-i-get-current-date-in-android
+          // Accessed on October 13.
           String date = new SimpleDateFormat("yyyy-MM-dd",
                   Locale.getDefault()).format(new Date());
 
@@ -843,6 +844,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
    * @param message The message to display in a toast pop-up.
    */
   private void showToast(String message) {
+    // Don't pop-up empty messages
     if (message.isEmpty()) {
       return;
     }
