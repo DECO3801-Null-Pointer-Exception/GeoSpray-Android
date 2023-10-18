@@ -63,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     mAuth = FirebaseAuth.getInstance();
 
-//    mAuth.signOut(); //just for testing purposes
-    //otherwise user stays signed in
     if (mAuth.getCurrentUser() == null) {
       mAuth.signInAnonymously();
     }
+
+//    mAuth.signOut(); //just for testing purposes
+    //otherwise user stays signed in
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
       } else if (item.getItemId() == R.id.bot_home) {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
-//        setupProfile();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         createToast("User is:"+ currentUser); //todo
 

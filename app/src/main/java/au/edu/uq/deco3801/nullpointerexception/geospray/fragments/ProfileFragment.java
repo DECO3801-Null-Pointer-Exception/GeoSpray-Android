@@ -45,8 +45,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseManager firebaseManager;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
-    private FirebaseAuth mAuth;
-
     private View rootView;
 
     @Override
@@ -66,7 +64,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile, container, false);
-
 
         ConstraintLayout your_area = rootView.findViewById(R.id.your_area);
         ImageView your_works = rootView.findViewById(R.id.your_works);
@@ -134,7 +131,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null || user.isAnonymous()) {
             // user should not be here

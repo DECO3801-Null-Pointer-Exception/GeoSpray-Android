@@ -9,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -19,18 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MainActivity;
 import au.edu.uq.deco3801.nullpointerexception.geospray.MarkerInfoWindowAdapter;
 import au.edu.uq.deco3801.nullpointerexception.geospray.Place;
