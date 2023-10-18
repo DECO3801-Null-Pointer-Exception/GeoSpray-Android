@@ -18,6 +18,7 @@ package au.edu.uq.deco3801.nullpointerexception.geospray;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -84,13 +85,30 @@ public class MainActivity extends AppCompatActivity {
         replaceFrag(imageGalleryFragment);
       } else if (item.getItemId() == R.id.bot_profile) {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        createToast("User is:"+ currentUser);
-        if(currentUser != null && !currentUser.isAnonymous()) {
-          replaceFrag(new ProfileFragment());
+        createToast("User is:"+ currentUser); //todo
+
+
+        if(currentUser != null) {
+          if (!currentUser.isAnonymous()) {
+            // user is not anonymous (signed in)
+            Log.i("userinfo", currentUser.getDisplayName()+"");
+            replaceFrag(new ProfileFragment());
+
+          } else {
+            //user is anonymous
+            Intent login = new Intent(getApplicationContext(), UserLogin.class);
+            startActivity(login);
+          }
+          // user a person
         } else {
+          // user does not exist
+          mAuth.signInAnonymously(); //create a user for them
           Intent login = new Intent(getApplicationContext(), UserLogin.class);
           startActivity(login);
         }
+        //go to sign in page or login
+
+
       }
       return true;
     });
@@ -101,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     super.onStart();
 //         Check if user is signed in (non-null) and update UI accordingly.
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    if (currentUser != null) {
+    if (currentUser != null && !currentUser.isAnonymous()) { //todo needed for toast to work with no email
 //      createToast("User is Loaded");
 //      createToast(currentUser.getDisplayName());
 //      createToast(currentUser.getEmail());
