@@ -327,7 +327,7 @@ public class PreviewFragment extends Fragment {
             e.printStackTrace();
         }
 
-        // Share image
+        // Open share dialog
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/jpg");
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
