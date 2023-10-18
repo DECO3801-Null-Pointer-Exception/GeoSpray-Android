@@ -219,6 +219,8 @@ public class PreviewFragment extends Fragment {
             ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(colour));
         });
 
+        // https://developer.android.com/develop/ui/views/components/menus
+        // Accessed on October 15.
         ImageButton moreButton = rootView.findViewById(R.id.preview_page_kebab);
         moreButton.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(requireContext(), view);
