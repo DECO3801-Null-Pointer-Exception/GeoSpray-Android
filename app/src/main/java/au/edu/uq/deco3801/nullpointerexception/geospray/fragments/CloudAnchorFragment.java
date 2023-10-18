@@ -99,8 +99,17 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRend
 
 /**
  * Main Fragment for the Cloud Anchors Codelab.
- *
- * <p>This is where the AR Session and the Cloud Anchors are managed.
+ * <br/>
+ * This is where the AR Session and the Cloud Anchors are managed.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">
+ *     https://github.com/google-ar/codelab-cloud-anchors</a>
+ * <br/>
+ * Modified by: Raymond Dufty, Xingyun Wang and Esmond Wu.
+ * <br/>
+ * Modifications include: extending hosting capabilities, allowing images to be rotated and scaled,
+ * automatic cloud anchor retrieval and replacement of message snackbars with toasts.
  */
 public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Renderer {
   private static final String TAG = CloudAnchorFragment.class.getSimpleName();
@@ -167,13 +176,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     storageReference = firebaseStorage.getReference();
-
     fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
   }
 
   @Override
-  public View onCreateView(
-          LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+          @Nullable Bundle savedInstanceState) {
     // Inflate from the Layout XML file.
     View rootView = inflater.inflate(R.layout.cloud_anchor_fragment, container, false);
     GLSurfaceView surfaceView = rootView.findViewById(R.id.surfaceView);
@@ -183,7 +191,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
     surfaceView.setPreserveEGLContextOnPause(true);
     surfaceView.setEGLContextClientVersion(2);
-    surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0); // Alpha used for plane blending.
+    surfaceView.setEGLConfigChooser(8, 8, 8, 8, 16,
+            0); // Alpha used for plane blending.
     surfaceView.setRenderer(this);
     surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
     surfaceView.setWillNotDraw(false);
@@ -195,7 +204,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       imageBytes = args.getByteArray("image");
       title = args.getString("title");
       description = args.getString("description");
-
       shortCode = args.getInt("shortcode");
 
       if (imageBytes != null) {
@@ -251,6 +259,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     if (session == null) {
       Exception exception = null;
       String message = null;
+
       try {
         switch (ArCoreApk.getInstance().requestInstall(requireActivity(), !installRequested)) {
           case INSTALL_REQUESTED:
@@ -310,7 +319,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     try {
       session.resume();
     } catch (CameraNotAvailableException e) {
-      requireActivity().runOnUiThread(() -> showToast("Camera not available. Try restarting the app."));
+      requireActivity().runOnUiThread(() ->
+              showToast("Camera not available. Try restarting the app."));
       session = null;
       return;
     }
@@ -333,9 +343,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] results) {
     if (!LocationPermissionHelper.hasLocationPermission(requireActivity())) {
-      requireActivity().runOnUiThread(() -> showToast("Location permission is needed to run this application."));
+      requireActivity().runOnUiThread(() ->
+              showToast("Location permission is needed to run this application."));
       if (!LocationPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
         // Permission denied with checking "Do not ask again".
         LocationPermissionHelper.launchPermissionSettings(requireActivity());
@@ -344,7 +356,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
 
     if (!CameraPermissionHelper.hasCameraPermission(requireActivity())) {
-      requireActivity().runOnUiThread(() -> showToast("Camera permission is needed to run this application."));
+      requireActivity().runOnUiThread(() ->
+              showToast("Camera permission is needed to run this application."));
       if (!CameraPermissionHelper.shouldShowRequestPermissionRationale(requireActivity())) {
         // Permission denied with checking "Do not ask again".
         CameraPermissionHelper.launchPermissionSettings(requireActivity());
@@ -374,6 +387,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       if (shortCode != 0) {
         onShortCodeEntered(shortCode);
       }
+
       resolved = true;
     }
   }
@@ -416,7 +430,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
       // If not tracking, don't draw 3D objects, show tracking failure reason instead.
       if (camera.getTrackingState() == TrackingState.PAUSED) {
-        requireActivity().runOnUiThread(() -> showToast(TrackingStateHelper.getTrackingFailureReasonString(camera)));
+        requireActivity().runOnUiThread(() ->
+                showToast(TrackingStateHelper.getTrackingFailureReasonString(camera)));
         return;
       }
 
@@ -588,13 +603,16 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     });
 
     // Required to stop getCurrentLocation complaining
-    if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      requireActivity().runOnUiThread(() -> showToast("Location permission is needed to run this application."));
+    if (ActivityCompat.checkSelfPermission(requireContext(),
+            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      requireActivity().runOnUiThread(() ->
+              showToast("Location permission is needed to run this application."));
       return;
     }
 
     // Get user's location
-    fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
+    fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY,
+            null).addOnSuccessListener(
             requireActivity(), location -> {
               if (location != null) {
                 latitude = location.getLatitude();
@@ -604,7 +622,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     );
 
     // Screenshot the view
-    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
+    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
+            Bitmap.Config.ARGB_8888);
 
     PixelCopy.request(surfaceView, bitmap, result -> {
       if (result == PixelCopy.SUCCESS) {
@@ -616,7 +635,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   }
 
   /**
-   * Handles additional behaviour that happens after a cloud anchor is either successfully or unsuccessfully hosted.
+   * Handles additional behaviour that happens after a cloud anchor is either successfully or
+   * unsuccessfully hosted.
    *
    * @param cloudAnchorId The ID of the hosted cloud anchor.
    * @param cloudState The state of the cloud anchor upload.
@@ -626,10 +646,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
           // TODO: reference
-          String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+          String date = new SimpleDateFormat("yyyy-MM-dd",
+                  Locale.getDefault()).format(new Date());
 
           // Store information associated with an image
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, date, getUID());
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale,
+                  latitude, longitude, title, description, date, getUID());
 
           // Store image
           StorageReference imageReference = storageReference.child("images/" + shortCode);
@@ -652,7 +674,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
                     uploadButton.setEnabled(true);
                   }
           ).addOnSuccessListener(
-                  taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
+                  taskSnapshot -> requireActivity().runOnUiThread(() ->
+                          showToast("Upload successful."))
           );
         }
       });
@@ -745,7 +768,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   /**
    * Handles the behaviour when the rotation slider is moved by rotating the image.
    */
-  private final SeekBar.OnSeekBarChangeListener rotationChangeListener = new SeekBar.OnSeekBarChangeListener() {
+  private final SeekBar.OnSeekBarChangeListener rotationChangeListener =
+          new SeekBar.OnSeekBarChangeListener() {
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
       // SeekBar begins at 180 which corresponds to a 0 degree rotation, thus 180 must be subtracted
@@ -764,7 +788,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   /**
    * Handles the behaviour when the scale slider is moved by scaling the image.
    */
-  private final SeekBar.OnSeekBarChangeListener scaleChangeListener = new SeekBar.OnSeekBarChangeListener() {
+  private final SeekBar.OnSeekBarChangeListener scaleChangeListener =
+          new SeekBar.OnSeekBarChangeListener() {
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
       imageScale = i / 100f;
@@ -778,11 +803,13 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   };
 
   /**
-   * Handles the behaviour when the shutter button is pressed by saving a photo of the current camera view.
+   * Handles the behaviour when the shutter button is pressed by saving a photo of the current camera
+   * view.
    */
   private void onShutterButtonPressed() {
     // Screenshot view
-    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
+    Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(),
+            Bitmap.Config.ARGB_8888);
 
     PixelCopy.request(surfaceView, bitmap, result -> {
       if (result == PixelCopy.SUCCESS) {
@@ -794,7 +821,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
         cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
-        Uri uri = requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+        Uri uri = requireContext().getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
 
         try {
           imageOutStream = requireContext().getContentResolver().openOutputStream(uri);
