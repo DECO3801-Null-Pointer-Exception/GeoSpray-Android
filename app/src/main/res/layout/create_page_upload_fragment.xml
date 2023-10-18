@@ -120,8 +120,8 @@
                 android:textColor="@color/white"
                 android:ems="10"
                 android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
                 android:autofillHints="Description"
-                android:imeOptions="actionNext"
                 android:backgroundTint="#20192D" />
 
             <Button

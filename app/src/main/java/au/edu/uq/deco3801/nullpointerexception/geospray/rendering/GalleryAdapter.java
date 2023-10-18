@@ -69,6 +69,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 "oprah_wind_fury" , "Godistime"));
 
         // 35 random integers between 0 and 7, and 0 and 1001 respectively
+        // TODO: https://stackoverflow.com/questions/22584244/how-to-generate-6-different-random-numbers-in-java
         comments = new Random().ints(0, 7).limit(35).toArray();
         likes = new Random().ints(0, 1001).limit(35).toArray();
     }

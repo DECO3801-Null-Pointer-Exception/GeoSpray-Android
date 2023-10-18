@@ -8,9 +8,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,7 +65,18 @@ public class CreateUploadFragment extends Fragment {
         backButton.setOnClickListener(view -> getParentFragmentManager().popBackStack());
 
         title = rootView.findViewById(R.id.create_title);
+
+        // TODO: https://stackoverflow.com/questions/2986387/multi-line-edittext-with-done-action-button/41022589#41022589
         description = rootView.findViewById(R.id.create_description);
+        description.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        description.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                onSubmitButtonPressed();
+                return true;
+            }
+
+            return false;
+        });
 
         Bundle args = this.getArguments();
 
