@@ -99,8 +99,16 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.PointCloudRend
 
 /**
  * Main Fragment for the Cloud Anchors Codelab.
- *
- * <p>This is where the AR Session and the Cloud Anchors are managed.
+ * <br/>
+ * This is where the AR Session and the Cloud Anchors are managed.
+ * <br/>
+ * Code adapted from Google's Cloud Anchors Codelab, available at:
+ * <a href="https://github.com/google-ar/codelab-cloud-anchors">https://github.com/google-ar/codelab-cloud-anchors</a>
+ * <br/>
+ * Modified by: Raymond Dufty, Xingyun Wang and Esmond Wu.
+ * <br/>
+ * Modifications include: extending hosting capabilities, allowing images to be rotated and scaled,
+ * automatic cloud anchor retrieval and replacement of message snackbars with toasts.
  */
 public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Renderer {
   private static final String TAG = CloudAnchorFragment.class.getSimpleName();
