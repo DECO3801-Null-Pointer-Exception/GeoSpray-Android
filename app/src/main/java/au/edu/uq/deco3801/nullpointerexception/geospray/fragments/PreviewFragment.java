@@ -144,18 +144,14 @@ public class PreviewFragment extends Fragment {
         likeTextView.setText(String.valueOf(likes));
 
         // Retrieve image, title, location, description from shortCode
-//        StorageReference imageReference = storageReference.child("previews/" + shortCode);
-//        imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
-//                bytes -> {
-//                    image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                    previewImage.setImageBitmap(image);
-//                }
-//        );
         previewImage.setImageBitmap(pImage);
 
         firebaseManager.getImageTitle(shortCode, title -> ((TextView) rootView.findViewById(R.id.preview_title)).setText(title));
         firebaseManager.getImageDescription(shortCode, description -> ((TextView) rootView.findViewById(R.id.preview_description)).setText(description));
         firebaseManager.getImageLat(shortCode, lat -> firebaseManager.getImageLong(shortCode, longitude -> {
+
+            // https://stackoverflow.com/questions/31248257/androidgoogle-maps-get-the-address-of-location-on-touch
+            // Accessed on October 15.
             try {
                 Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
                 StringBuilder location = new StringBuilder();
@@ -242,6 +238,8 @@ public class PreviewFragment extends Fragment {
         // Initialise bottom sheet
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(rootView.findViewById(R.id.bottom_sheet));
         // Convert 100 dp to px
+        // https://stackoverflow.com/questions/29664993/how-to-convert-dp-px-sp-among-each-other-especially-dp-and-sp
+        // Accessed on October 10.
         behavior.setPeekHeight((int) (100 * getResources().getDisplayMetrics().density));
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 

@@ -72,7 +72,8 @@ public class CreateUploadFragment extends Fragment {
         description = rootView.findViewById(R.id.create_description);
 
         // Pressing enter in the description box simulates a submit button press
-        // TODO: https://stackoverflow.com/questions/2986387/multi-line-edittext-with-done-action-button/41022589#41022589
+        // https://stackoverflow.com/questions/2986387/multi-line-edittext-with-done-action-button/41022589#41022589
+        // Accessed on October 18.
         description.setRawInputType(InputType.TYPE_CLASS_TEXT);
         description.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_DONE) {
@@ -105,7 +106,6 @@ public class CreateUploadFragment extends Fragment {
      */
     private void onImagePressed() {
         // Open file dialog
-        // TODO: reference
         Intent selectionDialog = new Intent(Intent.ACTION_GET_CONTENT);
         selectionDialog.setType("image/*");
         selectionDialog = Intent.createChooser(selectionDialog, "Select image");
@@ -115,6 +115,8 @@ public class CreateUploadFragment extends Fragment {
     /**
      * Handles the file dialog behaviour.
      */
+    // https://youtu.be/4EKlAvjY74U
+    // Accessed on October 7.
     ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -157,8 +159,10 @@ public class CreateUploadFragment extends Fragment {
         }
 
         // Close keyboard
-        // TODO: reference
-        InputMethodManager inputMethodManager = (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        // https://stackoverflow.com/questions/72436314/how-to-close-the-android-soft-keyboard
+        // Accessed on October 13.
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
 
         // Pass arguments to CloudAnchorFragment
