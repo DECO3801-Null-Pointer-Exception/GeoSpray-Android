@@ -9,10 +9,10 @@
         android:id="@+id/header_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/header_image"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/i11" />
+        app:srcCompat="@drawable/profile_bg" />
 
     <RelativeLayout
         android:layout_width="match_parent"
