@@ -65,6 +65,8 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -156,6 +158,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
   private boolean resolved = false;
 
   private Toast currentToast;
+
+  private FirebaseUser mAuth;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -596,20 +600,26 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         if (shortCode != null) {
           String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, date, "1");
+          firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, date, getUID());
 
           StorageReference imageReference = storageReference.child("images/" + shortCode);
           uploadTask = imageReference.putBytes(imageBytes);
 
           uploadTask.addOnFailureListener(
-                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed."))
+                  e -> {
+                    requireActivity().runOnUiThread(() -> showToast("Upload failed."));
+                    uploadButton.setEnabled(true);
+                  }
           );
 
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
           uploadTask = previewReference.putBytes(preview);
 
           uploadTask.addOnFailureListener(
-                  e -> requireActivity().runOnUiThread(() -> showToast("Upload failed."))
+                  e -> {
+                    requireActivity().runOnUiThread(() -> showToast("Upload failed."));
+                    uploadButton.setEnabled(true);
+                  }
           ).addOnSuccessListener(
                   taskSnapshot -> requireActivity().runOnUiThread(() -> showToast("Upload successful."))
           );
@@ -617,7 +627,19 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       });
     } else {
       requireActivity().runOnUiThread(() -> showToast("Upload failed."));
+      uploadButton.setEnabled(true);
     }
+  }
+
+  private String getUID() {
+    mAuth = FirebaseAuth.getInstance().getCurrentUser();
+
+    if (mAuth != null) {
+      return mAuth.getUid();
+    }
+
+    // Set user identifier to 0 for anonymous
+    return "0";
   }
 
   private void onShortCodeEntered(int shortCode) {
