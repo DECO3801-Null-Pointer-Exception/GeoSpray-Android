@@ -90,7 +90,6 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.CameraPermission
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.DisplayRotationHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.LocationPermissionHelper;
-import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.ResolveDialogFragment;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TapHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.TrackingStateHelper;
 import au.edu.uq.deco3801.nullpointerexception.geospray.rendering.BackgroundRenderer;
@@ -159,7 +158,6 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
 
   private Toast currentToast;
 
-
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
@@ -205,6 +203,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       }
     }
 
+    // Set up button behaviour
     ImageButton shutterButton = rootView.findViewById(R.id.shutter_button);
     shutterButton.setOnClickListener(v -> onShutterButtonPressed());
 
@@ -220,6 +219,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       getParentFragmentManager().popBackStack();
     });
 
+    // Set slider behaviour
     rotationBar = rootView.findViewById(R.id.rotation_seekbar);
     rotationBar.setOnSeekBarChangeListener(rotationChangeListener);
     rotationBar.setEnabled(false);
@@ -232,6 +232,8 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     uploadButton.setOnClickListener(v -> onUploadButtonPressed());
     uploadButton.setEnabled(false);
 
+    // Do not show these if redirected from the navigation fragment
+    // (short code is 0 if not redirected)
     if (shortCode != 0) {
       rotationBar.setVisibility(View.GONE);
       scaleBar.setVisibility(View.GONE);
@@ -472,6 +474,12 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
   }
 
+  /**
+   * Handle a tap event on the screen.
+   *
+   * @param frame The current frame.
+   * @param camera The camera object.
+   */
   // Handle only one tap per frame, as taps are usually low frequency compared to frame rate.
   private void handleTap(Frame frame, Camera camera) {
     if (currentAnchor != null || shortCode != 0) {
@@ -506,6 +514,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
             rotationBar.setEnabled(true);
           });
 
+          // Remove grid and tracking points from camera view
           visualise = false;
 
           break;
@@ -523,9 +532,14 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
         return true;
       }
     }
+
     return false;
   }
 
+  /**
+   * Handles pressing the clear button by removing the current image, cancelling ongoing uploads and
+   * re-enabling visualisation.
+   */
   private void onClearButtonPressed() {
     // Clear the anchor from the scene.
     if (currentAnchor != null) {
@@ -539,24 +553,34 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       future = null;
     }
 
+    // Re-enable visualisation and remove the image
     visualise = true;
     image = null;
 
+    // Reset slider positions
     rotationBar.setProgress(180);
     scaleBar.setProgress(100);
 
+    // Disable uploads
     uploadButton.setEnabled(false);
   }
 
+  /**
+   * Handles pressing the upload button by uploading an image, a preview of the image and information
+   * associated with the image to the database.
+   */
   private void onUploadButtonPressed() {
+    // Uploads only function when the camera is currently tracking a surface
     if (!hasTrackingPlane()) {
       requireActivity().runOnUiThread(() -> showToast("Please point the camera at the image."));
       return;
     }
 
+    // Upload image
     requireActivity().runOnUiThread(() -> showToast("Uploading image..."));
     future = session.hostCloudAnchorAsync(currentAnchor, 300, this::onHostComplete);
 
+    // Disable buttons during upload
     requireActivity().runOnUiThread(() -> {
       uploadButton.setEnabled(false);
       rotationBar.setEnabled(false);
@@ -569,6 +593,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       return;
     }
 
+    // Get user's location
     fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(
             requireActivity(), location -> {
               if (location != null) {
@@ -578,7 +603,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
             }
     );
 
-    // Screenshot view
+    // Screenshot the view
     Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
 
     PixelCopy.request(surfaceView, bitmap, result -> {
@@ -590,14 +615,23 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }, new Handler(Looper.getMainLooper()));
   }
 
+  /**
+   * Handles additional behaviour that happens after a cloud anchor is either successfully or unsuccessfully hosted.
+   *
+   * @param cloudAnchorId The ID of the hosted cloud anchor.
+   * @param cloudState The state of the cloud anchor upload.
+   */
   private void onHostComplete(String cloudAnchorId, CloudAnchorState cloudState) {
     if (cloudState == CloudAnchorState.SUCCESS) {
       firebaseManager.nextShortCode(shortCode -> {
         if (shortCode != null) {
+          // TODO: reference
           String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
+          // Store information associated with an image
           firebaseManager.storeUsingShortCode(shortCode, cloudAnchorId, imageRotation, imageScale, latitude, longitude, title, description, date, getUID());
 
+          // Store image
           StorageReference imageReference = storageReference.child("images/" + shortCode);
           uploadTask = imageReference.putBytes(imageBytes);
 
@@ -608,6 +642,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
                   }
           );
 
+          // Store image preview
           StorageReference previewReference = storageReference.child("previews/" + shortCode);
           uploadTask = previewReference.putBytes(preview);
 
@@ -627,6 +662,11 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
   }
 
+  /**
+   * Gets the current user's user ID (UID).
+   *
+   * @return The current user's ID.
+   */
   private String getUID() {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -634,11 +674,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       return user.getUid();
     }
 
-    // Set user identifier to 0 for anonymous
+    // Set user identifier to 0 for anonymous users
     return "0";
   }
 
+  /**
+   * Handle resolving a cloud anchor when redirected from the navigation fragment.
+   *
+   * @param shortCode The short code of the image to resolve.
+   */
   private void onShortCodeEntered(int shortCode) {
+    // Get image and relevant properties
     StorageReference imageReference = storageReference.child("images/" + shortCode);
     imageReference.getBytes(Long.MAX_VALUE).addOnSuccessListener(
             bytes -> {
@@ -666,21 +712,28 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
       imageScale = scale;
     });
 
+    // Get cloud anchor
     firebaseManager.getCloudAnchorId(shortCode, cloudAnchorId -> {
       if (cloudAnchorId == null || cloudAnchorId.isEmpty()) {
         requireActivity().runOnUiThread(() -> showToast("Error retrieving image."));
         return;
       }
-      future = session.resolveCloudAnchorAsync(
-          cloudAnchorId, (anchor, cloudState) -> onResolveComplete(anchor, cloudState, shortCode));
+
+      future = session.resolveCloudAnchorAsync(cloudAnchorId, this::onResolveComplete);
     });
   }
 
-  private void onResolveComplete(Anchor anchor, CloudAnchorState cloudState, int shortCode) {
+  /**
+   * Handles behaviour that occurs after a resolve attempt.
+   *
+   * @param anchor The resolved cloud anchor.
+   * @param cloudState The state of the cloud anchor retrieval.
+   */
+  private void onResolveComplete(Anchor anchor, CloudAnchorState cloudState) {
     if (cloudState == CloudAnchorState.SUCCESS) {
       requireActivity().runOnUiThread(() -> showToast("Image successfully loaded."));
-      currentAnchor = anchor;
 
+      currentAnchor = anchor;
       visualise = false;
       rotationBar.setProgress(180);
       scaleBar.setProgress(100);
@@ -689,11 +742,15 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }
   }
 
+  /**
+   * Handles the behaviour when the rotation slider is moved by rotating the image.
+   */
   private final SeekBar.OnSeekBarChangeListener rotationChangeListener = new SeekBar.OnSeekBarChangeListener() {
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-      // SeekBar begins at 180 which corresponds to a 0 degree rotation
+      // SeekBar begins at 180 which corresponds to a 0 degree rotation, thus 180 must be subtracted
       // Negative so rotation direction follows SeekBar direction
+      // Subtract 135 since the default image rotation when placed is -135 (prevents jump when touching the slider)
       imageRotation = -(i - 180) - 135;
     }
 
@@ -704,6 +761,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     public void onStopTrackingTouch(SeekBar seekBar) {}
   };
 
+  /**
+   * Handles the behaviour when the scale slider is moved by scaling the image.
+   */
   private final SeekBar.OnSeekBarChangeListener scaleChangeListener = new SeekBar.OnSeekBarChangeListener() {
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -717,6 +777,9 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     public void onStopTrackingTouch(SeekBar seekBar) {}
   };
 
+  /**
+   * Handles the behaviour when the shutter button is pressed by saving a photo of the current camera view.
+   */
   private void onShutterButtonPressed() {
     // Screenshot view
     Bitmap bitmap = Bitmap.createBitmap(surfaceView.getWidth(), surfaceView.getHeight(), Bitmap.Config.ARGB_8888);
@@ -746,12 +809,17 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
     }, new Handler(Looper.getMainLooper()));
   }
 
-  // Hides previous toast then shows a new one
+  /**
+   * Shows the given message in a toast pop-up, overwriting any previous pop-ups.
+   *
+   * @param message The message to display in a toast pop-up.
+   */
   private void showToast(String message) {
     if (message.isEmpty()) {
       return;
     }
 
+    // Hide previous toast and replace it with the new one
     if (currentToast != null) {
       currentToast.cancel();
     }
