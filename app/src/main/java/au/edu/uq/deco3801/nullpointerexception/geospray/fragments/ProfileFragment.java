@@ -163,7 +163,7 @@ public class ProfileFragment extends Fragment {
             if (user.getDisplayName() != null) {
                 username.setText(user.getDisplayName());
                 Log.d("ProfileUID",user.getUid());
-                String handleString = user.getDisplayName().toLowerCase()
+                String handleString = user.getDisplayName()
                         .replace(" ", "_");
                 handle.setText(handleString);
             }

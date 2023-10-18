@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -263,6 +264,16 @@ public class PreviewFragment extends Fragment {
         rootView.findViewById(R.id.bottom_sheet).setOnClickListener(null);
 
         // Comment behaviour
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String commentUser = "guest";
+
+        if (!(user == null || user.isAnonymous())) {
+            if (user.getDisplayName() != null) {
+                commentUser = user.getDisplayName();
+            }
+        }
+
         // Randomise comment messages
         Collections.shuffle(commentMessages);
 
@@ -271,9 +282,9 @@ public class PreviewFragment extends Fragment {
         ((ShapeableImageView) rootView.findViewById(commentViewElements.get(0).get(1)))
                 .setImageDrawable(requireContext().getResources().getDrawable(icons.get(0)));
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(2)))
-                .setText(usernames.get(0));
+                .setText(commentUser);
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(3)))
-                .setText("@" + usernames.get(0).replaceAll(" ", "_"));
+                .setText("@" + commentUser.replaceAll(" ", "_"));
 
         // Set randomised comments
         for (int i = 1; i < commentViewElements.size(); i++) {
@@ -296,9 +307,7 @@ public class PreviewFragment extends Fragment {
         // Show user comment
         EditText commentField = rootView.findViewById(R.id.comment_field);
         commentField.setOnEditorActionListener((textView, i, keyEvent) -> {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-
-            if (!(auth.getCurrentUser() != null && !auth.getCurrentUser().isAnonymous())) {
+            if (!(user != null && !user.isAnonymous())) {
                 showToast("You must be signed in to do that.");
                 return false;
             }
