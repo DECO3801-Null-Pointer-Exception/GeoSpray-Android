@@ -62,16 +62,10 @@ public class MainActivity extends AppCompatActivity {
   private FirebaseAuth mAuth;
   private Boolean profileRedirect;
 
-//  private ProfileFragment profile;
-  // TODO save profile information
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     mAuth = FirebaseAuth.getInstance();
     profileRedirect = false;
-
-//    mAuth.signOut(); //just for testing purposes
-    //otherwise user stays signed in
 
     if (mAuth.getCurrentUser() == null) {
       mAuth.signInAnonymously();

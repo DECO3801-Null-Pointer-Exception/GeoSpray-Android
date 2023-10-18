@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -105,7 +106,7 @@ public class PreviewFragment extends Fragment {
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
         // Initialise list of preset usernames
-        usernames = new ArrayList<>(Arrays.asList("guest", "SpaceCadet", "CaptainSporty", "FarmHick",
+        usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty", "FarmHick",
                 "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
                 "ur_buddha" , "Funkysticks" , "Warrior666" , "RapidRacket" , "GunSly Lee" ,
@@ -142,7 +143,7 @@ public class PreviewFragment extends Fragment {
         // Set view components
         icon.setImageDrawable(getResources().getDrawable(iconId));
         username.setText(name);
-        userHandle.setText("@" + name);
+        userHandle.setText("@" + name.replaceAll(" ", "_"));
         commentTextView.setText(String.valueOf(comments));
         likeTextView.setText(String.valueOf(likes));
 
@@ -272,7 +273,7 @@ public class PreviewFragment extends Fragment {
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(2)))
                 .setText(usernames.get(0));
         ((TextView) rootView.findViewById(commentViewElements.get(0).get(3)))
-                .setText("@" + usernames.get(0));
+                .setText("@" + usernames.get(0).replaceAll(" ", "_"));
 
         // Set randomised comments
         for (int i = 1; i < commentViewElements.size(); i++) {
@@ -295,6 +296,13 @@ public class PreviewFragment extends Fragment {
         // Show user comment
         EditText commentField = rootView.findViewById(R.id.comment_field);
         commentField.setOnEditorActionListener((textView, i, keyEvent) -> {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+            if (!(auth.getCurrentUser() != null && !auth.getCurrentUser().isAnonymous())) {
+                showToast("You must be signed in to do that.");
+                return false;
+            }
+
             if (i == EditorInfo.IME_ACTION_DONE) {
                 rootView.findViewById(commentViewElements.get(0).get(0)).setVisibility(View.VISIBLE);
                 ((TextView) rootView.findViewById(commentViewElements.get(0).get(4)))
