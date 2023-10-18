@@ -60,7 +60,8 @@
             android:paddingStart="4sp"
             android:paddingTop="2sp"
             android:paddingEnd="4sp"
-            android:paddingBottom="2sp" />
+            android:paddingBottom="2sp"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

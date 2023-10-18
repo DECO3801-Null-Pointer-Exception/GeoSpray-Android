@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -46,6 +47,15 @@ public class UserLogin extends AppCompatActivity {
 
         email = this.findViewById(R.id.log_email);
         password = this.findViewById(R.id.log_password);
+
+        password.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                onLoginButtonPressed();
+                return true;
+            }
+
+            return false;
+        });
 
         Button btnLogin = findViewById(R.id.log_login);
         btnLogin.setOnClickListener(v -> onLoginButtonPressed());
