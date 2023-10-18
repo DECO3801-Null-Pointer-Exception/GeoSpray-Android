@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +27,6 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -55,14 +52,11 @@ import au.edu.uq.deco3801.nullpointerexception.geospray.helpers.FirebaseManager;
  */
 public class PreviewFragment extends Fragment {
     private int shortCode;
-    private Bitmap image;
     private FirebaseManager firebaseManager;
-    private StorageReference storageReference;
-    private FirebaseStorage firebaseStorage;
     private boolean liked;
     private Toast currentToast;
     private Bitmap pImage;
-    private Integer iconid;
+    private Integer iconId;
     private String name;
     private int comments;
     private int likes;
@@ -76,8 +70,6 @@ public class PreviewFragment extends Fragment {
         super.onAttach(context);
 
         firebaseManager = new FirebaseManager(context);
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
 
         // Get view elements of each comment
         commentViewElements = new ArrayList<>(Arrays.asList(
@@ -132,7 +124,7 @@ public class PreviewFragment extends Fragment {
         if (args != null) {
             shortCode = args.getInt("shortcode");
             pImage = args.getParcelable("BitmapImage");
-            iconid = args.getInt("iconid");
+            iconId = args.getInt("iconid");
             name = args.getString("username");
             comments = args.getInt("comments");
             likes = args.getInt("likes");
@@ -147,7 +139,7 @@ public class PreviewFragment extends Fragment {
         TextView likeTextView = rootView.findViewById(R.id.preview_likes);
 
         // Set view components
-        icon.setImageDrawable(getResources().getDrawable(iconid));
+        icon.setImageDrawable(getResources().getDrawable(iconId));
         username.setText(name);
         userHandle.setText("@" + name);
         commentTextView.setText(String.valueOf(comments));
@@ -305,7 +297,7 @@ public class PreviewFragment extends Fragment {
      * selected as the item to share.
      */
     private void onShareButtonPressed() {
-        if (image == null) {
+        if (pImage == null) {
             return;
         }
 
@@ -321,7 +313,7 @@ public class PreviewFragment extends Fragment {
 
         try {
             imageOutStream = requireContext().getContentResolver().openOutputStream(uri);
-            image.compress(Bitmap.CompressFormat.JPEG, 50, imageOutStream);
+            pImage.compress(Bitmap.CompressFormat.JPEG, 50, imageOutStream);
             imageOutStream.close();
         } catch (Exception e) {
             e.printStackTrace();
