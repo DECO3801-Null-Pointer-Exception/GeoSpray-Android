@@ -61,7 +61,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.profile, container, false);
 
-
         ConstraintLayout your_area = rootView.findViewById(R.id.your_area);
         ImageView your_works = rootView.findViewById(R.id.your_works);
         View your_works_line = rootView.findViewById(R.id.your_works_line);
@@ -70,26 +69,20 @@ public class ProfileFragment extends Fragment {
         ImageView liked_works = rootView.findViewById(R.id.liked_works);
         View liked_works_line = rootView.findViewById(R.id.liked_line);
 
-        your_area.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                your_works.setColorFilter(Color.rgb(219, 214, 227));
-                your_works_line.setBackgroundColor(Color.rgb(255, 255, 255));
+        your_area.setOnClickListener(view -> {
+            your_works.setColorFilter(Color.rgb(219, 214, 227));
+            your_works_line.setBackgroundColor(Color.rgb(255, 255, 255));
 
-                liked_works.setColorFilter(Color.rgb(152, 154, 157));
-                liked_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
-            }
+            liked_works.setColorFilter(Color.rgb(152, 154, 157));
+            liked_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
         });
 
-        liked_area.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                liked_works.setColorFilter(Color.rgb(219, 214, 227));
-                liked_works_line.setBackgroundColor(Color.rgb(255, 255, 255));
+        liked_area.setOnClickListener(view -> {
+            liked_works.setColorFilter(Color.rgb(219, 214, 227));
+            liked_works_line.setBackgroundColor(Color.rgb(255, 255, 255));
 
-                your_works.setColorFilter(Color.rgb(152, 154, 157));
-                your_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
-            }
+            your_works.setColorFilter(Color.rgb(152, 154, 157));
+            your_works_line.setBackgroundColor(Color.rgb(152, 154, 157));
         });
 
         recyclerView = rootView.findViewById(R.id.profile_recycler);

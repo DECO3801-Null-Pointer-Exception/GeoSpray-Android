@@ -205,6 +205,8 @@ public class PreviewFragment extends Fragment {
                 likeTextView.setText(String.valueOf(likes));
             }
 
+            firebaseManager.getRootRef().child("" + shortCode).child("liked").setValue(liked);
+
             ImageViewCompat.setImageTintList(likeButton, ColorStateList.valueOf(colour));
         });
 
