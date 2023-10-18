@@ -61,16 +61,19 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
+    mAuth = FirebaseAuth.getInstance();
+
+//    mAuth.signOut(); //just for testing purposes
+    //otherwise user stays signed in
+    if (mAuth.getCurrentUser() == null) {
+      mAuth.signInAnonymously();
+    }
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     binding = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
     replaceFrag(imageGalleryFragment);
-
-    mAuth = FirebaseAuth.getInstance();
-
-    mAuth.signOut(); //just for testing purposes
-    //otherwise user stays signed in
 
     binding.botnav.setOnItemSelectedListener(item -> {
       if (item.getItemId() == R.id.bot_create) {
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     if (currentUser != null && !currentUser.isAnonymous()) { //todo needed for toast to work with no email
 //      createToast("User is Loaded");
 //      createToast(currentUser.getDisplayName());
-      createToast(currentUser.getEmail());
+//      createToast(currentUser.getEmail());
       // TODO Testing user interaction
     } else {
       //set user to be anon
