@@ -276,6 +276,7 @@ public class CloudAnchorFragment extends Fragment implements GLSurfaceView.Rende
           return;
         }
 
+        // Ask for location permission
         if (!LocationPermissionHelper.hasLocationPermission(requireActivity())) {
           LocationPermissionHelper.requestLocationPermission(requireActivity());
           return;

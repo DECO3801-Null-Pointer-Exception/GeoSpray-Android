@@ -102,6 +102,7 @@ public class NavigationFragment extends Fragment {
                             return;
                         }
 
+                        // Don't get user's location if permission isn't granted
                         if (ActivityCompat.checkSelfPermission(requireContext(),
                                 android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                                 PackageManager.PERMISSION_GRANTED &&
@@ -185,6 +186,7 @@ public class NavigationFragment extends Fragment {
 
         googleMap.setOnCameraIdleListener(clusterManager);
 
+        // Don't get user's location if permission isn't granted
         if (ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(),
