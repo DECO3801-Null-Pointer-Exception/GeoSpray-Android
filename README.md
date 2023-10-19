@@ -29,7 +29,7 @@ Once this is done, you will have the app install on your phone
 4) Install the Application
 
    
-## Developement
+## Development
 To create the build enviroment you will need several keys and Android Studio
 
 1) Download the Codebase
