@@ -151,7 +151,8 @@ public class ObjectRenderer {
     GLES20.glGenTextures(textures.length, textures, 0);
     GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
 
-    // TODO: https://stackoverflow.com/questions/16077448/texture-is-all-black
+    // https://stackoverflow.com/questions/16077448/texture-is-all-black
+    // Accessed October 7
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
     GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
