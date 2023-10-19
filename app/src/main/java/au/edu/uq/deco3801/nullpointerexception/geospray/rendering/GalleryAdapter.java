@@ -62,6 +62,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         firebaseManager = new FirebaseManager(context);
 
         // Initialise a preset list of profile pictures
+        // References in README
         icons = new ArrayList<>(Arrays.asList(R.drawable.profile_picture, R.drawable.i1,
                 R.drawable.i2, R.drawable.i3, R.drawable.i4, R.drawable.i5, R.drawable.i6,
                 R.drawable.i7, R.drawable.i8, R.drawable.i9, R.drawable.i10, R.drawable.i11,
@@ -71,7 +72,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 R.drawable.i27, R.drawable.i28, R.drawable.i29, R.drawable.i30, R.drawable.i31,
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
-        // Initialise a preset list of usernames
+        // Initialise a preset list of usernames from:
+        // https://www.sportskeeda.com/roblox-news/100-unique-roblox-username-ideas-new-players-2022
         usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty", "FarmHick",
                 "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils" , "DarkLord" , "NoTolerance" , "unfriend_now", "im_watching_you",
