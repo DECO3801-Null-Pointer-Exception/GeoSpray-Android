@@ -378,6 +378,9 @@ public class PreviewFragment extends Fragment {
      * Handle behaviour when the report button is pressed by simulating a report submission.
      */
     private void onReportButtonPressed() {
+        firebaseManager.getRootRef().child("" + shortCode).child("reported")
+                .setValue(true);
+
         showToast("Report submitted.");
     }
 

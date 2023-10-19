@@ -163,7 +163,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         onShareButtonPressed(image.getImg());
                         return true;
                     } else if (menuItem.getItemId() == R.id.report_button) {
-                        onReportButtonPressed();
+                        onReportButtonPressed(image.getShortCode());
                         return true;
                     }
 
@@ -267,7 +267,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * Handles the user tapping the report button by simulating a report submission.
      */
-    private void onReportButtonPressed() {
+    private void onReportButtonPressed(int shortCode) {
+        firebaseManager.getRootRef().child("" + shortCode).child("reported")
+                .setValue(true);
+        
         showToast("Report submitted.");
     }
 
