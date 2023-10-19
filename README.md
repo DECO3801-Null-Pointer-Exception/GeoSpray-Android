@@ -57,7 +57,7 @@ To create the build enviroment you will need several keys and Android Studio
 4) Locate File with APK
 
 # References
-## Code
+### Code
 https://github.com/google-ar/codelab-cloud-anchors
 
 https://github.com/googlecodelabs/maps-platform-101-android
@@ -84,7 +84,7 @@ https://www.geeksforgeeks.org/how-to-create-a-paint-application-in-android/
 
 https://stackoverflow.com/questions/22584244/how-to-generate-6-different-random-numbers-in-java
 
-## Images
+### Images
 i1.png: https://pixabay.com/vectors/girl-sitting-clouds-moon-sky-mind-8301168/
 
 i2.png: https://pixabay.com/vectors/egg-breakfast-fried-egg-7847875/
