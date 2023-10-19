@@ -23,18 +23,44 @@ it will say "app is not authorised" click on the link under it and press "instal
 
 Once this is done, you will have the app install on your phone
 
+1) Download the latest APK file named Geospray onto your Android Device. This can be done through USB transfer from the codebase.
+2) Find the Application on your phone storage and Run the Apk file
+3) If this is your first time installing an apk file, you may need to enable it in your settings. Go to "Install unknown apps" and enable for your file manager
+4) Install the Application
+
+   
 ## Developement
+To create the build enviroment you will need several keys and Android Studio
 
-If you want look at the developement process, you will need to install Android Studio
+1) Download the Codebase
+2) Install Android Studio
+3) Open Android Studio and open the Codebase inside
+4) Go to Tools -> Firebase
+5) In the Firebase Assistant Page -> Realtime Database -> Get Started with Realtime Database -> Connect your app with Firebase
+6) To connect with Firebase you will need permissions from the owners and an account permission
+7) Access the Build.gradle file and sync the grade file to update codebase
+8) Get a googlemap API key and add it to local.properties ```GOOGLE_MAPS_API_KEY={API_KEY}```
 
-Download the code base and point the Android Studio to open the code base,
 
-To build a working application from Android Studio, you will need several keys,
+### Run the app on your phone
+1) Enable Developer Options on your android device
+2) Enable USB Debugging
+3) Plug in your device to the computer running Android Studio
+4) Accept permission when asked to be connected
+5) Go to top right and choose your device
+6) Run the application installer
 
-Google API key
+(Note: You may need permissions to access the API for ARCore)
 
-SHA256 key of the Android studio application
 
-Firebase credentials
+### Build the Signed APK File from Android Studio
+1) Build -> Generate Signed Bundle/APK... -> APK
+2) Choose the GeoSprayKey.jks file and passwords (Note, you may need to ask the owners for access to the build key and credentials)
+3) Choose Build Variant -> Release
+4) Locate File with APK
+   
+
+# References
+
 
 
