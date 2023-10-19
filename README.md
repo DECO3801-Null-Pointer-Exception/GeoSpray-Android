@@ -38,7 +38,7 @@ To create the build enviroment you will need several keys and Android Studio
 5) In the Firebase Assistant Page -> Realtime Database -> Get Started with Realtime Database -> Connect your app with Firebase
 6) To connect with Firebase you will need permissions from the owners and an account permission
 7) Access the Build.gradle file and sync the grade file to update codebase
-8) Get a googlemap API key and add it to local.properties ```GOOGLE_MAPS_API_KEY={API_KEY}```
+8) Get a googlemap API key and add it to local.properties ```GOOGLE_MAPS_API_KEY=API_KEY```, replacing ```API_KEY``` with the key
 
 ### Run the app on your phone
 1) Enable Developer Options on your android device
