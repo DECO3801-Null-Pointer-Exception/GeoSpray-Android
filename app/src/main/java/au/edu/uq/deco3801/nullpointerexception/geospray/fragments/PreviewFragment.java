@@ -75,6 +75,7 @@ public class PreviewFragment extends Fragment {
         firebaseManager = new FirebaseManager(context);
 
         // Get view elements of each comment
+        // References in README
         commentViewElements = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(R.id.user_comment, R.id.comment_user_picture, R.id.comment_user_username, R.id.comment_user_handle, R.id.comment_user_message)),
                 new ArrayList<>(Arrays.asList(R.id.comment_1, R.id.comment_1_picture, R.id.comment_1_username, R.id.comment_1_handle, R.id.comment_1_message)),
@@ -85,7 +86,8 @@ public class PreviewFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(R.id.comment_6, R.id.comment_6_picture, R.id.comment_6_username, R.id.comment_6_handle, R.id.comment_6_message))
         ));
 
-        // Initialise list of preset comments
+        // Initialise list of preset comments from:
+        // ChatGPT prompt: generate a list of short comments people might make for an artwork
         commentMessages = new ArrayList<>(Arrays.asList("This is stunning!", "I love the colors!",
                 "The detail is incredible.", "It really evokes emotion.", "This speaks to me.",
                 "The composition is perfect.", "Such a unique perspective.",
@@ -107,7 +109,8 @@ public class PreviewFragment extends Fragment {
                 R.drawable.i27, R.drawable.i28, R.drawable.i29, R.drawable.i30, R.drawable.i31,
                 R.drawable.i32, R.drawable.i33, R.drawable.i34, R.drawable.i35));
 
-        // Initialise list of preset usernames
+        // Initialise list of preset usernames from:
+        // https://www.sportskeeda.com/roblox-news/100-unique-roblox-username-ideas-new-players-2022
         usernames = new ArrayList<>(Arrays.asList("Jane Q. User", "SpaceCadet", "CaptainSporty",
                 "FarmHick", "HoodUnmasked", "billdates", "CouchCactus", "Ruddy", "Thunderbeast",
                 "Faulty Devils", "DarkLord", "NoTolerance", "unfriend_now", "im_watching_you",
