@@ -6,6 +6,8 @@ Currently based on Android.
 
 Built with Android Studio, using ARCore and Firebase.
 
+[![Watch the video](https://img.youtube.com/vi/AfgjNq2KmBU/hqdefault.jpg)](https://youtu.be/AfgjNq2KmBU?t=27)
+
 ## Project Outline
 The project involves developing an interactive Augmented Reality (AR) experience. This experience will utilise virtual “graffiti” that users can create using an in-built interface. This digital art can be placed on flat surfaces (for example, a wall) and viewed by passersby through the application, seamlessly blending the virtual and real worlds. Users can geo-tag their creations to specific locations, enabling a contextual connection between art and place. The application fosters community engagement, allowing users to discover, rate and appreciate each other’s virtual graffiti. This will create a dynamic platform that merges artistic expression with AR technology. 
 
