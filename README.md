@@ -6,6 +6,8 @@ Currently based on Android.
 
 Built with Android Studio, using ARCore and Firebase.
 
+**Video demo:**
+
 [![Watch the video](https://img.youtube.com/vi/AfgjNq2KmBU/hqdefault.jpg)](https://youtu.be/AfgjNq2KmBU?t=27)
 
 ## Project Outline
